@@ -598,6 +598,24 @@ namespace HammerwatchAP.Archipelago
                 }
             }
         }
+        public static Upgrade GetNextShopUpgrade(Upgrade baseUpgrade)
+        {
+            Logging.Debug("GetNextShopUpgrade: " + baseUpgrade.ID);
+            if (baseUpgrade.ID.StartsWith("ap-"))
+            {
+                int locId = int.Parse(baseUpgrade.ID.Substring(3));
+                NetworkItem item = archipelagoData.GetItemFromLoc(locId);
+                Upgrade? upgrade = GetNextShopUpgrade(item, false);
+                if (upgrade.HasValue)
+                {
+                    Logging.Debug("Next shop upgrade: " + upgrade.Value.ID);
+                    Logging.Debug($"Next shop upgrade data: {upgrade.Value.Data}");
+                    Logging.Debug($"Next shop upgrade description: {upgrade.Value.Description}");
+                    return upgrade.Value;
+                }
+            }
+            return baseUpgrade;
+        }
         public static Upgrade? GetNextShopUpgrade(NetworkItem item, bool receive)
         {
             int itemId = (int)item.Item;
@@ -643,18 +661,6 @@ namespace HammerwatchAP.Archipelago
                 }
             }
             return focusedUpgrade;
-        }
-        public static Upgrade GetNextShopUpgrade(string upgradeId, Upgrade defaultedUpgrade)
-        {
-            if (upgradeId.StartsWith("ap-"))
-            {
-                int locId = int.Parse(upgradeId.Substring(3));
-                NetworkItem item = archipelagoData.GetItemFromLoc(locId);
-                Upgrade? upgrade = GetNextShopUpgrade(item, false);
-                if (upgrade.HasValue)
-                    return upgrade.Value;
-            }
-            return defaultedUpgrade;
         }
         public static void SyncUpgrades(PlayerInfo updatePlayer = null)
         {

@@ -19,6 +19,19 @@ namespace HammerwatchAP.Util
                 return;
             ResourceContext.Log("--DEBUG: "+message);
         }
+        public static void DebugObject(object obj)
+        {
+            if (!ArchipelagoManager.DEBUG_MODE)
+                return;
+            try
+            {
+                Debug(obj.ToString());
+            }
+            catch (NullReferenceException)
+            {
+                Debug("null");
+            }
+        }
         public static void GameLog(string message)
         {
             ArchipelagoMessageManager.SendHWMessage(message);

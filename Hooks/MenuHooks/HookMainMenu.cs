@@ -254,7 +254,7 @@ namespace HammerwatchAP.Hooks
 							if(ArchipelagoManager.DEBUG_MODE)
 							{
 								defaultIp = "localhost";
-								defaultSlotName = "Parcosmic";
+								defaultSlotName = "PlayerName";
 							}
 							DateTime latestSaveTime = DateTime.MinValue;
 							//Get the connection info from the last played game

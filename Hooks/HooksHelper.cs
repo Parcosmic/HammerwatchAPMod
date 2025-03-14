@@ -11,10 +11,25 @@ namespace HammerwatchAP.Hooks
 {
     public static class HooksHelper
     {
+        public static MethodInfo _mi_Logging_DebugObject = typeof(Logging).GetMethod(nameof(Logging.DebugObject), BindingFlags.Public | BindingFlags.Static);
+
         public static void Hook(Type hookType)
         {
             Logging.Debug("- Hooking "+hookType.Name);
             Harmony.CreateAndPatchAll(hookType);
+        }
+
+        public static void PrintCodes(List<CodeInstruction> codes)
+        {
+            for (int i = 0; i < codes.Count; i++)
+            {
+                Logging.Log($"{codes[i].opcode}: {codes[i].operand}");
+            }
+        }
+
+        public static CodeInstruction GetLogDebugInstruction()
+        {
+            return new CodeInstruction(OpCodes.Call, _mi_Logging_DebugObject);
         }
 
         public static readonly MethodInfo _mi_Widget_Enabled = typeof(Widget).GetProperty(nameof(Widget.Enabled), BindingFlags.Instance | BindingFlags.Public).GetSetMethod(true);
