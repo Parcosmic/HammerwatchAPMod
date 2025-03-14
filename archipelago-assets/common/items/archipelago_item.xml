@@ -1,0 +1,47 @@
+<item behavior="archipelago" minimap="menus/minimap-ap.xml:apitem_progression">
+  <behavior>
+    <dictionary>
+	<entry name="pickup-text">
+	  <string>AP Item!</string>
+	</entry>
+      <entry name="pickup-snd">
+        <string>sound/misc.xml:take_letter</string>
+      </entry>
+      <entry name="pickup-particle">
+        <string>effects/particles.xml:none</string>
+      </entry>
+    </dictionary>
+  </behavior>
+  <sprite random-start="true" scale="16">
+    <texture>items/archipelago_item.png</texture>
+    <origin>8 13</origin>
+    <frame time="200">0 0 16 16</frame>
+    <frame time="200">16 0 16 16</frame>
+    <frame time="200">32 0 16 16</frame>
+    <frame time="200">16 0 16 16</frame>
+    <glow scale="16">
+	<texture>items/archipelago_item.png</texture>
+	<frame time="200">0 16 16 16</frame>
+	<frame time="200">16 16 16 16</frame>
+	<frame time="200">32 16 16 16</frame>
+	<frame time="200">16 16 16 16</frame>
+    </glow>
+  </sprite>
+  <light>
+    <origin>0 -5</origin>
+    <mul>
+      <range>64</range>
+      <color1>255 255 255</color1>
+      <color2>0 0 0</color2>
+      <color3>0 0 0</color3>
+    </mul>
+    <add>
+      <range>64</range>
+      <color1>5 5 5</color1>
+      <color2>0 0 0</color2>
+      <color3>0 0 0</color3>
+    </add>
+  </light>
+  <collision shoot-through="true">
+    <circle offset="0 -2" radius="5"/>
+  </collision></item>

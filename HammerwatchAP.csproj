@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{334E0231-E117-4A87-839E-42DD904B5CF1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HammerwatchAP</RootNamespace>
+    <AssemblyName>HammerwatchAP</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony, Version=2.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\HarmonyX.2.13.0\lib\net35\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Archipelago.MultiClient.Net, Version=6.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Archipelago.MultiClient.Net.6.6.0\lib\net40\Archipelago.MultiClient.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="FarseerPhysicsOTK">
+      <HintPath>ref\FarseerPhysicsOTK.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Hammerwatch">
+      <HintPath>ref\Hammerwatch.exe</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.10.4\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.10.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.10.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+      <HintPath>packages\Mono.Cecil.0.10.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Backports, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MonoMod.Backports.1.1.2\lib\net35\MonoMod.Backports.dll</HintPath>
+      <Aliases>alternate</Aliases>
+    </Reference>
+    <Reference Include="MonoMod.Core, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MonoMod.Core.1.1.2\lib\net35\MonoMod.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Iced, Version=1.17.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MonoMod.Core.1.1.2\lib\net35\MonoMod.Iced.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.ILHelpers, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MonoMod.ILHelpers.1.1.0\lib\net35\MonoMod.ILHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour, Version=25.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MonoMod.RuntimeDetour.25.1.2\lib\net35\MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils, Version=25.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MonoMod.Utils.25.0.6\lib\net35\MonoMod.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Archipelago.MultiClient.Net.6.6.0\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SDL2-CS">
+      <HintPath>ref\SDL2-CS.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\portable-net40+sl4+win8+wp8\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TiltedEngine">
+      <HintPath>ref\TiltedEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="websocket-sharp, Version=1.0.2.34775, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>packages\Archipelago.MultiClient.Net.6.6.0\lib\net40\websocket-sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Archipelago\APData.cs" />
+    <Compile Include="Archipelago\APHelper.cs" />
+    <Compile Include="Archipelago\APMapPatcher.cs" />
+    <Compile Include="Archipelago\APSaveManager.cs" />
+    <Compile Include="Archipelago\ArchipelagoData.cs" />
+    <Compile Include="Archipelago\ArchipelagoManager.cs" />
+    <Compile Include="Archipelago\ConnectionInfo.cs" />
+    <Compile Include="Archipelago\MapPatching\EnemyShuffler.cs" />
+    <Compile Include="Archipelago\MapPatching\TweakPatcher.cs" />
+    <Compile Include="Archipelago\SlotDataKeys.cs" />
+    <Compile Include="Game\BuffInstaKill.cs" />
+    <Compile Include="Game\BuffExploreSpeed.cs" />
+    <Compile Include="Game\GameInterface.cs" />
+    <Compile Include="Game\LootTableWrapper.cs" />
+    <Compile Include="Game\QoL.cs" />
+    <Compile Include="Game\WorldItemKeyMultiBehavior.cs" />
+    <Compile Include="Game\WorldItemArchipelagoBehavior.cs" />
+    <Compile Include="HammerwatchAP.cs" />
+    <Compile Include="Hooks\HookARPGGame.cs" />
+    <Compile Include="Hooks\HookGameBase.cs" />
+    <Compile Include="Hooks\HookGameSaver.cs" />
+    <Compile Include="Hooks\HookBehaviorFactory.cs" />
+    <Compile Include="Hooks\HookSharedPlayerInfo.cs" />
+    <Compile Include="Hooks\MenuHooks\HookGameHUD.cs" />
+    <Compile Include="Hooks\HookPlayerHandler.cs" />
+    <Compile Include="Hooks\HookLootTable.cs" />
+    <Compile Include="Hooks\HookBaseEnemyBehavior.cs" />
+    <Compile Include="Hooks\MenuHooks\HookShopMenu.cs" />
+    <Compile Include="Hooks\TemplateHook.cs" />
+    <Compile Include="Hooks\HookPlayerActorBehavior.cs" />
+    <Compile Include="Hooks\HookPlayerInfo.cs" />
+    <Compile Include="Hooks\HooksHelper.cs" />
+    <Compile Include="Hooks\HooksMain.cs" />
+    <Compile Include="Hooks\WorldItemHooks\HookWorldItemBreakableBehavior.cs" />
+    <Compile Include="Hooks\WorldItemHooks\HookWorldItemPickupBehavior.cs" />
+    <Compile Include="Hooks\MenuHooks\HookChatWidget.cs" />
+    <Compile Include="Hooks\MenuHooks\HookLobbyMenu.cs" />
+    <Compile Include="Hooks\MenuHooks\HookMainMenu.cs" />
+    <Compile Include="Hooks\MenuHooks\HookOptionsMenu.cs" />
+    <Compile Include="Hooks\MenuHooks\HookMenuList.cs" />
+    <Compile Include="Hooks\MenuHooks\MenuHooksMain.cs" />
+    <Compile Include="Menus\TextPromptTripleMenu.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Archipelago\ArchipelagoMessageManager.cs" />
+    <Compile Include="Util\Logging.cs" />
+    <Compile Include="Util\MiscHelper.cs" />
+    <Compile Include="Util\NodeHelper.cs" />
+    <Compile Include="Util\SoundHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="archipelago-assets\castle\doodads\floorsigns_extra.png" />
+    <Content Include="archipelago-assets\castle\doodads\theme_a\a_floorsign_1_up.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_a\a_floorsign_4_dn.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_a\a_floorsign_boss_dn.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_b\b_floorsign_1_up.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_b\b_floorsign_4_up.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_b\b_floorsign_7_dn.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_c\c_floorsign_10_dn.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_c\c_floorsign_4_up.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_c\c_floorsign_7_up.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_d\d_floorsign_10_up.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_d\d_floorsign_12_dn.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_d\d_floorsign_7_up.xml" />
+    <Content Include="archipelago-assets\castle\doodads\theme_d\d_floorsign_question_up.xml" />
+    <Content Include="archipelago-assets\castle\icon.png" />
+    <Content Include="archipelago-assets\castle\info.xml" />
+    <Content Include="archipelago-assets\castle\levels\ap_hub.xml" />
+    <Content Include="archipelago-assets\common\actors\tick_ap.xml" />
+    <Content Include="archipelago-assets\common\items\apholo.png" />
+    <Content Include="archipelago-assets\common\items\apitem.png" />
+    <Content Include="archipelago-assets\common\items\apitem_filler.png" />
+    <Content Include="archipelago-assets\common\items\aptrap_confuse.xml" />
+    <Content Include="archipelago-assets\common\items\aptrap_fire.xml" />
+    <Content Include="archipelago-assets\common\items\aptrap_frost.xml" />
+    <Content Include="archipelago-assets\common\items\aptrap_poison.xml" />
+    <Content Include="archipelago-assets\common\items\ap_check.xml" />
+    <Content Include="archipelago-assets\common\items\archipelago_filler_item.xml" />
+    <Content Include="archipelago-assets\common\items\archipelago_holo.xml" />
+    <Content Include="archipelago-assets\common\items\archipelago_holo_filler.xml" />
+    <Content Include="archipelago-assets\common\items\archipelago_holo_prog.xml" />
+    <Content Include="archipelago-assets\common\items\archipelago_item.png" />
+    <Content Include="archipelago-assets\common\items\archipelago_item.xml" />
+    <Content Include="archipelago-assets\common\items\archipelago_useful_item.xml" />
+    <Content Include="archipelago-assets\common\items\bonus_key_archives.xml" />
+    <Content Include="archipelago-assets\common\items\bonus_key_armory.xml" />
+    <Content Include="archipelago-assets\common\items\bonus_key_chambers.xml" />
+    <Content Include="archipelago-assets\common\items\bonus_key_prison.xml" />
+    <Content Include="archipelago-assets\common\items\boss_rune.png" />
+    <Content Include="archipelago-assets\common\items\boss_rune_1.xml" />
+    <Content Include="archipelago-assets\common\items\boss_rune_2.xml" />
+    <Content Include="archipelago-assets\common\items\boss_rune_3.xml" />
+    <Content Include="archipelago-assets\common\items\button_effect.xml" />
+    <Content Include="archipelago-assets\common\items\button_effect2.png" />
+    <Content Include="archipelago-assets\common\items\chest_trap_banner.xml" />
+    <Content Include="archipelago-assets\common\items\chest_trap_bomb.xml" />
+    <Content Include="archipelago-assets\common\items\chest_trap_confuse.xml" />
+    <Content Include="archipelago-assets\common\items\chest_trap_drain.xml" />
+    <Content Include="archipelago-assets\common\items\chest_trap_fire.xml" />
+    <Content Include="archipelago-assets\common\items\chest_trap_flies.xml" />
+    <Content Include="archipelago-assets\common\items\chest_trap_frost.xml" />
+    <Content Include="archipelago-assets\common\items\chest_trap_poison.xml" />
+    <Content Include="archipelago-assets\common\items\disp_bomb.xml" />
+    <Content Include="archipelago-assets\common\items\disp_gold_arrows.xml" />
+    <Content Include="archipelago-assets\common\items\disp_note.xml" />
+    <Content Include="archipelago-assets\common\items\door_a_gold_v_v2.xml" />
+    <Content Include="archipelago-assets\common\items\floor_master_key_bonus.xml" />
+    <Content Include="archipelago-assets\common\items\floor_master_key_bronze.xml" />
+    <Content Include="archipelago-assets\common\items\floor_master_key_gold.xml" />
+    <Content Include="archipelago-assets\common\items\floor_master_key_silver.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_archives.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_armory.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_big.png" />
+    <Content Include="archipelago-assets\common\items\key_bronze_big.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_big_archives.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_big_armory.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_big_chambers.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_big_prison.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_chambers.xml" />
+    <Content Include="archipelago-assets\common\items\key_bronze_prison.xml" />
+    <Content Include="archipelago-assets\common\items\key_gold_archives.xml" />
+    <Content Include="archipelago-assets\common\items\key_gold_armory.xml" />
+    <Content Include="archipelago-assets\common\items\key_gold_chambers.xml" />
+    <Content Include="archipelago-assets\common\items\key_gold_prison.xml" />
+    <Content Include="archipelago-assets\common\items\key_mirror.xml" />
+    <Content Include="archipelago-assets\common\items\key_ore.xml" />
+    <Content Include="archipelago-assets\common\items\key_silver_archives.xml" />
+    <Content Include="archipelago-assets\common\items\key_silver_armory.xml" />
+    <Content Include="archipelago-assets\common\items\key_silver_chambers.xml" />
+    <Content Include="archipelago-assets\common\items\key_silver_prison.xml" />
+    <Content Include="archipelago-assets\common\items\key_teleport.xml" />
+    <Content Include="archipelago-assets\common\items\shop_items.png" />
+    <Content Include="archipelago-assets\common\items\shop_item_combo.xml" />
+    <Content Include="archipelago-assets\common\items\shop_item_def.xml" />
+    <Content Include="archipelago-assets\common\items\shop_item_gamble.xml" />
+    <Content Include="archipelago-assets\common\items\shop_item_misc.xml" />
+    <Content Include="archipelago-assets\common\items\shop_item_off.xml" />
+    <Content Include="archipelago-assets\common\items\shop_item_power.xml" />
+    <Content Include="archipelago-assets\common\items\tool_hammer.png" />
+    <Content Include="archipelago-assets\common\items\tool_hammer.xml" />
+    <Content Include="archipelago-assets\common\items\tool_hammer_fragment.xml" />
+    <Content Include="archipelago-assets\common\items\tool_lever_fragment.xml" />
+    <Content Include="archipelago-assets\common\items\tool_pan_fragment.xml" />
+    <Content Include="archipelago-assets\common\items\tool_pickaxe_fragment.xml" />
+    <Content Include="archipelago-assets\common\menus\apitem_map_icons.png" />
+    <Content Include="archipelago-assets\common\menus\hud-extended.xml" />
+    <Content Include="archipelago-assets\common\menus\minimap-ap.xml" />
+    <Content Include="archipelago-assets\common\prefabs\bomb_roof_trap.xml" />
+    <Content Include="archipelago-assets\temple\icon.png" />
+    <Content Include="archipelago-assets\temple\info.xml" />
+    <Content Include="archipelago-assets\temple\levels\ap_hub.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y /R "C:\Archipelago Stuff\Archipelago Modding Stuff\HammerwatchAPMod\bin\Release\HammerwatchAP.dll" "C:\Program Files (x86)\Steam\steamapps\common\Hammerwatch\HammerwatchAP.dll"
+xcopy /Y /R "C:\Archipelago Stuff\Archipelago Modding Stuff\HammerwatchAPMod\bin\Release\HammerwatchAP.pdb" "C:\Program Files (x86)\Steam\steamapps\common\Hammerwatch\HammerwatchAP.pdb"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

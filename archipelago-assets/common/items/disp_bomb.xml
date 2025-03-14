@@ -1,0 +1,21 @@
+<item behavior="bomb">
+	<behavior>
+		<dictionary>
+			<entry name="dmg"><int>33</int></entry>
+			<entry name="splash"><float>1.25</float></entry>
+			<entry name="explode-delay"><int>1250</int></entry>
+			<entry name="explode-snd"><string>sound/players.xml:ranger_bomb</string></entry>
+			<entry name="explode-particle"><string>effects/particles.xml:fire-particle</string></entry>
+			<entry name="gib"><string>effects/gibs/gib_bomb.xml</string></entry>		
+		</dictionary>
+	</behavior>
+
+	<sprite scale="16">
+		<texture>items/bomb_2.png</texture>
+		<origin>16 19</origin>
+		<frame time="125">96 32 32 32</frame>
+	</sprite>		
+	
+	<collision shoot-through="true">
+	</collision>
+</item>

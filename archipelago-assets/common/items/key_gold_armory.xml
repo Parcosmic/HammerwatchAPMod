@@ -1,0 +1,35 @@
+<item behavior="key" minimap="menus/minimap.xml:goldkey">
+	<behavior>
+		<dictionary>
+			<entry name="pickup-text"><string>Armory Gold Key!</string></entry>			
+			<entry name="type"><int>2</int></entry>
+			<entry name="pickup-snd"><string>sound/misc.xml:take_key</string></entry>
+			<entry name="pickup-particle"><string>effects/particles.xml:none</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite random-start="true" scale="16">
+		<texture>items/items.png</texture>
+		<origin>8 13</origin>
+		<frame time="200">0 32 16 16</frame>
+		<frame time="200">16 32 16 16</frame>
+		<frame time="200">32 32 16 16</frame>
+		<frame time="200">16 32 16 16</frame>		
+		<glow scale="16">
+			<texture>items/items.png</texture>
+				<frame time="200">48 32 16 16</frame>
+				<frame time="200">64 32 16 16</frame>
+				<frame time="200">80 32 16 16</frame>
+				<frame time="200">64 32 16 16</frame>		
+		</glow>			
+	</sprite>
+	
+	<collision shoot-through="true">
+		<polygon>
+			<point>-4 3</point>
+			<point>-4 -7</point>
+			<point>4 -7</point>
+			<point>4 3</point>
+		</polygon>
+	</collision>
+</item>

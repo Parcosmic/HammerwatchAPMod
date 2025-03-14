@@ -1,0 +1,28 @@
+<item behavior="archipelago">
+  <behavior>
+    <dictionary>
+      <entry name="is-check">
+	<bool>true</bool>
+      </entry>
+      <entry name="pickup-snd">
+        <string>sound/misc.xml:none</string>
+      </entry>
+      <entry name="pickup-particle">
+        <string>effects/particles.xml:none</string>
+      </entry>
+    </dictionary>
+  </behavior>
+  <sprite random-start="false" scale="16">
+    <texture>items/archipelago_item.png</texture>
+    <origin>8 8</origin>
+    <frame time="200">48 0 16 16</frame>
+  </sprite>
+  <collision shoot-through="true">
+    <polygon>
+      <point>-1000 -1000</point>
+      <point>-1000 1000</point>
+      <point>1000 -1000</point>
+      <point>1000 1000</point>
+    </polygon>
+  </collision>
+</item>

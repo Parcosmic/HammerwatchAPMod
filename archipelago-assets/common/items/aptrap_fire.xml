@@ -1,0 +1,40 @@
+<item behavior="bomb">
+  <behavior>
+    <dictionary>
+      <entry name="no-lamp"><bool>true</bool></entry>
+	<entry name="dmg"><int>1</int></entry>
+	<entry name="splash"><float>10.0</float></entry>
+	<entry name="buff"><string>buffs/enemy_tower_firebeam.xml</string></entry>
+	<entry name="explode-delay"><int>1000</int></entry>
+	<entry name="explode-snd"><string>sound/misc.xml:trap_fireball_shoot</string></entry>
+	<entry name="explode-particle"><string>effects/particles.xml:fire-particle</string></entry>
+    </dictionary>
+  </behavior>
+
+  <sprite scale="16">
+    <texture>items/bomb_floater_fire.png</texture>
+    <origin>6 15</origin>
+    <frame time="75">0 0 16 20</frame>
+    <frame time="75">16 0 16 20</frame>
+    <frame time="1000">32 0 16 20</frame>
+    <frame time="25">48 0 16 20</frame>
+    <frame time="25">64 0 16 20</frame>
+    <frame time="25">80 0 16 20</frame>
+    <frame time="25">96 0 16 20</frame>
+    <frame time="25">112 0 16 20</frame>
+    <glow scale="16">
+	<texture>items/bomb_floater_fire.png</texture>
+	<frame time="75">0 20 16 20</frame>
+	<frame time="75">16 20 16 20</frame>
+	<frame time="1000">32 20 16 20</frame>
+	<frame time="25">48 20 16 20</frame>
+	<frame time="25">64 20 16 20</frame>
+	<frame time="25">80 20 16 20</frame>
+	<frame time="25">96 20 16 20</frame>
+	<frame time="25">112 20 16 20</frame>
+    </glow>
+  </sprite>
+	
+  <collision shoot-through="true">
+  </collision>
+</item>

@@ -1,0 +1,41 @@
+<item behavior="key" minimap="menus/minimap.xml:key_ore">
+	<behavior>
+		<dictionary>
+			<entry name="type"><int>9</int></entry>
+			<entry name="pickup-text"><string>item.ore</string></entry>			
+			<entry name="pickup-snd"><string>sound/misc.xml:take_key</string></entry>
+			<entry name="pickup-particle"><string>effects/particles.xml:none</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite scale="16">
+		<texture>items/items.png</texture>
+		<origin>8 12</origin>
+		<frame time="200">96 128 16 16</frame>		
+		<glow scale="16">
+			<texture>items/items.png</texture>
+				<frame time="200">144 128 16 16</frame>
+		</glow>				
+	</sprite>
+
+	<collision shoot-through="true">
+		<circle offset="0 0" radius="4" />
+	</collision>	
+	
+	<light>
+		<origin>0 -1</origin>
+		<mul>
+			<range>24</range>
+			<color1>50 50 50</color1>
+			<color2>25 25 25</color2>
+			<color3>5 5 5</color3>
+		</mul>
+		<add>
+			<range>0</range>
+			<color1>50 25 0</color1>
+			<color2>0 0 0</color2>
+			<color3>0 0 0</color3>
+		</add>
+	</light>		
+	
+</item>

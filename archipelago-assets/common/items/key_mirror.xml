@@ -1,0 +1,51 @@
+<item behavior="key" minimap="menus/minimap.xml:key_mirror">
+	<behavior>
+		<dictionary>
+			<entry name="type"><int>8</int></entry>
+			<entry name="pickup-text"><string>item.mirror</string></entry>			
+			<entry name="pickup-snd"><string>sound/misc.xml:take_key</string></entry>
+			<entry name="pickup-particle"><string>effects/particles.xml:none</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite random-start="true" scale="16">
+		<texture>items/items.png</texture>
+		<origin>8 8</origin>
+		<frame time="1500">96 176 16 16</frame>	
+		<frame time="100">112 176 16 16</frame>	
+		<frame time="100">128 176 16 16</frame>	
+		<frame time="100">144 176 16 16</frame>
+		<frame time="100">160 176 16 16</frame>		
+		<glow scale="16">
+			<texture>items/items.png</texture>
+				<frame time="1500">176 176 16 16</frame>	
+				<frame time="100">192 176 16 16</frame>	
+				<frame time="100">208 176 16 16</frame>	
+				<frame time="100">224 176 16 16</frame>
+				<frame time="100">240 176 16 16</frame>	
+		</glow>			
+	</sprite>
+
+	
+	<collision shoot-through="true">
+		<circle offset="0 0" radius="7" />
+	</collision>	
+	
+	<light>
+		<origin>0 1</origin>
+		<mul>
+			<range>64</range>
+			<color1>50 50 50</color1>
+			<color2>25 25 25</color2>
+			<color3>12 12 12</color3>
+		</mul>
+		<add>
+			<range>0</range>
+			<color1>50 25 0</color1>
+			<color2>0 0 0</color2>
+			<color3>0 0 0</color3>
+		</add>
+	</light>		
+	
+	
+</item>

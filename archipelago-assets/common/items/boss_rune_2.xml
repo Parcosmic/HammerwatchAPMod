@@ -1,0 +1,34 @@
+<item behavior="archipelago" minimap="menus/minimap-ap.xml:boss_rune_2">
+	<behavior>
+		<dictionary>
+			<entry name="pickup-text"><string>Boss Rune!</string></entry>
+			<entry name="pickup-snd"><string>sound/misc.xml:info_seqcomplete</string></entry>
+			<entry name="pickup-particle"><string>effects/particles.xml:none</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite random-start="true" scale="16">
+		<texture>items/boss_rune.png</texture>
+    		<origin>8 13</origin>
+    		<frame time="200">0 16 16 16</frame>
+    		<frame time="200">16 16 16 16</frame>
+    		<frame time="200">32 16 16 16</frame>
+    		<frame time="200">16 16 16 16</frame>
+    		<glow scale="16">
+		<texture>items/boss_rune.png</texture>
+		<frame time="200">48 16 16 16</frame>
+		<frame time="200">64 16 16 16</frame>
+		<frame time="200">80 16 16 16</frame>
+		<frame time="200">64 16 16 16</frame>
+    </glow>									
+	</sprite>
+
+	<collision shoot-through="true">
+		<polygon>
+			<point>-5 3</point>
+			<point>-5 -7</point>
+			<point>5 -7</point>
+			<point>5 3</point>
+		</polygon>
+	</collision>
+</item>

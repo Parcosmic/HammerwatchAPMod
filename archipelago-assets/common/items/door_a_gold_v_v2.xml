@@ -1,0 +1,28 @@
+<item behavior="door" minimap="menus/minimap.xml:door_gold_v_v2">
+	<behavior>
+		<dictionary>
+			<entry name="type"><int>2</int></entry>
+			<entry name="open-snd"><string>sound/misc.xml:open_gate</string></entry>
+			<entry name="no-key-snd"><string>sound/misc.xml:info_nokey</string></entry>
+		</dictionary>
+	</behavior>
+	<sprite scale="16">
+		<texture>items/doors.png</texture>
+		<origin>6 16</origin>
+		<frame>72 24 12 16</frame>
+	</sprite>
+	<collision static="true">
+		<polygon>
+			<point>-8 -16</point>
+			<point>-8 8</point>
+			<point>8 -16</point>
+			<point>8 8</point>
+		</polygon>
+	</collision>
+	<polygon shadow="true">
+		<point>-2 -8</point>
+		<point>2 -8</point>
+		<point>2 32</point>
+		<point>-2 32</point>
+	</polygon>			
+</item>

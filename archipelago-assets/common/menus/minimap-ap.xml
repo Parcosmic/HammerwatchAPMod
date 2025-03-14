@@ -1,0 +1,42 @@
+<spritebank>
+<sprite name="apitem_progression" scale="8">
+		<texture>menus/apitem_map_icons.png</texture>
+		<origin>2 2</origin>
+		<frame>0 0 12 12</frame>
+	</sprite>
+<sprite name="apitem" scale="8">
+		<texture>menus/apitem_map_icons.png</texture>
+		<origin>2 2</origin>
+		<frame>12 0 12 12</frame>
+	</sprite>
+<sprite name="apitem_filler" scale="8">
+		<texture>menus/apitem_map_icons.png</texture>
+		<origin>2 2</origin>
+		<frame>24 0 12 12</frame>
+	</sprite>
+<sprite name="button_effect" scale="8">
+		<texture>menus/apitem_map_icons.png</texture>
+		<origin>2 2</origin>
+		<frame>36 0 12 12</frame>
+	</sprite>
+<sprite name="boss_rune_1" scale="8">
+		<texture>menus/apitem_map_icons.png</texture>
+		<origin>2 2</origin>
+		<frame>0 12 12 12</frame>
+	</sprite>
+<sprite name="boss_rune_2" scale="8">
+		<texture>menus/apitem_map_icons.png</texture>
+		<origin>2 2</origin>
+		<frame>12 12 12 12</frame>
+	</sprite>
+<sprite name="boss_rune_3" scale="8">
+		<texture>menus/apitem_map_icons.png</texture>
+		<origin>2 2</origin>
+		<frame>24 12 12 12</frame>
+	</sprite>
+<sprite name="shop_upgrade" scale="8">
+		<texture>menus/apitem_map_icons.png</texture>
+		<origin>2 2</origin>
+		<frame>48 0 12 12</frame>
+	</sprite>
+</spritebank>

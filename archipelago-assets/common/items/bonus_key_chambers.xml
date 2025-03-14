@@ -1,0 +1,25 @@
+<item behavior="key" minimap="menus/minimap.xml:bonus_key">
+	<behavior>
+		<dictionary>
+			<entry name="pickup-text"><string>Chambers Bonus Key!</string></entry>
+			<entry name="type"><int>10</int></entry>
+			<entry name="pickup-snd"><string>sound/bonus.xml:bonus_key</string></entry>
+			<entry name="pickup-particle"><string>effects/particles.xml:none</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite scale="16">
+		<texture>items/items.png</texture>
+		<origin>8 8</origin>
+		<frame time="200">0 400 16 16</frame>
+	</sprite>
+	
+	<collision shoot-through="true">
+		<polygon>
+			<point>-6 6</point>
+			<point>-6 -6</point>
+			<point>6 -6</point>
+			<point>6 6</point>
+		</polygon>
+	</collision>
+</item>

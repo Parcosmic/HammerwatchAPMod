@@ -1,0 +1,26 @@
+<item behavior="archipelago" minimap="menus/minimap.xml:shop_upgrade">
+	<behavior>
+		<dictionary>
+			<entry name="pickup-snd"><string>sound/misc.xml:take_upgrade</string></entry>
+			<entry name="pickup-particle"><string>effects/particles.xml:none</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite random-start="true" scale="16">
+		<texture>items/shop_items.png</texture>
+		<origin>8 13</origin>
+		<frame time="200">0 64 16 16</frame>
+		<frame time="200">16 64 16 16</frame>
+		<frame time="200">32 64 16 16</frame>
+		<frame time="200">16 64 16 16</frame>
+	</sprite>
+	
+	<collision shoot-through="true">
+		<polygon>
+			<point>-6 6</point>
+			<point>-6 -6</point>
+			<point>6 -6</point>
+			<point>6 6</point>
+		</polygon>
+	</collision>
+</item>

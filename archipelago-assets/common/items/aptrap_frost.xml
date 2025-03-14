@@ -1,0 +1,35 @@
+<item behavior="bomb">
+	<behavior>
+		<dictionary>
+			<entry name="no-lamp"><bool>true</bool></entry>
+			<entry name="dmg"><int>1</int></entry>
+			<entry name="splash"><float>10.0</float></entry>
+			<entry name="buff"><string>buffs/frost.xml</string></entry>
+			<entry name="explode-delay"><int>1000</int></entry>
+			<entry name="explode-snd"><string>sound/misc.xml:info_ice</string></entry>
+			<entry name="explode-particle"><string>effects/particles.xml:ice-particle</string></entry>
+		</dictionary>
+	</behavior>
+
+  <sprite scale="16">
+    <texture>items/bomb_lich_desert_1.png</texture>
+    <origin>16 16</origin>
+    <frame time="100">0 0 32 32</frame>
+    <frame time="100">32 0 32 32</frame>
+    <frame time="100">64 0 32 32</frame>
+    <frame time="100">96 0 32 32</frame>
+    <frame time="100">0 0 32 32</frame>
+    <frame time="100">32 0 32 32</frame>
+    <frame time="100">64 0 32 32</frame>
+    <frame time="100">96 0 32 32</frame>
+    <glow scale="16">
+	<texture>items/bomb_lich_desert_1.png</texture>
+	<origin>16 19</origin>
+	<frame time="100">0 32 32 32</frame>
+	<frame time="100">32 32 32 32</frame>
+    </glow>
+  </sprite>
+
+  <collision shoot-through="true">
+  </collision>
+</item>

@@ -1,0 +1,51 @@
+<item behavior="key" minimap="menus/minimap.xml:key_teleport">
+	<behavior>
+		<dictionary>
+			<entry name="type"><int>7</int></entry>
+			<entry name="pickup-text"><string>item.keyrune</string></entry>			
+			<entry name="pickup-snd"><string>sound/misc.xml:take_key</string></entry>
+			<entry name="pickup-particle"><string>effects/particles.xml:none</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite scale="16">
+		<texture>items/items.png</texture>
+		<origin>8 13</origin>
+		<frame time="200">96 112 16 16</frame>
+		<frame time="200">112 112 16 16</frame>
+		<frame time="200">128 112 16 16</frame>
+		<frame time="200">112 112 16 16</frame>		
+		<glow scale="16">
+			<texture>items/items.png</texture>
+				<frame time="200">144 112 16 16</frame>
+				<frame time="200">160 112 16 16</frame>
+				<frame time="200">176 112 16 16</frame>
+				<frame time="200">160 112 16 16</frame>	
+		</glow>			
+	</sprite>
+
+	<light>
+		<origin>0 -5</origin>
+		<mul>
+			<range>32</range>
+			<color1>0 150 200</color1>
+			<color2>0 75 100</color2>
+			<color3>0 15 10</color3>
+		</mul>
+		<add>
+			<range>64</range>
+			<color1>0 25 50</color1>
+			<color2>0 0 0</color2>
+			<color3>0 0 0</color3>
+		</add>
+	</light>		
+
+	<collision shoot-through="true">
+		<polygon>
+			<point>-4 3</point>
+			<point>-4 -7</point>
+			<point>4 -7</point>
+			<point>4 3</point>
+		</polygon>
+	</collision>
+</item>

@@ -1,0 +1,25 @@
+<item behavior="archipelago" minimap="menus/minimap-ap.xml:apitem_progression">
+  <behavior>
+    <dictionary>
+      <entry name="layer">
+        <int>10</int>
+      </entry>
+      <entry name="pickup-text">
+	<string>AP Item!</string>
+      </entry>
+      <entry name="pickup-snd">
+        <string>sound/misc.xml:take_letter</string>
+      </entry>
+      <entry name="pickup-particle">
+        <string>effects/particles.xml:none</string>
+      </entry>
+    </dictionary>
+  </behavior>
+  <sprite scale="16">
+    <texture>items/apholo.png</texture>
+    <origin>8 8</origin>
+    <frame time="200">32 0 16 16</frame>
+  </sprite>
+  <collision shoot-through="true">
+    <circle offset="0 0" radius="5"/>
+  </collision></item>

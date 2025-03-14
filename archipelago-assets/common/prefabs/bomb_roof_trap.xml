@@ -1,0 +1,815 @@
+﻿<prefab>
+<dictionary>
+	<dictionary name="tilemap">
+		<array name="tiledata"></array>
+	</dictionary>
+	<dictionary name="doodads">
+		<array name="doodads"></array>
+	</dictionary>
+	<dictionary name="actors">
+	</dictionary>
+	<dictionary name="items">
+	</dictionary>
+	<dictionary name="scripting">
+		<array name="nodes">
+			<dictionary>
+				<int name="id">137192</int>
+				<string name="type">TimerTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">0 -12</vec2>
+				<int name="parameters">1</int>				
+				<int-arr name="connections">137130</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137117</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.875 -5.625</vec2>
+				<int-arr name="connections">137132 137133 137134 137135 137136 137137</int-arr>
+				<int-arr name="connection-delays">0 200 600 400 800 1000</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137144</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">3.375 0.625</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137145</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">3.375 0.625</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137146</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">3.375 0.625</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137128</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">3.375 0.625</vec2>
+				<int-arr name="connections">137144 137146 137145</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137168</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -0.75</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137169</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -0.75</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137170</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -0.75</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137132</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -0.75</vec2>
+				<int-arr name="connections">137168 137170 137169</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137171</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.875 2.75</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137172</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.875 2.75</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137173</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.875 2.75</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137122</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.875 2.75</vec2>
+				<int-arr name="connections">137171 137173 137172</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137177</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -2.25</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137178</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -2.25</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137179</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -2.25</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137134</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -2.25</vec2>
+				<int-arr name="connections">137177 137179 137178</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137141</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.375 1.375</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137142</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.375 1.375</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137143</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.375 1.375</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137118</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.375 1.375</vec2>
+				<int-arr name="connections">137141 137143 137142</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137150</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">1 -1</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137151</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">1 -1</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137152</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">1 -1</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137126</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">1 -1</vec2>
+				<int-arr name="connections">137150 137152 137151</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137156</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0.625 2.75</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137157</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0.625 2.75</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137158</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0.625 2.75</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137119</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0.625 2.75</vec2>
+				<int-arr name="connections">137156 137158 137157</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137159</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">1 0.625</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137160</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">1 0.625</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137161</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">1 0.625</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137120</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">1 0.625</vec2>
+				<int-arr name="connections">137159 137161 137160</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137116</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.125 -5.625</vec2>
+				<int-arr name="connections">137124 137125 137126 137127 137128 137129</int-arr>
+				<int-arr name="connection-delays">0 200 600 400 800 1000</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137147</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.5 -1</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137148</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.5 -1</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137149</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.5 -1</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137127</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.5 -1</vec2>
+				<int-arr name="connections">137147 137149 137148</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137162</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -0.125</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137163</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -0.125</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137164</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -0.125</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137121</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -0.125</vec2>
+				<int-arr name="connections">137162 137164 137163</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137180</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 1.5</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137181</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 1.5</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137182</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 1.5</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137135</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 1.5</vec2>
+				<int-arr name="connections">137180 137182 137181</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137186</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -2.25</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137187</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -2.25</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137188</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -2.25</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137133</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -2.25</vec2>
+				<int-arr name="connections">137186 137188 137187</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137138</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.75 2.5</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137139</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.75 2.5</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137140</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.75 2.5</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137125</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-0.75 2.5</vec2>
+				<int-arr name="connections">137138 137140 137139</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137165</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-1.375 0.75</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137166</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-1.375 0.75</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137167</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-1.375 0.75</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137137</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-1.375 0.75</vec2>
+				<int-arr name="connections">137165 137167 137166</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137153</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.125 -0.375</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137154</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.125 -0.375</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137155</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.125 -0.375</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137136</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.125 -0.375</vec2>
+				<int-arr name="connections">137153 137155 137154</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137174</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.125 -1.875</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137175</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.125 -1.875</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137176</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.125 -1.875</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137123</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.125 -1.875</vec2>
+				<int-arr name="connections">137174 137176 137175</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137189</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.5 3</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137190</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.5 3</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137191</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.5 3</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137129</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.5 3</vec2>
+				<int-arr name="connections">137189 137191 137190</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137115</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.625 -5.625</vec2>
+				<int-arr name="connections">137118 137119 137120 137121 137122 137123</int-arr>
+				<int-arr name="connection-delays">0 200 600 400 800 1000</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137183</int>
+				<string name="type">PlayEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.875 1.25</vec2>
+				<dictionary name="parameters">
+					<string name="effect">doodads/generic/trap_bomb_falling.xml:activate</string>
+					<int name="layer">20</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137184</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.875 1.25</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:trap_bomb_ground</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137185</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.875 1.25</vec2>
+				<string name="parameters">items/bomb_roof.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137124</int>
+				<string name="type">ScriptLink</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2.875 1.25</vec2>
+				<int-arr name="connections">137183 137185 137184</int-arr>
+				<int-arr name="connection-delays">0 400 400</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137130</int>
+				<string name="type">Random</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -9</vec2>
+				<dictionary name="parameters">
+					<dictionary name="nodes">
+						<int-arr name="static">137115 137116 137117</int-arr>
+					</dictionary>
+					<bool name="run-one">True</bool>
+				</dictionary>
+			</dictionary>
+		</array>
+	</dictionary>
+	<dictionary name="lighting">
+		<array name="lights"></array>
+		<int-arr name="shadow-color">135 128 128 255</int-arr>
+		<int-arr name="ambient-color">50 50 50 255</int-arr>
+		<int-arr name="add-color">0 0 0 255</int-arr>
+		<float name="shadow-length">1</float>
+	</dictionary>
+	<dictionary name="prefabs">
+	</dictionary>
+</dictionary>
+</prefab>

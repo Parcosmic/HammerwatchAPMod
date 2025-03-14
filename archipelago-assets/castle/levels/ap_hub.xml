@@ -1,0 +1,1814 @@
+﻿<dictionary>
+	<dictionary name="tilemap">
+		<array name="tiledata">
+			<dictionary>
+				<int name="x">0</int>
+				<int name="y">-100</int>
+				<array name="datasets">
+					<dictionary>
+						<string name="tileset">tilemaps/d_carpet.xml</string>
+						<int-arr name="data-t">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6 5 5 6 3 4 4 6 0 0 0 0 0 0 0 0 0 0 0 0 3 4 5 1 2 6 3 3 0 0 0 0 0 0 0 0 0 0 0 0 5 4 2 2 1 6 3 5 0 0 0 0 0 0 0 0 0 0 0 0 5 5 2 3 2 6 1 6 0 0 0 0 0 0 0 0 0 0 0 0 2 6 6 1 5 4 6 3 0 0 0 0 0 0 0 0 0 0 0 0 1 3 6 4 3 4 1 1 0 0 0 0 0 0 0 0 0 0 0 0 4 2 4 4 5 2 6 5 0 0 0 0 0 0 0 0 0 0 0 0 6 3 4 4 5 4 6 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+						<int-arr name="data-a">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+					</dictionary>
+					<dictionary>
+						<string name="tileset">tilemaps/d_carpet_border_dn.xml</string>
+						<int-arr name="data-t">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+						<int-arr name="data-a">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+					</dictionary>
+					<dictionary>
+						<string name="tileset">tilemaps/d_carpet_border_l.xml</string>
+						<int-arr name="data-t">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+						<int-arr name="data-a">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+					</dictionary>
+					<dictionary>
+						<string name="tileset">tilemaps/d_carpet_border_r.xml</string>
+						<int-arr name="data-t">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+						<int-arr name="data-a">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+					</dictionary>
+					<dictionary>
+						<string name="tileset">tilemaps/d_carpet_border_up.xml</string>
+						<int-arr name="data-t">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+						<int-arr name="data-a">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+					</dictionary>
+					<dictionary>
+						<string name="tileset">tilemaps/g_default.xml</string>
+						<int-arr name="data-t">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 1 1 1 2 1 2 1 2 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 2 2 1 1 1 2 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+						<int-arr name="data-a">0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 255 0 0 0 0 0 0 0 0 0 0 255 255 255 255 255 255 255 255 255 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</int-arr>
+					</dictionary>
+				</array>
+			</dictionary>
+		</array>
+	</dictionary>
+	<dictionary name="doodads">
+		<array name="doodads">
+			<dictionary>
+				<int name="id">137033</int>
+				<string name="type">doodads/theme_g/g_ledge_up.xml</string>
+				<vec2 name="pos">-2.5 -98</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137034</int>
+				<string name="type">doodads/theme_g/g_ledge_up.xml</string>
+				<vec2 name="pos">-4.5 -98</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137036</int>
+				<string name="type">doodads/theme_g/g_ledge_up_v3.xml</string>
+				<vec2 name="pos">-5.5 -98</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137037</int>
+				<string name="type">doodads/theme_g/g_ledge_up.xml</string>
+				<vec2 name="pos">-0.5 -98</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137038</int>
+				<string name="type">doodads/theme_g/g_ledge_up.xml</string>
+				<vec2 name="pos">1.5 -98</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137039</int>
+				<string name="type">doodads/theme_g/g_ledge_up.xml</string>
+				<vec2 name="pos">3.5 -98</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137040</int>
+				<string name="type">doodads/theme_g/g_ledge_r.xml</string>
+				<vec2 name="pos">-5.5 -98</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137041</int>
+				<string name="type">doodads/theme_g/g_ledge_r.xml</string>
+				<vec2 name="pos">-5.5 -100</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137042</int>
+				<string name="type">doodads/theme_g/g_ledge_r.xml</string>
+				<vec2 name="pos">-5.5 -102</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137043</int>
+				<string name="type">doodads/theme_g/g_ledge_r.xml</string>
+				<vec2 name="pos">-5.5 -104</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137044</int>
+				<string name="type">doodads/theme_g/g_ledge_r.xml</string>
+				<vec2 name="pos">-5.5 -106</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137045</int>
+				<string name="type">doodads/theme_g/g_ledge_l.xml</string>
+				<vec2 name="pos">5 -98</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137046</int>
+				<string name="type">doodads/theme_g/g_ledge_l.xml</string>
+				<vec2 name="pos">5 -100</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137047</int>
+				<string name="type">doodads/theme_g/g_ledge_l.xml</string>
+				<vec2 name="pos">5 -102</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137048</int>
+				<string name="type">doodads/theme_g/g_ledge_l.xml</string>
+				<vec2 name="pos">5 -104</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137049</int>
+				<string name="type">doodads/theme_g/g_ledge_l.xml</string>
+				<vec2 name="pos">5 -106</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137050</int>
+				<string name="type">doodads/theme_g/g_ledge_dn.xml</string>
+				<vec2 name="pos">-5.5 -108.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137051</int>
+				<string name="type">doodads/theme_g/g_ledge_dn.xml</string>
+				<vec2 name="pos">-3.5 -108.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137052</int>
+				<string name="type">doodads/theme_g/g_ledge_dn.xml</string>
+				<vec2 name="pos">-1.5 -108.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137053</int>
+				<string name="type">doodads/theme_g/g_ledge_dn.xml</string>
+				<vec2 name="pos">0.5 -108.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137054</int>
+				<string name="type">doodads/theme_g/g_ledge_dn.xml</string>
+				<vec2 name="pos">2.5 -108.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137055</int>
+				<string name="type">doodads/theme_g/g_ledge_dn_v2.xml</string>
+				<vec2 name="pos">4.5 -108.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137062</int>
+				<string name="type">doodads/generic/exit_teleport_exit.xml</string>
+				<vec2 name="pos">-3.5 -98.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137074</int>
+				<string name="type">doodads/generic/exit_teleport.xml</string>
+				<vec2 name="pos">3.75 -107.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137075</int>
+				<string name="type">doodads/generic/exit_teleport_stand.xml</string>
+				<vec2 name="pos">3.75 -107.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137076</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 -103</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137103</int>
+				<string name="type">doodads/theme_bonus1/bonus1_h_8.xml</string>
+				<vec2 name="pos">-0.5 -103.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137122</int>
+				<string name="type">doodads/generic/deco_crystal_small.xml</string>
+				<vec2 name="pos">0 -103</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105677</int>
+				<string name="type">doodads/theme_f/f_special_cliff_v1.xml</string>
+				<vec2 name="pos">5 3.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105680</int>
+				<string name="type">doodads/theme_f/f_special_cliff_v1.xml</string>
+				<vec2 name="pos">5 -3.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105700</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">5 -1</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105701</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">5 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105702</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">5 1</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105718</int>
+				<string name="type">doodads/generic/exit_teleport.xml</string>
+				<vec2 name="pos">5 3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105721</int>
+				<string name="type">doodads/generic/exit_teleport_stand.xml</string>
+				<vec2 name="pos">5 3.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105710</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">4 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">52</int>
+				<string name="type">doodads/generic/deco_signpost.xml</string>
+				<vec2 name="pos">4 4</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">54</int>
+				<string name="type">doodads/generic/deco_signpost.xml</string>
+				<vec2 name="pos">4 -3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105709</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">3 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105708</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">2 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105707</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">1 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105719</int>
+				<string name="type">doodads/generic/exit_teleport_exit.xml</string>
+				<vec2 name="pos">0.5 7</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105675</int>
+				<string name="type">doodads/theme_f/f_special_cliff_v1.xml</string>
+				<vec2 name="pos">0 6.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105685</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 4</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105688</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 3</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105689</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 -3</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105690</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 -2</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105691</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 -1</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105692</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105693</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 1</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105694</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 2</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105706</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">-1 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105705</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">-2 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105704</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">-3 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105703</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">-4 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105676</int>
+				<string name="type">doodads/theme_f/f_special_cliff_v1.xml</string>
+				<vec2 name="pos">-5 3.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105678</int>
+				<string name="type">doodads/theme_f/f_special_cliff_v1.xml</string>
+				<vec2 name="pos">-5 -3.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105686</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">-5 0</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105687</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">-5 1</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105699</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">-5 -1</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105717</int>
+				<string name="type">doodads/generic/exit_teleport.xml</string>
+				<vec2 name="pos">-5 3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105722</int>
+				<string name="type">doodads/generic/exit_teleport_stand.xml</string>
+				<vec2 name="pos">-5 3.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">53</int>
+				<string name="type">doodads/generic/deco_signpost.xml</string>
+				<vec2 name="pos">-6 -3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105715</int>
+				<string name="type">doodads/generic/exit_teleport.xml</string>
+				<vec2 name="pos">5 -4</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105720</int>
+				<string name="type">doodads/generic/exit_teleport_stand.xml</string>
+				<vec2 name="pos">5 -4</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105711</int>
+				<string name="type">doodads/generic/ground_glasswalk.xml</string>
+				<vec2 name="pos">0 -4</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105716</int>
+				<string name="type">doodads/generic/exit_teleport.xml</string>
+				<vec2 name="pos">-5 -4</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105723</int>
+				<string name="type">doodads/generic/exit_teleport_stand.xml</string>
+				<vec2 name="pos">-5 -4</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">105679</int>
+				<string name="type">doodads/theme_f/f_special_cliff_v1.xml</string>
+				<vec2 name="pos">0 -6.5</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136882</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_dn.xml</string>
+				<vec2 name="pos">-2.25 -4.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136883</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_dn.xml</string>
+				<vec2 name="pos">0.25 -4.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136884</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_up.xml</string>
+				<vec2 name="pos">0.25 -6.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136885</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_up.xml</string>
+				<vec2 name="pos">-2.25 -6.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136886</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_dn.xml</string>
+				<vec2 name="pos">-7.25 -1.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136887</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_dn.xml</string>
+				<vec2 name="pos">-4.75 -1.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136888</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_up.xml</string>
+				<vec2 name="pos">-4.75 -3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136890</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_dn.xml</string>
+				<vec2 name="pos">-7.25 5.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136891</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_dn.xml</string>
+				<vec2 name="pos">-4.75 5.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136892</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_up.xml</string>
+				<vec2 name="pos">-4.75 3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136893</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_up.xml</string>
+				<vec2 name="pos">-7.25 3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136894</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_dn.xml</string>
+				<vec2 name="pos">-2.25 8.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136895</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_dn.xml</string>
+				<vec2 name="pos">0.25 8.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136896</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_up.xml</string>
+				<vec2 name="pos">0.25 6.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136897</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_up.xml</string>
+				<vec2 name="pos">-2.25 6.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136898</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_dn.xml</string>
+				<vec2 name="pos">2.75 -1.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136899</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_dn.xml</string>
+				<vec2 name="pos">5.25 -1.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136900</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_up.xml</string>
+				<vec2 name="pos">5.25 -3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136901</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_up.xml</string>
+				<vec2 name="pos">2.75 -3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136902</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_dn.xml</string>
+				<vec2 name="pos">2.75 5.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136903</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_dn.xml</string>
+				<vec2 name="pos">5.25 5.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136904</int>
+				<string name="type">doodads/theme_f/f_collision_round_r_up.xml</string>
+				<vec2 name="pos">5.25 3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136905</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_up.xml</string>
+				<vec2 name="pos">2.75 3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136906</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">6.75 -2.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136907</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">6.75 4.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136908</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">1.75 -5.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136909</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">-3.25 -2.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136910</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">-3.25 4.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136911</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">1.75 7.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136912</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">0.5 -2.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136913</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">0.5 -0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136914</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">5.5 0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136915</int>
+				<string name="type">doodads/theme_b/b_ledge_l_v2.xml</string>
+				<vec2 name="pos">5.5 1.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136916</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">0.5 2.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136917</int>
+				<string name="type">doodads/theme_b/b_ledge_l.xml</string>
+				<vec2 name="pos">0.5 4.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136918</int>
+				<string name="type">doodads/theme_b/b_ledge_l_v2.xml</string>
+				<vec2 name="pos">-4.5 -0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136919</int>
+				<string name="type">doodads/theme_b/b_ledge_l_v2.xml</string>
+				<vec2 name="pos">-4.5 1.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136921</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-6 0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136922</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-1 -2.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136923</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-1 -0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136924</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-2.25 -5.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136925</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-7.25 -2.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136926</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-7.25 4.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136927</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-2.25 7.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136928</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">2.75 4.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136929</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">2.75 -2.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136930</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-1 2.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136931</int>
+				<string name="type">doodads/theme_b/b_ledge_r.xml</string>
+				<vec2 name="pos">-1 4.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136932</int>
+				<string name="type">doodads/theme_b/b_ledge_r_v2.xml</string>
+				<vec2 name="pos">-6 1.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136933</int>
+				<string name="type">doodads/theme_b/b_ledge_r_v2.xml</string>
+				<vec2 name="pos">4 -0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136934</int>
+				<string name="type">doodads/theme_b/b_ledge_r_v2.xml</string>
+				<vec2 name="pos">4 1.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136935</int>
+				<string name="type">doodads/theme_b/b_ledge_up.xml</string>
+				<vec2 name="pos">4 5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136936</int>
+				<string name="type">doodads/theme_b/b_ledge_up.xml</string>
+				<vec2 name="pos">-1 8</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136937</int>
+				<string name="type">doodads/theme_b/b_ledge_up.xml</string>
+				<vec2 name="pos">-6 5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136938</int>
+				<string name="type">doodads/theme_b/b_ledge_up.xml</string>
+				<vec2 name="pos">-4.5 0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136939</int>
+				<string name="type">doodads/theme_b/b_ledge_up.xml</string>
+				<vec2 name="pos">-2.5 0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136940</int>
+				<string name="type">doodads/theme_b/b_ledge_up.xml</string>
+				<vec2 name="pos">0.5 0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136943</int>
+				<string name="type">doodads/theme_b/b_ledge_up_v2.xml</string>
+				<vec2 name="pos">2.5 0.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136944</int>
+				<string name="type">doodads/theme_b/b_ledge_dn.xml</string>
+				<vec2 name="pos">0.5 -1</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136945</int>
+				<string name="type">doodads/theme_b/b_ledge_dn.xml</string>
+				<vec2 name="pos">2.5 -1</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136946</int>
+				<string name="type">doodads/theme_b/b_ledge_dn.xml</string>
+				<vec2 name="pos">-4.5 -1</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136947</int>
+				<string name="type">doodads/theme_b/b_ledge_dn.xml</string>
+				<vec2 name="pos">-2.5 -1</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136948</int>
+				<string name="type">doodads/theme_b/b_ledge_dn.xml</string>
+				<vec2 name="pos">-6 -5.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136949</int>
+				<string name="type">doodads/theme_b/b_ledge_dn.xml</string>
+				<vec2 name="pos">-1 -8.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136950</int>
+				<string name="type">doodads/theme_b/b_ledge_dn.xml</string>
+				<vec2 name="pos">4 -5.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137064</int>
+				<string name="type">doodads/generic/exit_teleport.xml</string>
+				<vec2 name="pos">0 -7</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137065</int>
+				<string name="type">doodads/generic/exit_teleport_stand.xml</string>
+				<vec2 name="pos">0 -7</vec2>
+				<bool name="need-sync">False</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">137066</int>
+				<string name="type">doodads/generic/deco_signpost.xml</string>
+				<vec2 name="pos">-1 -6.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">136889</int>
+				<string name="type">doodads/theme_f/f_collision_round_l_up.xml</string>
+				<vec2 name="pos">-7.25 -3.5</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+			<dictionary>
+				<int name="id">51</int>
+				<string name="type">doodads/generic/deco_signpost.xml</string>
+				<vec2 name="pos">-6 4</vec2>
+				<bool name="need-sync">True</bool>
+			</dictionary>
+		</array>
+	</dictionary>
+	<dictionary name="actors">
+	</dictionary>
+	<dictionary name="items">
+	</dictionary>
+	<dictionary name="scripting">
+		<array name="nodes">
+			<dictionary>
+				<int name="id">137081</int>
+				<string name="type">LevelStart</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-4 -99</vec2>
+				<dictionary name="parameters">
+					<int name="id">1</int>
+					<int name="dir">6</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137083</int>
+				<string name="type">PlayAttachedEffect</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0.0375 -102.95</vec2>
+				<dictionary name="parameters">
+					<string name="effect">actors/tick_ap.xml:south</string>
+					<int name="layer">-100</int>
+					<bool name="looping">True</bool>
+					<dictionary name="objects">
+						<int-arr name="static">137122</int-arr>
+					</dictionary>
+					<float name="y-offset">0</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137084</int>
+				<string name="type">ChangeDoodadLayer</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">2.5 -101</vec2>
+				<dictionary name="parameters">
+					<int name="layer">5</int>
+					<dictionary name="objects">
+						<int-arr name="static">137076</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137087</int>
+				<string name="type">ShowSpeechBubble</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -99</vec2>
+				<dictionary name="parameters">
+					<string name="style">menus/speech/help_speech.xml</string>
+					<string name="text">Break glass in case of BK!</string>
+					<dictionary name="objects">
+						<int-arr name="static">137122</int-arr>
+					</dictionary>
+					<float name="x-offset">0</float>
+					<float name="y-offset">-1</float>
+					<int name="width">200</int>
+					<int name="layer">5</int>
+					<int name="time">-1</int>
+					<dictionary name="execute">
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137089</int>
+				<string name="type">RectangleShape</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">3.75 -107.5</vec2>
+				<dictionary name="parameters">
+					<float name="w">1</float>
+					<float name="h">1</float>
+					<int name="types">15</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137090</int>
+				<string name="type">LevelExitArea</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">3.75 -110</vec2>
+				<dictionary name="parameters">
+					<string name="level">ap_hub</string>
+					<int name="start id">0</int>
+					<dictionary name="shape">
+						<int-arr name="static">137089</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137092</int>
+				<string name="type">TimerTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-2 -101</vec2>
+				<int name="parameters">1000</int>
+				<int-arr name="connections">137083</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137093</int>
+				<string name="type">ObjectEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">2.5 -105</vec2>
+				<dictionary name="parameters">
+					<string name="event">Hit</string>
+					<dictionary name="object">
+						<int-arr name="static">137103</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">137094 137095 137106 137115</int-arr>
+				<int-arr name="connection-delays">0 0 0 0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137094</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2.5 -103</vec2>
+				<dictionary name="parameters">
+					<int name="state">1</int>
+					<dictionary name="element">
+						<int-arr name="static">137083 137092 137087</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">137087 137083</int-arr>
+				<int-arr name="connection-delays">0 0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">137095</int>
+				<string name="type">SpawnObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">0 -103</vec2>
+				<string name="parameters">actors/tick_ap.xml</string>
+			</dictionary>
+			<dictionary>
+				<int name="id">137106</int>
+				<string name="type">DestroyObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -106</vec2>
+				<dictionary name="parameters">
+					<int-arr name="static">137103 137076 137122</int-arr>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137115</int>
+				<string name="type">PlaySound</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -103</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/misc.xml:destroy_vase</string>
+					<bool name="loop">False</bool>
+					<bool name="play3d">True</bool>
+					<float name="range3d">5</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137104</int>
+				<string name="type">HideObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">12 -103</vec2>
+				<dictionary name="parameters">
+					<int name="state">1</int>
+					<dictionary name="element">
+						<int-arr name="static">137103 137122</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">137084</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">57</int>
+				<string name="type">RectangleShape</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">5 3.5</vec2>
+				<dictionary name="parameters">
+					<float name="w">1</float>
+					<float name="h">1</float>
+					<int name="types">15</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">62</int>
+				<string name="type">LevelExitArea</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">5 1</vec2>
+				<dictionary name="parameters">
+					<string name="level">4</string>
+					<int name="start id">0</int>
+					<dictionary name="shape">
+						<int-arr name="static">57</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">66</int>
+				<string name="type">ObjectEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2 6</vec2>
+				<dictionary name="parameters">
+					<string name="event">Hit</string>
+					<dictionary name="object">
+						<int-arr name="static">52</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">73</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">73</int>
+				<string name="type">ShowSpeechBubble</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2 4</vec2>
+				<dictionary name="parameters">
+					<string name="style">menus/speech/sign_wood_speech.xml</string>
+					<string name="text">Portal to Armory Floors</string>
+					<dictionary name="objects">
+						<int-arr name="static">52</int-arr>
+					</dictionary>
+					<float name="x-offset">0.15</float>
+					<float name="y-offset">-1.15</float>
+					<int name="width">100</int>
+					<int name="layer">0</int>
+					<int name="time">0</int>
+					<dictionary name="execute">
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">68</int>
+				<string name="type">ObjectEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2 -2.5</vec2>
+				<dictionary name="parameters">
+					<string name="event">Hit</string>
+					<dictionary name="object">
+						<int-arr name="static">54</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">75</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">75</int>
+				<string name="type">ShowSpeechBubble</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">2 -4.5</vec2>
+				<dictionary name="parameters">
+					<string name="style">menus/speech/sign_wood_speech.xml</string>
+					<string name="text">Portal to Chambers Floors</string>
+					<dictionary name="objects">
+						<int-arr name="static">54</int-arr>
+					</dictionary>
+					<float name="x-offset">0.15</float>
+					<float name="y-offset">-1.15</float>
+					<int name="width">100</int>
+					<int name="layer">0</int>
+					<int name="time">0</int>
+					<dictionary name="execute">
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">35</int>
+				<string name="type">LevelStart</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 6.5</vec2>
+				<dictionary name="parameters">
+					<int name="id">0</int>
+					<int name="dir">6</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">56</int>
+				<string name="type">RectangleShape</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-5 3.5</vec2>
+				<dictionary name="parameters">
+					<float name="w">1</float>
+					<float name="h">1</float>
+					<int name="types">15</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">61</int>
+				<string name="type">LevelExitArea</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-5 1</vec2>
+				<dictionary name="parameters">
+					<string name="level">1</string>
+					<int name="start id">5</int>
+					<dictionary name="shape">
+						<int-arr name="static">56</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">65</int>
+				<string name="type">ObjectEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-8 6</vec2>
+				<dictionary name="parameters">
+					<string name="event">Hit</string>
+					<dictionary name="object">
+						<int-arr name="static">51</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">69</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">69</int>
+				<string name="type">ShowSpeechBubble</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-8 4</vec2>
+				<dictionary name="parameters">
+					<string name="style">menus/speech/sign_wood_speech.xml</string>
+					<string name="text">Portal to Prison Floors</string>
+					<dictionary name="objects">
+						<int-arr name="static">51</int-arr>
+					</dictionary>
+					<float name="x-offset">0.15</float>
+					<float name="y-offset">-1.15</float>
+					<int name="width">100</int>
+					<int name="layer">0</int>
+					<int name="time">0</int>
+					<dictionary name="execute">
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137067</int>
+				<string name="type">RectangleShape</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -7</vec2>
+				<dictionary name="parameters">
+					<float name="w">1</float>
+					<float name="h">1</float>
+					<int name="types">15</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137068</int>
+				<string name="type">LevelExitArea</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -9.5</vec2>
+				<dictionary name="parameters">
+					<string name="level">ap_hub</string>
+					<int name="start id">1</int>
+					<dictionary name="shape">
+						<int-arr name="static">137067</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137072</int>
+				<string name="type">ShowSpeechBubble</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-3 -6.5</vec2>
+				<dictionary name="parameters">
+					<string name="style">menus/speech/sign_wood_speech.xml</string>
+					<string name="text">BK Zone</string>
+					<dictionary name="objects">
+						<int-arr name="static">137066</int-arr>
+					</dictionary>
+					<float name="x-offset">0.15</float>
+					<float name="y-offset">-1.15</float>
+					<int name="width">100</int>
+					<int name="layer">0</int>
+					<int name="time">0</int>
+					<dictionary name="execute">
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137073</int>
+				<string name="type">ObjectEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-3 -4.5</vec2>
+				<dictionary name="parameters">
+					<string name="event">Hit</string>
+					<dictionary name="object">
+						<int-arr name="static">137066</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">137072</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">59</int>
+				<string name="type">RectangleShape</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">5 -4</vec2>
+				<dictionary name="parameters">
+					<float name="w">1</float>
+					<float name="h">1</float>
+					<int name="types">15</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">64</int>
+				<string name="type">LevelExitArea</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">5 -6.5</vec2>
+				<dictionary name="parameters">
+					<string name="level">10</string>
+					<int name="start id">0</int>
+					<dictionary name="shape">
+						<int-arr name="static">59</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">58</int>
+				<string name="type">RectangleShape</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-5 -4</vec2>
+				<dictionary name="parameters">
+					<float name="w">1</float>
+					<float name="h">1</float>
+					<int name="types">15</int>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">63</int>
+				<string name="type">LevelExitArea</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-5 -6.5</vec2>
+				<dictionary name="parameters">
+					<string name="level">7</string>
+					<int name="start id">0</int>
+					<dictionary name="shape">
+						<int-arr name="static">58</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">67</int>
+				<string name="type">ObjectEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-8 -1.5</vec2>
+				<dictionary name="parameters">
+					<string name="event">Hit</string>
+					<dictionary name="object">
+						<int-arr name="static">53</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">74</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">74</int>
+				<string name="type">ShowSpeechBubble</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-8 -3.5</vec2>
+				<dictionary name="parameters">
+					<string name="style">menus/speech/sign_wood_speech.xml</string>
+					<string name="text">Portal to Archives Floors</string>
+					<dictionary name="objects">
+						<int-arr name="static">53</int-arr>
+					</dictionary>
+					<float name="x-offset">0.15</float>
+					<float name="y-offset">-1.15</float>
+					<int name="width">100</int>
+					<int name="layer">0</int>
+					<int name="time">0</int>
+					<dictionary name="execute">
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137123</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">7.25 0.5</vec2>
+				<dictionary name="parameters">
+					<int name="state">0</int>
+					<dictionary name="element">
+						<int-arr name="static">62</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137125</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">7.25 1.5</vec2>
+				<dictionary name="parameters">
+					<int name="state">1</int>
+					<dictionary name="element">
+						<int-arr name="static">62</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137124</int>
+				<string name="type">ChangeDoodadState</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">7.25 3</vec2>
+				<dictionary name="parameters">
+					<string name="state">open</string>
+					<dictionary name="object">
+						<int-arr name="static">105718</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137126</int>
+				<string name="type">ChangeDoodadState</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">7.25 4</vec2>
+				<dictionary name="parameters">
+					<string name="state">closed</string>
+					<dictionary name="object">
+						<int-arr name="static">105718</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137133</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">7 -7</vec2>
+				<dictionary name="parameters">
+					<int name="state">0</int>
+					<dictionary name="element">
+						<int-arr name="static">64</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137135</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">7 -6</vec2>
+				<dictionary name="parameters">
+					<int name="state">1</int>
+					<dictionary name="element">
+						<int-arr name="static">64</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137134</int>
+				<string name="type">ChangeDoodadState</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">7 -4.5</vec2>
+				<dictionary name="parameters">
+					<string name="state">open</string>
+					<dictionary name="object">
+						<int-arr name="static">105715</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137136</int>
+				<string name="type">ChangeDoodadState</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">7 -3.5</vec2>
+				<dictionary name="parameters">
+					<string name="state">closed</string>
+					<dictionary name="object">
+						<int-arr name="static">105715</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137137</int>
+				<string name="type">CheckGlobalFlag</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">9 -5.5</vec2>
+				<dictionary name="parameters">
+					<string name="flag">portal_a4</string>
+					<dictionary name="on-true">
+						<int-arr name="static">137133 137134</int-arr>
+					</dictionary>
+					<dictionary name="on-false">
+						<int-arr name="static">137135 137136</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137127</int>
+				<string name="type">CheckGlobalFlag</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">9 2</vec2>
+				<dictionary name="parameters">
+					<string name="flag">portal_a2</string>
+					<dictionary name="on-true">
+						<int-arr name="static">137123 137124</int-arr>
+					</dictionary>
+					<dictionary name="on-false">
+						<int-arr name="static">137125 137126</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137138</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">-7 -7</vec2>
+				<dictionary name="parameters">
+					<int name="state">0</int>
+					<dictionary name="element">
+						<int-arr name="static">63</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137140</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">-7 -6</vec2>
+				<dictionary name="parameters">
+					<int name="state">1</int>
+					<dictionary name="element">
+						<int-arr name="static">63</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137139</int>
+				<string name="type">ChangeDoodadState</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">-7 -4.5</vec2>
+				<dictionary name="parameters">
+					<string name="state">open</string>
+					<dictionary name="object">
+						<int-arr name="static">105716</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137141</int>
+				<string name="type">ChangeDoodadState</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">-7 -3.5</vec2>
+				<dictionary name="parameters">
+					<string name="state">closed</string>
+					<dictionary name="object">
+						<int-arr name="static">105716</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137142</int>
+				<string name="type">CheckGlobalFlag</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-9 -5.5</vec2>
+				<dictionary name="parameters">
+					<string name="flag">portal_a3</string>
+					<dictionary name="on-true">
+						<int-arr name="static">137138 137139</int-arr>
+					</dictionary>
+					<dictionary name="on-false">
+						<int-arr name="static">137140 137141</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">136920</int>
+				<string name="type">HideObject</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 0</vec2>
+				<dictionary name="parameters">
+					<int name="state">1</int>
+					<dictionary name="element">
+						<int-arr name="static">136935 136907 136928 136905 136902 136904 136903 136915 136914 136934 136943 136940 136916 136917 136896 136911 136895 136936 136894 136927 136897 136931 136930 136939 136938 136919 136892 136891 136910 136937 136890 136926 136893 136932 136921 136886 136925 136889 136888 136888 136948 136909 136887 136918 136946 136947 136923 136922 136912 136913 136944 136945 136898 136929 136901 136950 136900 136906 136899 136883 136908 136884 136949 136885 136924 136882 136933</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137143</int>
+				<string name="type">CheckGlobalFlag</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">9 -1.5</vec2>
+				<dictionary name="parameters">
+					<string name="flag">open_castle</string>
+					<dictionary name="on-true">
+						<int-arr name="static">137133 137138 137144 137123 137134 137139 137146 137124</int-arr>
+					</dictionary>
+					<dictionary name="on-false">
+						<int-arr name="static">137137 137142 137127 137148</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137144</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-7 0.5</vec2>
+				<dictionary name="parameters">
+					<int name="state">0</int>
+					<dictionary name="element">
+						<int-arr name="static">61</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137145</int>
+				<string name="type">ToggleElement</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-7 1.5</vec2>
+				<dictionary name="parameters">
+					<int name="state">1</int>
+					<dictionary name="element">
+						<int-arr name="static">61</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137146</int>
+				<string name="type">ChangeDoodadState</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-7 3</vec2>
+				<dictionary name="parameters">
+					<string name="state">open</string>
+					<dictionary name="object">
+						<int-arr name="static">105717</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137147</int>
+				<string name="type">ChangeDoodadState</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-7 4</vec2>
+				<dictionary name="parameters">
+					<string name="state">closed</string>
+					<dictionary name="object">
+						<int-arr name="static">105717</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">137148</int>
+				<string name="type">CheckGlobalFlag</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">-9 2</vec2>
+				<dictionary name="parameters">
+					<string name="flag">portal_a1</string>
+					<dictionary name="on-true">
+						<int-arr name="static">137144 137146</int-arr>
+					</dictionary>
+					<dictionary name="on-false">
+						<int-arr name="static">137145 137147</int-arr>
+					</dictionary>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">136856</int>
+				<string name="type">AddParallaxLayer</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">1</int>
+				<vec2 name="pos">14.5 -2.5</vec2>
+				<dictionary name="parameters">
+					<string name="sprite">effects/fog_grey.xml:fog</string>
+					<int name="layer">-1000</int>
+					<int name="fade-in">1</int>
+					<float name="x-parallax">0</float>
+					<float name="y-parallax">0</float>
+					<float name="x-scroll">0.15</float>
+					<float name="y-scroll">0.05</float>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">105751</int>
+				<string name="type">PlayMusic</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">12 0</vec2>
+				<dictionary name="parameters">
+					<string name="sound">sound/music.xml:custom_1</string>
+					<bool name="loop">True</bool>
+				</dictionary>
+			</dictionary>
+			<dictionary>
+				<int name="id">105750</int>
+				<string name="type">GlobalEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">12 -2.5</vec2>
+				<string name="parameters">LevelLoaded</string>
+				<int-arr name="connections">105751 136856 136920 137104 137143 137087</int-arr>
+				<int-arr name="connection-delays">0 0 0 0 0 0</int-arr>
+			</dictionary>
+		</array>
+	</dictionary>
+	<dictionary name="lighting">
+		<array name="lights">
+			<dictionary>
+				<int name="id">137056</int>
+				<vec2 name="pos">0 -103</vec2>
+				<int-arr name="mulColor1">255 255 255 255</int-arr>
+				<int-arr name="mulColor2">255 255 255 255</int-arr>
+				<int-arr name="mulColor3">255 255 254 255</int-arr>
+				<float name="mulRange">20.4</float>
+				<int-arr name="addColor1">0 0 0 255</int-arr>
+				<int-arr name="addColor2">0 0 0 255</int-arr>
+				<int-arr name="addColor3">0 0 0 255</int-arr>
+				<float name="addRange">4</float>
+			</dictionary>
+			<dictionary>
+				<int name="id">105742</int>
+				<vec2 name="pos">-5 -3.375</vec2>
+				<int-arr name="mulColor1">255 255 255 255</int-arr>
+				<int-arr name="mulColor2">255 255 0 255</int-arr>
+				<int-arr name="mulColor3">255 255 0 255</int-arr>
+				<float name="mulRange">10</float>
+				<int-arr name="addColor1">0 0 0 255</int-arr>
+				<int-arr name="addColor2">0 0 0 255</int-arr>
+				<int-arr name="addColor3">0 0 0 255</int-arr>
+				<float name="addRange">4</float>
+			</dictionary>
+			<dictionary>
+				<int name="id">105744</int>
+				<vec2 name="pos">5 3.625</vec2>
+				<int-arr name="mulColor1">255 255 255 255</int-arr>
+				<int-arr name="mulColor2">255 0 255 255</int-arr>
+				<int-arr name="mulColor3">255 0 255 255</int-arr>
+				<float name="mulRange">10</float>
+				<int-arr name="addColor1">0 0 0 255</int-arr>
+				<int-arr name="addColor2">0 0 0 255</int-arr>
+				<int-arr name="addColor3">0 0 0 255</int-arr>
+				<float name="addRange">4</float>
+			</dictionary>
+			<dictionary>
+				<int name="id">105745</int>
+				<vec2 name="pos">-5 3.625</vec2>
+				<int-arr name="mulColor1">255 255 255 255</int-arr>
+				<int-arr name="mulColor2">0 0 255 255</int-arr>
+				<int-arr name="mulColor3">0 0 255 255</int-arr>
+				<float name="mulRange">10.1</float>
+				<int-arr name="addColor1">0 0 0 255</int-arr>
+				<int-arr name="addColor2">0 0 0 255</int-arr>
+				<int-arr name="addColor3">0 0 0 255</int-arr>
+				<float name="addRange">4</float>
+			</dictionary>
+			<dictionary>
+				<int name="id">105746</int>
+				<vec2 name="pos">0 6.625</vec2>
+				<int-arr name="mulColor1">255 255 255 255</int-arr>
+				<int-arr name="mulColor2">255 128 0 255</int-arr>
+				<int-arr name="mulColor3">255 128 0 255</int-arr>
+				<float name="mulRange">10.6</float>
+				<int-arr name="addColor1">0 0 0 255</int-arr>
+				<int-arr name="addColor2">0 0 0 255</int-arr>
+				<int-arr name="addColor3">123 56 1 255</int-arr>
+				<float name="addRange">8</float>
+			</dictionary>
+			<dictionary>
+				<int name="id">105743</int>
+				<vec2 name="pos">5 -3.375</vec2>
+				<int-arr name="mulColor1">255 255 255 255</int-arr>
+				<int-arr name="mulColor2">0 255 0 255</int-arr>
+				<int-arr name="mulColor3">0 255 0 255</int-arr>
+				<float name="mulRange">9.8</float>
+				<int-arr name="addColor1">0 0 0 255</int-arr>
+				<int-arr name="addColor2">0 0 0 255</int-arr>
+				<int-arr name="addColor3">0 0 0 255</int-arr>
+				<float name="addRange">4</float>
+			</dictionary>
+			<dictionary>
+				<int name="id">105749</int>
+				<vec2 name="pos">0 -6.375</vec2>
+				<int-arr name="mulColor1">255 255 255 255</int-arr>
+				<int-arr name="mulColor2">255 0 0 255</int-arr>
+				<int-arr name="mulColor3">255 0 0 255</int-arr>
+				<float name="mulRange">9.8</float>
+				<int-arr name="addColor1">0 0 0 255</int-arr>
+				<int-arr name="addColor2">33 1 1 255</int-arr>
+				<int-arr name="addColor3">66 2 1 255</int-arr>
+				<float name="addRange">11.5</float>
+			</dictionary>
+		</array>
+		<int-arr name="shadow-color">128 128 128 255</int-arr>
+		<int-arr name="ambient-color">183 183 183 255</int-arr>
+		<int-arr name="add-color">0 0 0 255</int-arr>
+		<float name="shadow-length">1</float>
+	</dictionary>
+	<dictionary name="prefabs">
+	</dictionary>
+</dictionary>

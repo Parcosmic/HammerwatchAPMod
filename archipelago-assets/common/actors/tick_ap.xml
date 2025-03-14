@@ -1,0 +1,368 @@
+<actor collision="5" behavior="composite" minimap="menus/minimap.xml:enemy">
+	<behavior>
+		<dictionary>
+			<entry name="hp"><int>2000483647</int></entry>		
+			<float name="aggro-range">8</float>
+			<float name="max-range">20</float>	
+					
+			<dictionary name="movement">
+				<string name="type">melee</string>
+				<float name="speed">0.4</float>
+			</dictionary>
+			
+			<array name="skills">
+				<dictionary>
+					<string name="type">hit</string>
+					<string name="anim-set">attack</string>
+					<int name="cooldown">250</int>
+					<float name="range">2</float>					
+					<int name="dmg">15</int>
+				</dictionary>
+			</array>
+			
+			<array name="pskills">
+				<dictionary>				
+					<string name="type">drop</string>
+					<string name="sound">sound/monsters.xml:death_tick_golden</string>					
+					<int name="hp">50</int>
+					
+					<array name="loot">
+							<int>2</int><string>items/valuable_9.xml</string>
+							<int>12</int><string>items/valuable_8.xml</string>
+							<int>35</int><string>items/valuable_7.xml</string>
+							<int>12</int><string>items/valuable_6.xml</string>
+							<int>62</int><string>items/valuable_5.xml</string>
+							<int>175</int><string>items/valuable_4.xml</string>
+							<int>35</int><string>items/valuable_3.xml</string>
+							<int>175</int><string>items/valuable_2.xml</string>
+							<int>490</int><string>items/valuable_1.xml</string>	
+					</array>
+				</dictionary>
+			</array>
+			
+			<dictionary name="loot">
+				<string name="origin">0 0</string>
+				<float name="spread">0</float>
+					<array name="loot">							
+						<array>
+							<int>500</int><string>items/valuable_8.xml</string>																					
+						</array>					
+					</array>
+			</dictionary>		
+			
+			<entry name="death-snd"><string>sound/monsters.xml:death_tick</string></entry>
+			<entry name="hit-effect"><string>effects/particles.xml:hit_tick_2</string></entry>		
+			<entry name="hit-particle"><string>effects/particles.xml:particle_tick_2</string></entry>
+		</dictionary>
+	</behavior>	
+
+
+	<!-- Idle -->
+	<sprite scale="16" random-start="true" name="east">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">40 20 20 20</frame>
+		<frame time="1500">100 20 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">40 140 20 20</frame>
+				<frame time="1500">100 140 20 20</frame>
+		</glow>			
+	</sprite>
+
+	<sprite scale="16" random-start="true" name="northeast">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">40 0 20 20</frame>
+		<frame time="1500">100 0 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">40 120 20 20</frame>
+				<frame time="1500">100 120 20 20</frame>
+		</glow>			
+	</sprite>
+
+	<sprite scale="16" random-start="true" name="north">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">20 0 20 20</frame>
+		<frame time="1500">80 0 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">20 120 20 20</frame>
+				<frame time="1500">80 120 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" random-start="true" name="northwest">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">0 0 20 20</frame>
+		<frame time="1500">60 0 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">0 120 20 20</frame>
+				<frame time="1500">60 120 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" random-start="true" name="west">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">0 20 20 20</frame>
+		<frame time="1500">60 20 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">0 140 20 20</frame>
+				<frame time="1500">60 140 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" random-start="true" name="southwest">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">0 40 20 20</frame>
+		<frame time="1500">60 40 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">0 160 20 20</frame>
+				<frame time="1500">0 160 20 20</frame>
+		</glow>				
+	</sprite>
+	
+	<sprite scale="16" random-start="true" name="south">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">20 40 20 20</frame>
+		<frame time="1500">80 40 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">20 160 20 20</frame>
+				<frame time="1500">80 160 20 20</frame>
+		</glow>		
+	</sprite>
+	
+	<sprite scale="16" random-start="true" name="southeast">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">40 40 20 20</frame>
+		<frame time="1500">100 40 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">40 160 20 20</frame>
+				<frame time="1500">100 160 20 20</frame>
+		</glow>		
+	</sprite>
+	
+	
+	<!-- Walk -->
+	<sprite scale="16" name="east-walk">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">160 20 20 20</frame>
+		<frame time="150">220 20 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">160 140 20 20</frame>
+				<frame time="150">220 140 20 20</frame>
+		</glow>			
+	</sprite>
+
+	<sprite scale="16" name="northeast-walk">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">160 0 20 20</frame>
+		<frame time="150">220 0 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">160 120 20 20</frame>
+				<frame time="150">220 120 20 20</frame>
+		</glow>				
+	</sprite>
+
+	<sprite scale="16" name="north-walk">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">140 0 20 20</frame>
+		<frame time="150">200 0 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">140 120 20 20</frame>
+				<frame time="150">200 120 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="northwest-walk">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">120 0 20 20</frame>
+		<frame time="150">180 0 20 20</frame>	
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">120 120 20 20</frame>
+				<frame time="150">180 120 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="west-walk">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">120 20 20 20</frame>
+		<frame time="150">180 20 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">120 140 20 20</frame>
+				<frame time="150">180 140 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="southwest-walk">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">120 40 20 20</frame>
+		<frame time="150">180 40 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">120 160 20 20</frame>
+				<frame time="150">180 160 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="south-walk">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">140 40 20 20</frame>
+		<frame time="150">200 40 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">140 160 20 20</frame>
+				<frame time="150">200 160 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="southeast-walk">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="150">160 40 20 20</frame>
+		<frame time="150">220 40 20 20</frame>		
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="150">160 160 20 20</frame>
+				<frame time="150">220 160 20 20</frame>
+		</glow>					
+	</sprite>
+	
+
+	<!-- Attack -->
+	<sprite scale="16" name="east-attack">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="200">40 80 20 20</frame>
+		<frame time="200">100 80 20 20</frame>	
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="200">40 200 20 20</frame>
+				<frame time="200">100 200 20 20</frame>
+		</glow>				
+	</sprite>
+
+	<sprite scale="16" name="northeast-attack">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="200">160 0 20 20</frame>
+		<frame time="200">220 0 20 20</frame>	
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="200">40 180 20 20</frame>
+				<frame time="200">100 180 20 20</frame>
+		</glow>			
+	</sprite>
+
+	<sprite scale="16" name="north-attack">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="200">20 60 20 20</frame>
+		<frame time="200">80 60 20 20</frame>	
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="200">20 180 20 20</frame>
+				<frame time="200">80 180 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="northwest-attack">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="200">120 0 20 20</frame>
+		<frame time="200">180 0 20 20</frame>	
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="200">0 180 20 20</frame>
+				<frame time="200">60 180 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="west-attack">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="200">0 80 20 20</frame>
+		<frame time="200">60 80 20 20</frame>
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="200">0 200 20 20</frame>
+				<frame time="200">60 200 20 20</frame>
+		</glow>					
+	</sprite>
+	
+	<sprite scale="16" name="southwest-attack">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="200">120 40 20 20</frame>
+		<frame time="200">180 40 20 20</frame>	
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="200">0 220 20 20</frame>
+				<frame time="200">60 220 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="south-attack">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="200">20 100 20 20</frame>
+		<frame time="200">80 100 20 20</frame>	
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="200">20 220 20 20</frame>
+				<frame time="200">80 220 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<sprite scale="16" name="southeast-attack">
+		<texture>actors/tick_2_small.png</texture>
+		<origin>10 12</origin>
+		<frame time="200">160 40 20 20</frame>
+		<frame time="200">220 40 20 20</frame>	
+		<glow scale="16">
+			<texture>actors/tick_2_small.png</texture>
+				<frame time="200">40 220 20 20</frame>
+				<frame time="200">100 220 20 20</frame>
+		</glow>			
+	</sprite>
+	
+	<light>
+		<origin>0 -2</origin>
+		<mul>
+			<range>45</range>
+			<color1>100 50 0</color1>
+			<color2>50 25 12</color2>
+			<color3>25 12 6</color3>
+		</mul>
+		<add>
+			<range>0</range>
+			<color1>50 25 0</color1>
+			<color2>0 0 0</color2>
+			<color3>0 0 0</color3>
+		</add>
+	</light>		
+</actor>

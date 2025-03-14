@@ -1,0 +1,14 @@
+<spritebank>
+	<sprite scale="1" name="strange-plank">
+		<texture>items/items.png</texture>
+		<frame>16 480 16 16</frame>
+	</sprite>	
+	<sprite scale="1" name="bonus-key">
+		<texture>items/items.png</texture>
+		<frame>0 400 16 16</frame>
+	</sprite>	
+	<sprite scale="1" name="hammer">
+		<texture>items/tool_hammer.png</texture>
+		<frame>0 0 16 16</frame>
+	</sprite>	
+</spritebank>

@@ -1,0 +1,25 @@
+<item behavior="archipelago">
+	<behavior>
+		<dictionary>		
+			<entry name="pickup-snd"><string>sound/misc.xml:take_key</string></entry>
+			<entry name="pickup-particle"><string>effects/particles.xml:none</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite scale="16">
+		<texture>items/items.png</texture>
+		<origin>8 13</origin>
+		<frame time="200">96 96 16 16</frame>
+		<frame time="200">112 96 16 16</frame>
+		<frame time="200">128 96 16 16</frame>
+		<frame time="200">112 96 16 16</frame>		
+	</sprite>		
+	<collision shoot-through="true">
+		<polygon>
+			<point>-4 3</point>
+			<point>-4 -7</point>
+			<point>4 -7</point>
+			<point>4 3</point>
+		</polygon>
+	</collision>
+</item>

@@ -1,0 +1,35 @@
+<item behavior="bomb">
+	<behavior>
+		<dictionary>
+			<entry name="no-lamp"><bool>true</bool></entry>
+			<entry name="dmg"><int>1</int></entry>
+			<entry name="splash"><float>10.0</float></entry>
+			<entry name="buff"><string>buffs/enemy_lich_desert_2.xml</string></entry>
+			<entry name="explode-delay"><int>1000</int></entry>
+			<entry name="explode-snd"><string>sound/misc.xml:info_confused</string></entry>
+			<entry name="explode-particle"><string>effects/misc.xml:confuse</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite scale="16">
+		<texture>items/bomb_lich_desert_2.png</texture>
+		<origin>16 16</origin>
+		<frame time="100">0 0 32 32</frame>
+		<frame time="100">32 0 32 32</frame>
+		<frame time="100">64 0 32 32</frame>
+		<frame time="100">96 0 32 32</frame>				
+		<frame time="100">0 0 32 32</frame>
+		<frame time="100">32 0 32 32</frame>
+		<frame time="100">64 0 32 32</frame>
+		<frame time="100">96 0 32 32</frame>			
+		<glow scale="16">
+			<texture>items/bomb_lich_desert_2.png</texture>
+			<origin>16 19</origin>
+			<frame time="100">0 32 32 32</frame>
+			<frame time="100">32 32 32 32</frame>						
+		</glow>			
+	</sprite>	
+	
+	<collision shoot-through="true">
+	</collision>
+</item>
