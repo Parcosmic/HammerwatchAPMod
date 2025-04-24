@@ -1,0 +1,192 @@
+<actor collision="3.5" behavior="composite" minimap="menus/minimap.xml:enemy">
+	<behavior>
+		<dictionary>
+			<entry name="hp"><int>1</int></entry>				
+			<entry name="aggro-range"><float>1000</float></entry>
+			<entry name="max-range"><float>1000</float></entry>
+			
+			<dictionary name="movement">
+				<string name="type">melee</string>
+				<float name="speed">2</float>
+			</dictionary>
+			
+			<array name="skills">
+
+				<dictionary>
+					<string name="type">explode</string>
+					<string name="category">Player</string>
+					<int name="cooldown">0</int>
+					<float name="range">1</float>
+					<float name="splash">0</float>
+					<int name="dmg">0</int>
+					<bool name="suicide">true</bool>
+				</dictionary>
+				
+			</array>
+			
+			
+			<array name="pskills">
+				<dictionary>
+					<string name="type">explode</string>
+					<string name="category">Player</string>
+					<string name="sound">sound/players.xml:ranger_bomb</string>
+					<string name="effect">effects/particles.xml:kamikaze_bomb_1_flash</string>
+					<string name="particle">effects/particles.xml:kamikaze_bomb_1</string>
+					<dictionary name="light">
+						<vec2 name="origin">0 -0.9</vec2>
+						<float name="mul-range">14</float>
+						<string name="mul-color1">255 100 0</string>
+						<string name="mul-color2">0 0 0</string>
+						<string name="mul-color3">0 0 0</string>
+						<float name="add-range">10</float>
+						<string name="add-color1">75 0 0</string>
+						<string name="add-color2">0 0 0</string>
+						<string name="add-color3">0 0 0</string>											
+					</dictionary>
+					<float name="splash">2</float>
+					<int name="dmg">30</int>
+				</dictionary>
+
+				<dictionary>
+					<string name="type">sound</string>
+					<string name="sound">sound/misc.xml:special_serious_aaaaaaaaaa</string>
+					<float name="range">3</float>
+				</dictionary>
+			</array>
+			
+			
+			
+			<entry name="death-snd"><string>sound/monsters.xml:death_skeleton</string></entry>
+			<entry name="hit-effect"><string>effects/particles.xml:bone</string></entry>		
+			<entry name="hit-particle"><string>effects/particles.xml:bone-particle</string></entry>	
+			
+			
+			
+		</dictionary>
+	</behavior>
+
+
+	<!-- Idle -->
+	<sprite scale="16" name="east">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame>0 0 24 24</frame>
+	</sprite>
+
+	<sprite scale="16" name="northeast">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame>24 0 24 24</frame>
+	</sprite>
+
+	<sprite scale="16" name="north">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame>48 0 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="northwest">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame>72 0 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="west">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame>96 0 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="southwest">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame>120 0 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="south">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame>144 0 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="southeast">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame>168 0 24 24</frame>
+	</sprite>
+	
+	
+	<!-- Walk -->
+	<sprite scale="16" name="east-walk">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="123">0 24 24 24</frame>
+		<frame time="123">0 48 24 24</frame>
+	</sprite>
+
+	<sprite scale="16" name="northeast-walk">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="123">24 24 24 24</frame>
+		<frame time="123">24 48 24 24</frame>
+	</sprite>
+
+	<sprite scale="16" name="north-walk">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="123">48 24 24 24</frame>
+		<frame time="123">48 48 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="northwest-walk">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="123">72 24 24 24</frame>
+		<frame time="123">72 48 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="west-walk">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="123">96 24 24 24</frame>
+		<frame time="123">96 48 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="southwest-walk">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="123">120 24 24 24</frame>
+		<frame time="123">120 48 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="south-walk">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="123">144 24 24 24</frame>
+		<frame time="123">144 48 24 24</frame>
+	</sprite>
+	
+	<sprite scale="16" name="southeast-walk">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="123">168 24 24 24</frame>
+		<frame time="123">168 48 24 24</frame>
+	</sprite>
+	
+
+	<!-- Attack -->
+	<sprite scale="16" name="explode">
+		<texture>actors/special_beheaded_kamikaze.png</texture>
+		<origin>12 19</origin>
+		<frame time="5">0 72 24 24</frame>
+		<frame time="5">24 72 24 24</frame>
+		<frame time="5">48 72 24 24</frame>
+		<frame time="5">72 72 24 24</frame>
+		<frame time="5">96 72 24 24</frame>
+		<frame time="5">120 72 24 24</frame>
+		<frame time="5">144 72 24 24</frame>
+		<frame time="5">168 72 24 24</frame>
+		<frame time="5">0 96 24 24</frame>
+		<frame time="5">24 96 24 24</frame>
+	</sprite>
+</actor>

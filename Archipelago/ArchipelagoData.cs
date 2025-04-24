@@ -1,4 +1,5 @@
-﻿using Archipelago.MultiClient.Net.Models;
+﻿using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using ARPGGame;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace HammerwatchAP.Archipelago
         public int[,] actKeys = new int[4, 4];
         public bool[,] hasMasterFloorKeys = new bool[4, 12];
         public bool[] killedBosses;
-        public int[] bossRunes;
+        public int[] bossRunes = new int[12];
         public int pofRaiseLevel;
         public int wormCounter = 0;
         public int neededPlayers;
@@ -88,10 +89,15 @@ namespace HammerwatchAP.Archipelago
                     ArchipelagoManager.connectionInfo.session.Locations.CompleteLocationChecksAsync(new long[] { locationID });
                 }
             }
+            NetworkItem item = GetItemFromLoc(locationID);
+            //If this is a trap item and TrapLink is on send out a Bounce packet
+            if(item.Player == ArchipelagoManager.connectionInfo.playerId && ArchipelagoManager.TrapLink && (item.Flags & ItemFlags.Trap) != ItemFlags.None)
+            {
+                ArchipelagoManager.connectionInfo.SendTrapLink(item);
+            }
             //Show a pickup popup if the item belongs to someone else
             if (showPickupMessage)
             {
-                NetworkItem item = GetItemFromLoc(locationID);
                 ArchipelagoManager.AddPickupMessageToQueue(item);
             }
         }
@@ -513,7 +519,7 @@ namespace HammerwatchAP.Archipelago
                     break;
                 NetworkItem itemToReceive = itemsToReceive[itemsReceived++];
                 ArchipelagoMessageManager.announceMessageQueue.Add(ArchipelagoManager.GetReceiveItemMessage(itemToReceive));
-                ArchipelagoManager.ReceiveItem(itemToReceive);
+                ArchipelagoManager.CreateItemInWorld(itemToReceive, true);
             }
         }
     }

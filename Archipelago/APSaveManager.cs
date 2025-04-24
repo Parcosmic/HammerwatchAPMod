@@ -49,7 +49,6 @@ namespace HammerwatchAP.Archipelago
             if (archipelagoData.completedGoal) ArchipelagoManager.CompleteGoal();
             archipelagoData.itemsReceived = save.Get("ap-items-received").GetInteger();
             SValue[] locations = save.Get("ap-checked-locations").GetArray();
-            //checkedLocations = new List<long>(locations.Length);
             foreach (SValue loc in locations)
             {
                 int savedCheckedLocation = loc.GetInteger();
@@ -74,12 +73,6 @@ namespace HammerwatchAP.Archipelago
                 archipelagoData.totalPickaxeFragments = save.Get("ap-total-pickaxe-fragments").GetInteger();
                 archipelagoData.pofRaiseLevel = SaveTryGetInteger(save, "ap-pof-raise-level");
                 archipelagoData.wormCounter = SaveTryGetInteger(save, "ap-worm-counter");
-                //buttonProgress = new Dictionary<int, int>(templeButtonProgressCounts.Count);
-                //foreach (string buttonProgressName in templeButtonProgressCounts.Keys)
-                //{
-                //    buttonProgress[buttonProgressName] = SaveTryGetInteger(save, buttonProgressName.Replace(' ', '-'));
-                //    //buttonProgress[buttonProgressName] = save.Get(buttonProgressName.Replace(' ', '-')).GetInteger();
-                //}
             }
             archipelagoData.hammerFragments = SaveTryGetInteger(save, "ap-hammer-fragments");
             archipelagoData.totalHammerFragments = SaveTryGetInteger(save, "ap-total-hammer-fragments");
@@ -133,18 +126,6 @@ namespace HammerwatchAP.Archipelago
                 }
             }
 
-            //archipelagoData.buttonProgress = new Dictionary<string, int>();
-            //SValue buttonProgressIdsObject = save.Get("ap-button-progress-ids");
-            //if (!buttonProgressIdsObject.IsNull())
-            //{
-            //    SValue[] buttonProgressIds = buttonProgressIdsObject.GetArray();
-            //    int[] buttonProgressCounts = save.Get("ap-button-progress-counts").GetIntegerArray();
-            //    for (int b = 0; b < buttonProgressIds.Length; b++)
-            //    {
-            //        archipelagoData.buttonProgress[buttonProgressIds[b].GetString()] = buttonProgressCounts[b];
-            //    }
-            //}
-
             SValue saveModVersion = save.Get("ap-save-mod-version");
             switch (saveModVersion.GetString())
             {
@@ -186,7 +167,6 @@ namespace HammerwatchAP.Archipelago
             else
             {
                 //We're already connected, but sync our loaded checked locations with the server here
-                //session.Socket.SendPacketAsync(new LocationChecksPacket { Locations = checkedLocations.ToArray() });
                 connectionData.SendCheckedLocations(archipelagoData);
             }
             return true;
@@ -199,13 +179,11 @@ namespace HammerwatchAP.Archipelago
         }
         public static void SaveGame(string saveName, SObject save)
         {
-            //APSaveGenerator.SetAPSaveData(ip, apSeed, slotName, saveName, completedGoal, itemsReceived, checkedLocations);
             ConnectionInfo connectionData = ArchipelagoManager.connectionInfo;
             ArchipelagoData archipelagoData = ArchipelagoManager.archipelagoData;
             archipelagoData.saveFileName = saveName;
             save.Set("ap", true);
             save.Set("ap-ip", connectionData.ip);
-            //save.Set("ap-port", port.ToString());
             save.Set("ap-seed", archipelagoData.seed);
             save.Set("ap-slot-name", connectionData.slotName);
             save.Set("ap-password", connectionData.apPassword);
@@ -220,11 +198,9 @@ namespace HammerwatchAP.Archipelago
             save.Set("ap-checked-locations", checkedLocations);
             save.Set("ap-planks", archipelagoData.planks);
 
-            Dictionary<string, int> mapButtonProgressCounts;
             if (archipelagoData.mapType == ArchipelagoData.MapType.Castle)
             {
                 save.Set("ap-boss-runes", archipelagoData.bossRunes);
-                mapButtonProgressCounts = APData.castleButtonProgressCounts;
             }
             else
             {
@@ -236,7 +212,6 @@ namespace HammerwatchAP.Archipelago
                 save.Set("ap-total-pickaxe-fragments", archipelagoData.totalPickaxeFragments);
                 save.Set("ap-pof-raise-level", archipelagoData.pofRaiseLevel);
                 save.Set("ap-worm-counter", archipelagoData.wormCounter);
-                mapButtonProgressCounts = APData.templeButtonProgressCounts;
             }
             save.Set("ap-hammer-fragments", archipelagoData.hammerFragments);
             save.Set("ap-total-hammer-fragments", archipelagoData.totalHammerFragments);
@@ -273,18 +248,6 @@ namespace HammerwatchAP.Archipelago
             save.Set("ap-game-names", gameNames);
             save.Set("ap-checksums", checksums);
 
-            //SValue[] buttonProgressIds = new SValue[archipelagoData.buttonProgress.Count];
-            //int[] buttonProgressCounts = new int[archipelagoData.buttonProgress.Count];
-            //int counter = 0;
-            //foreach (string buttonProgressItem in archipelagoData.buttonProgress.Keys)
-            //{
-            //    buttonProgressIds[counter] = new SValue(buttonProgressItem);
-            //    //buttonProgressCounts[counter++] = buttonProgress.TryGetValue(buttonProgressItem, out int progCount) ? progCount : 0;
-            //    buttonProgressCounts[counter++] = archipelagoData.buttonProgress[buttonProgressItem];
-            //}
-            //save.Set("ap-button-progress-ids", buttonProgressIds);
-            //save.Set("ap-button-progress-counts", buttonProgressCounts);
-
             save.Set("ap-save-mod-version", ArchipelagoManager.MOD_VERSION.ToString());
 
             //Save player info and scouted items
@@ -310,6 +273,8 @@ namespace HammerwatchAP.Archipelago
             save.Set("ap-item-location-ids", itemLocationIds);
             save.Set("ap-item-players", itemPlayers);
             save.Set("ap-item-flags", itemClassifications);
+
+            Logging.Debug("Saved Archipelago data");
         }
         public static APSaveDataInfo LoadSaveInfo(string saveFileName)
         {

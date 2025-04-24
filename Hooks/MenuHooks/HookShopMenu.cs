@@ -7,6 +7,8 @@ using ARPGGame;
 using ARPGGame.Menus;
 using HammerwatchAP.Archipelago;
 using HammerwatchAP.Util;
+using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 
 namespace HammerwatchAP.Hooks
 {
@@ -16,8 +18,36 @@ namespace HammerwatchAP.Hooks
 
 		internal static void Hook()
 		{
+			HooksHelper.Hook(typeof(Back));
 			HooksHelper.Hook(typeof(BuySharedUpgrade));
 			HooksHelper.Hook(typeof(Focus));
+		}
+
+		[HarmonyPatch(typeof(ShopMenu), nameof(ShopMenu.Back))]
+		internal static class Back
+		{
+			static void Prefix(Upgrade[] ___upgrades)
+			{
+				List<int> hintLocationIds = new List<int>();
+				foreach(Upgrade upgrade in ___upgrades)
+				{
+					if (upgrade.ID.StartsWith("ap-"))
+					{
+						int locId = int.Parse(upgrade.ID.Substring(3));
+						NetworkItem item = ArchipelagoManager.archipelagoData.GetItemFromLoc(locId);
+						//Only hint for progression items
+						if((item.Flags & ItemFlags.Advancement) != ItemFlags.None)
+						{
+							hintLocationIds.Add(locId);
+
+						}
+					}
+                }
+				if(hintLocationIds.Count > 0 && ArchipelagoManager.ShopItemHinting)
+				{
+					ArchipelagoManager.connectionInfo.HintLocations(hintLocationIds);
+				}
+			}
 		}
 
 		[HarmonyPatch(typeof(ShopMenu), nameof(ShopMenu.BuySharedUpgrade))]
@@ -40,7 +70,6 @@ namespace HammerwatchAP.Hooks
 
                 LocalBuilder focusedUpgradeLocalBuilder = il.DeclareLocal(typeof(Upgrade));
 
-                //Upgrade focusedUpgrade = ArchipelagoManager.GetNextShopUpgrade(upgrades[slot]);
                 List<CodeInstruction> getFocusedUpgradeInstructions = new List<CodeInstruction>()
                 {
                     new CodeInstruction(OpCodes.Ldarg_0),

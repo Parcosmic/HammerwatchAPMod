@@ -1,0 +1,44 @@
+<buff>
+	<behavior>
+		<dictionary>
+			<string name="color">127 127 127</string>
+			
+			<int name="duration">10000</int>
+			
+			<float name="dmg-mul">0</float>
+			<float name="speed-mul">1</float>
+			<bool name="snare">false</bool>
+			<bool name="stun">false</bool>
+			
+			
+			<array name="effects">
+								
+				<dictionary>
+					<string name="type">light</string>
+					<vec2 name="offset">0 0</vec2>
+					<!--
+					<float name="mul-range">20</float>
+					<string name="mul-color1">0 0 255</string>
+					<string name="mul-color2">255 127 0</string>
+					<string name="mul-color3">255 0 0</string>
+					-->
+					
+					<float name="add-range">7</float>
+					<string name="add-color1">10 15 25</string>
+					<string name="add-color2">0 10 30</string>
+					<string name="add-color3">0 0 30</string>
+				</dictionary>
+				
+				
+				<dictionary>
+					<string name="type">sprite</string>
+					
+					<string name="sprite">effects/marker_miniboss.xml:marker</string>
+					
+					<int name="layer">15</int>
+				</dictionary>
+			</array>			
+			
+		</dictionary>
+	</behavior>
+</buff>

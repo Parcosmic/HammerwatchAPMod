@@ -32,7 +32,7 @@ namespace HammerwatchAP.Hooks
 		internal static void Hook()
 		{
 			HooksHelper.Hook(typeof(LoadGUI));
-			HooksHelper.Hook(typeof(Update));
+			//HooksHelper.Hook(typeof(Update));
 			HooksHelper.Hook(typeof(RefreshState));
 			HooksHelper.Hook(typeof(Back));
 			HooksHelper.Hook(typeof(SaveOptions));
@@ -118,42 +118,69 @@ namespace HammerwatchAP.Hooks
 				apTitle.SetAttributeValue("text", "Archipelago");
 				apTitle.SetAttributeValue("color", "255 201 54");
 				archipelagoGroup.Add(apTitle);
-				XElement deathlink = new XElement("textcheck");
-				deathlink.SetAttributeValue("id", "ap-deathlink");
-				deathlink.SetAttributeValue("check", "ap-deathlink");
-				deathlink.SetAttributeValue("offset", "30 20");
-				deathlink.SetAttributeValue("text", "Deathlink");
-				archipelagoGroup.Add(deathlink);
-				XElement exploreSpeed = new XElement("textcheck");
-				exploreSpeed.SetAttributeValue("id", "ap-explore-speed");
-				exploreSpeed.SetAttributeValue("check", "ap-explore-speed");
-				exploreSpeed.SetAttributeValue("offset", "30 35");
-				exploreSpeed.SetAttributeValue("text", "Explore Speed");
-				archipelagoGroup.Add(exploreSpeed);
-				XElement exploreSpeedPing = new XElement("textcheck");
-				exploreSpeedPing.SetAttributeValue("id", "ap-explore-speed-ping");
-				exploreSpeedPing.SetAttributeValue("check", "ap-explore-speed-ping");
-				exploreSpeedPing.SetAttributeValue("offset", "30 50");
-				exploreSpeedPing.SetAttributeValue("text", "Explore Speed Ping");
-				archipelagoGroup.Add(exploreSpeedPing);
-				XElement fragileBreakables = new XElement("textcheck");
-				fragileBreakables.SetAttributeValue("id", "ap-fragile-breakables");
-				fragileBreakables.SetAttributeValue("check", "ap-fragile-breakables");
-				fragileBreakables.SetAttributeValue("offset", "30 65");
-				fragileBreakables.SetAttributeValue("text", "Fragile Breakables");
-				archipelagoGroup.Add(fragileBreakables);
-				XElement chatMirroring = new XElement("textcheck");
-				chatMirroring.SetAttributeValue("id", "ap-chat-mirroring");
-				chatMirroring.SetAttributeValue("check", "ap-chat-mirroring");
-				chatMirroring.SetAttributeValue("offset", "30 80");
-				chatMirroring.SetAttributeValue("text", "AP Chat Mirroring");
-				archipelagoGroup.Add(chatMirroring);
-				XElement shopItemHinting = new XElement("textcheck");
-				shopItemHinting.SetAttributeValue("id", "ap-shop-item-hinting");
-				shopItemHinting.SetAttributeValue("check", "ap-shop-item-hinting");
-				shopItemHinting.SetAttributeValue("offset", "30 95");
-				shopItemHinting.SetAttributeValue("text", "Shop Item Hinting");
-				archipelagoGroup.Add(shopItemHinting);
+				int baseYPos = 0;
+				int ySpacing = 15;
+				Tuple<string, string>[] apOptionNames = new Tuple<string, string>[]
+				{
+					new Tuple<string, string>( "ap-deathlink", "Deathlink" ),
+					new Tuple<string, string>( "ap-explore-speed", "Explore Speed" ),
+					new Tuple<string, string>( "ap-explore-speed-ping", "Explore Speed Ping" ),
+					new Tuple<string, string>( "ap-fragile-breakables", "Fragile Breakables" ),
+					new Tuple<string, string>( "ap-chat-mirroring", "AP Chat Mirroring" ),
+					new Tuple<string, string>( "ap-shop-item-hinting", "Shop Item Hinting" ),
+					//new Tuple<string, string>( "ap-traplink", "TrapLink" ),
+				};
+				for(int i = 0; i < apOptionNames.Length; i++)
+                {
+					XElement optionElement = new XElement("textcheck");
+					optionElement.SetAttributeValue("id", apOptionNames[i].Item1);
+					optionElement.SetAttributeValue("check", apOptionNames[i].Item1);
+					optionElement.SetAttributeValue("offset", $"30 {baseYPos + ySpacing * i}");
+					optionElement.SetAttributeValue("text", apOptionNames[i].Item2);
+					archipelagoGroup.Add(optionElement);
+				}
+				//XElement deathlink = new XElement("textcheck");
+				//deathlink.SetAttributeValue("id", "ap-deathlink");
+				//deathlink.SetAttributeValue("check", "ap-deathlink");
+				//deathlink.SetAttributeValue("offset", "30 20");
+				//deathlink.SetAttributeValue("text", "Deathlink");
+				//archipelagoGroup.Add(deathlink);
+				//XElement exploreSpeed = new XElement("textcheck");
+				//exploreSpeed.SetAttributeValue("id", "ap-explore-speed");
+				//exploreSpeed.SetAttributeValue("check", "ap-explore-speed");
+				//exploreSpeed.SetAttributeValue("offset", "30 35");
+				//exploreSpeed.SetAttributeValue("text", "Explore Speed");
+				//archipelagoGroup.Add(exploreSpeed);
+				//XElement exploreSpeedPing = new XElement("textcheck");
+				//exploreSpeedPing.SetAttributeValue("id", "ap-explore-speed-ping");
+				//exploreSpeedPing.SetAttributeValue("check", "ap-explore-speed-ping");
+				//exploreSpeedPing.SetAttributeValue("offset", "30 50");
+				//exploreSpeedPing.SetAttributeValue("text", "Explore Speed Ping");
+				//archipelagoGroup.Add(exploreSpeedPing);
+				//XElement fragileBreakables = new XElement("textcheck");
+				//fragileBreakables.SetAttributeValue("id", "ap-fragile-breakables");
+				//fragileBreakables.SetAttributeValue("check", "ap-fragile-breakables");
+				//fragileBreakables.SetAttributeValue("offset", "30 65");
+				//fragileBreakables.SetAttributeValue("text", "Fragile Breakables");
+				//archipelagoGroup.Add(fragileBreakables);
+				//XElement chatMirroring = new XElement("textcheck");
+				//chatMirroring.SetAttributeValue("id", "ap-chat-mirroring");
+				//chatMirroring.SetAttributeValue("check", "ap-chat-mirroring");
+				//chatMirroring.SetAttributeValue("offset", "30 80");
+				//chatMirroring.SetAttributeValue("text", "AP Chat Mirroring");
+				//archipelagoGroup.Add(chatMirroring);
+				//XElement shopItemHinting = new XElement("textcheck");
+				//shopItemHinting.SetAttributeValue("id", "ap-shop-item-hinting");
+				//shopItemHinting.SetAttributeValue("check", "ap-shop-item-hinting");
+				//shopItemHinting.SetAttributeValue("offset", "30 95");
+				//shopItemHinting.SetAttributeValue("text", "Shop Item Hinting");
+				//archipelagoGroup.Add(shopItemHinting);
+				//XElement trapLink = new XElement("textcheck");
+				//trapLink.SetAttributeValue("id", "ap-traplink");
+				//trapLink.SetAttributeValue("check", "ap-traplink");
+				//trapLink.SetAttributeValue("offset", "30 110");
+				//trapLink.SetAttributeValue("text", "TrapLink");
+				//archipelagoGroup.Add(trapLink);
 				optionGroupRoot.Add(archipelagoGroup);
 
 				return doc;
@@ -168,20 +195,21 @@ namespace HammerwatchAP.Hooks
 				((CheckboxWidget)optionsMenu.Document.GetWidget("ap-fragile-breakables").Children[0]).Checked = ArchipelagoManager.FragileBreakables;
 				((CheckboxWidget)optionsMenu.Document.GetWidget("ap-chat-mirroring").Children[0]).Checked = ArchipelagoManager.APChatMirroring;
 				((CheckboxWidget)optionsMenu.Document.GetWidget("ap-shop-item-hinting").Children[0]).Checked = ArchipelagoManager.ShopItemHinting;
+				//((CheckboxWidget)optionsMenu.Document.GetWidget("ap-traplink").Children[0]).Checked = ArchipelagoManager.TrapLink;
 			}
 		}
 
-		[HarmonyPatch(typeof(OptionsMenu), "Update")]
-		internal static class Update
-		{
-			static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator iLGenerator)
-			{
-				List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+		//[HarmonyPatch(typeof(OptionsMenu), "Update")]
+		//internal static class Update
+		//{
+		//	static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator iLGenerator)
+		//	{
+		//		List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
 
-				return codes;
-			}
+		//		return codes;
+		//	}
 
-		}
+		//}
 
 		[HarmonyPatch(typeof(OptionsMenu), "RefreshState")]
 		internal static class RefreshState
@@ -286,6 +314,7 @@ namespace HammerwatchAP.Hooks
 				archipelago.Add(new XElement("FragileBreakables", ArchipelagoManager.FragileBreakables));
 				archipelago.Add(new XElement("APChatMirroring", ArchipelagoManager.APChatMirroring));
 				archipelago.Add(new XElement("ShopItemHinting", ArchipelagoManager.ShopItemHinting));
+				archipelago.Add(new XElement("TrapLink", ArchipelagoManager.TrapLink));
 				archipelago.Add(new XElement("APDebugMode", ArchipelagoManager.DEBUG_MODE));
 				optionsNode.Add(archipelago);
 			}
@@ -339,6 +368,12 @@ namespace HammerwatchAP.Hooks
 						__result = delegate (Widget w)
 						{
 							ArchipelagoManager.ShopItemHinting = ((CheckboxWidget)w).Checked;
+						};
+						return false;
+					case "ap-traplink":
+						__result = delegate (Widget w)
+						{
+							ArchipelagoManager.SetTrapLink(((CheckboxWidget)w).Checked);
 						};
 						return false;
 				}

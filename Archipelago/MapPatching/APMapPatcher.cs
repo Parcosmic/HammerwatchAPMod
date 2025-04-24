@@ -932,10 +932,11 @@ namespace HammerwatchAP.Archipelago
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId++, new Vector2(6, 40.5f), 100)); //Offset +0,+2 from RectangleShape
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId++, new Vector2(41.5f, -35f), 88)); //Bonus return
 
-                            scriptNodesToAdd.AddRange(NodeHelper.CreateAreaTriggerNodes(ref modNodeStartId, new Vector2(41.5f, -35f), new List<int> { 10005, 1204, 4245, 4246, 1215, 1210 })); //Bonus portal delete doodads trigger
-                            scriptNodesToAdd.AddRange(NodeHelper.CreateAreaTriggerNodes(ref modNodeStartId, new Vector2(52f, -38f), new List<int> { 10005, 1204, 4245, 4246, 1215, 1210, 1042 })); //Bonus portal delete doodads trigger, bonus return
+                            int p3DestroyBonusCoverNodeId = modNodeStartId++;
+                            scriptNodesToAdd.Add(NodeHelper.CreateDestroyObjectNode(p3DestroyBonusCoverNodeId, new Vector2(41.5f, -40f), 1, new int[] { 1135, 1134 })); //Destroy bonus doodads
+                            scriptNodesToAdd.AddRange(NodeHelper.CreateAreaTriggerNodes(ref modNodeStartId, new Vector2(41.5f, -35f), new List<int> { 10005, 1204, 4245, 4246, 1215, 1210, p3DestroyBonusCoverNodeId })); //Bonus portal delete doodads trigger
+                            scriptNodesToAdd.AddRange(NodeHelper.CreateAreaTriggerNodes(ref modNodeStartId, new Vector2(52f, -38f), new List<int> { 10005, 1204, 4245, 4246, 1215, 1210, 1042, p3DestroyBonusCoverNodeId })); //Bonus portal delete doodads trigger, bonus return
                             //4254 is the node that shows the secret announce and plays the sound, we might actually want to trigger it but idk
-                            scriptNodesToAdd.Add(NodeHelper.CreateDestroyObjectNode(modNodeStartId++, new Vector2(41.5f, -40f), 1, new int[] { 1135, 1134 })); //Destroy bonus doodads
 
                             //Remove cover nodes if entering from the bonus return
                             NodeHelper.AddConnectionNodes(idToNode["1420"], new int[] { modNodeStartId - 1 });
@@ -1006,12 +1007,9 @@ namespace HammerwatchAP.Archipelago
                                 nodesToNuke.AddRange(new[] { 2058, 3294, 3299, 3301, 3302 }); //Return spawn node, boss button shapes
                                 doodadsToNuke.AddRange(new[] { "3146", "3142", "3143", "3147", "3145", "3144" }); //Boss buttons, boss lock marker, boss sigil
                                 //Create return portal + exit
-                                doodadsToAdd.AddRange(CreateTeleporter(ref modNodeStartId, new Vector2(-38.5f, 6.5f), 81, "1", 20, -1, false, out List<XElement> shortcutTpScriptNodes));//, out List<int> c3NodesToRun));
-                                //nodesToGuaranteeSpawn.AddRange(c3NodesToRun);
+                                doodadsToAdd.AddRange(CreateTeleporter(ref modNodeStartId, new Vector2(-38.5f, 6.5f), 81, "1", 20, -1, false, out List<XElement> shortcutTpScriptNodes));
                                 scriptNodesToAdd.AddRange(shortcutTpScriptNodes);
                             }
-
-                            //ReplacePrefabs(levelFile, doc, out secretNodesToGuaranteeSpawn);
                             break;
                         case "level_bonus_1.xml": //Bonus 1
                             nodesToNuke = new List<int> { 327 }; //SetGlobalFlag
@@ -1050,24 +1048,8 @@ namespace HammerwatchAP.Archipelago
                                 panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
                                 scriptNodesToAdd.Add(panelDeleteNode);
                             }
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    string nodeId = node.Element("int").Value;
-                            //    if (b1AreaTriggerDestroyNodes.TryGetValue(nodeId, out string deleteNodeId))
-                            //    {
-                            //        XElement[] connectionNodes = node.Elements("int-arr").ToArray();
-                            //        connectionNodes[0].Value += $" {modNodeStartId}";
-                            //        connectionNodes[1].Value += $" 0";
 
-                            //        List<string> panelDoodads = b1DeleteNodePanelDoodads[deleteNodeId];
-                            //        XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.PosFromString(node.Element("vec2").Value) + new Vector2(0, 5f), 1, new int[0]);
-                            //        panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
-                            //        scriptNodesToAdd.Add(panelDeleteNode);
-                            //    }
-                            //}
-
-                            doodadsToAdd.AddRange(CreateTeleporter(ref modNodeStartId, new Vector2(-27.5f, 33.5f), -1, "3", 88, -1, false, out List<XElement> n1TpScriptNodes));//, out List<int> n1NodesToRun));
-                            //nodesToGuaranteeSpawn.AddRange(n1NodesToRun);
+                            doodadsToAdd.AddRange(CreateTeleporter(ref modNodeStartId, new Vector2(-27.5f, 33.5f), -1, "3", 88, -1, false, out List<XElement> n1TpScriptNodes));
                             scriptNodesToAdd.AddRange(n1TpScriptNodes);
                             break;
                         case "level_boss_1.xml":
@@ -1818,10 +1800,10 @@ namespace HammerwatchAP.Archipelago
                             }
                             break;
                         case "level_boss_4.xml": //Boss 4
-
                             int b4PortalId = modNodeStartId;
                             Vector2 b4PortalPos = new Vector2(-7.5f, 20.5f);
-                            List<XElement> b4TpDoodads = CreateToggleableTeleporterWithSign(ref modNodeStartId, b4PortalPos, -1, "11", 1, -1, true, -1, true, "Portal Back to Floor 11", out List<XElement> b4TpScriptNodes, out int portalOnNodeId, out int portalOffNodeId);
+                            string b4PortalSignMessage = archipelagoData.GetOption(SlotDataKeys.exitRandomization) > 0 ? "Portal Back to Wherever You Came From" : "Portal Back to Floor 11";
+                            List<XElement> b4TpDoodads = CreateToggleableTeleporterWithSign(ref modNodeStartId, b4PortalPos, -1, "11", 1, -1, true, -1, true, b4PortalSignMessage, out List<XElement> b4TpScriptNodes, out int portalOnNodeId, out int portalOffNodeId);
                             doodadsToAdd.AddRange(b4TpDoodads);
                             scriptNodesToAdd.AddRange(b4TpScriptNodes);
 
@@ -2000,6 +1982,25 @@ namespace HammerwatchAP.Archipelago
                             scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(2, 18), "Fight the dragon WITH the hammer this time!!", 117000, 1, true, -1));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
                             scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(4, 20), "Go on, shoo", 3000, 2, true, -1));
+                            //Disable the game from ending (avoids potential softlocks, it doesn't add anything to the randomizer anyway)
+                            int e4EndTauntNodeBaseId = modNodeStartId++;
+                            Vector2 e4EndTauntBasePos = new Vector2(-59.5f, -49f);
+                            NodeHelper.SetConnectionNodes(idToNode["269"], new int[] { e4EndTauntNodeBaseId }, new int[] { 1000 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(e4EndTauntNodeBaseId, e4EndTauntBasePos + new Vector2(0, 2), "Cmon we don't have all day!", 5000, 1, true, -1));
+                            NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4EndTauntBasePos + new Vector2(0, 4), "The castle is falling apart!", 5000, 1, true, -1));
+                            NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 7000 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4EndTauntBasePos + new Vector2(0, 6), "...", 3000, 0, true, -1));
+                            NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 3000 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4EndTauntBasePos + new Vector2(0, 8), "Fine, lollygag all you want", 10000, 0, true, -1));
+                            NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4EndTauntBasePos + new Vector2(0, 10), "The exit is right there just go!!", 5000, 1, true, -1));
+                            NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4EndTauntBasePos + new Vector2(0, 12), "Did you forget how to escape?", 120000, 0, true, -1));
+                            NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 3000 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4EndTauntBasePos + new Vector2(0, 14), "Break the wall at the end!", 117000, 1, true, -1));
+                            NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4EndTauntBasePos + new Vector2(0, 16), "Go on, shoo", 3000, 2, true, -1));
                             break;
                     }
                     break;

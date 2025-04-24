@@ -254,11 +254,6 @@ namespace HammerwatchAP.Archipelago
                         SendHWErrorMessage($"Argument 2 of command \"tp\" should be an integer.");
                         break;
                     }
-                    if (ArchipelagoManager.archipelagoData.currentLevelName != null && ArchipelagoManager.archipelagoData.currentLevelName.Contains("esc"))
-                    {
-                        SendHWErrorMessage($"Teleporting during the escape sequence is not allowed!");
-                        break;
-                    }
                     GameBase.Instance.ChangeLevel(levelId, startId);
                     break;
                 case "flag":

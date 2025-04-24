@@ -42,27 +42,18 @@ namespace HammerwatchAP.Archipelago
 
         private static Random random;
 
-        public static ArchipelagoSession session
-        {
-            get
-            {
-                return connectionInfo.session;
-            }
-        }
         public static ConnectionInfo connectionInfo = new ConnectionInfo();
         public static ArchipelagoData archipelagoData = new ArchipelagoData();
         public static GenerateInfo generateInfo = new GenerateInfo();
         public static string saveFileName;
 
-        public static int startWaitForGeneratingCounter;
         public static int reconnectTimer;
 
         public static bool inArchipelagoMenu;
         public static bool playingArchipelagoSave;
 
         static DeathLink deathlinkQueue;
-        static List<string> announceMessageQueue = new List<string>();
-        static List<string> pickupTextQueue = new List<string>();
+        public static List<string> trapLinkQueue = new List<string>();
         public static Dictionary<string, Dictionary<long, string>> remoteItemToXmlNameCache = new Dictionary<string, Dictionary<long, string>>();
 
         public static GameState gameState;
@@ -92,7 +83,8 @@ namespace HammerwatchAP.Archipelago
         public static bool ExploreSpeedPing = true;
         public static bool FragileBreakables = true;
         public static bool APChatMirroring = true;
-        public static bool ShopItemHinting = false; //TODO: add functionality
+        public static bool ShopItemHinting = true;
+        public static bool TrapLink = false;
 
         public static bool DEBUG_MODE = true;
 
@@ -149,7 +141,7 @@ namespace HammerwatchAP.Archipelago
 
             QoL.Setup();
         }
-        //TODO: remove all references and make them use ConnectionActive
+        
         public static bool ConnectedToAP()
         {
             return connectionInfo.ConnectionActive;
@@ -159,9 +151,6 @@ namespace HammerwatchAP.Archipelago
         {
             gameChecksums = new Dictionary<string, string>();
 
-            //gameReady = false;
-            //mapFinishedGenerating = false;
-
             ArchipelagoManager.archipelagoData = archipelagoData;
 
             ResetAPVars();
@@ -169,6 +158,7 @@ namespace HammerwatchAP.Archipelago
         public static void ResetAPVars()
         {
             deathlinkQueue = null;
+            trapLinkQueue.Clear();
         }
 
         public static bool LoadDatapackage()
@@ -292,8 +282,6 @@ namespace HammerwatchAP.Archipelago
                             if (reconnectTimer <= 0)
                             {
                                 reconnectTimer = 15000;
-                                //Task reconnectThread = new Task(() => { ConnectionInfo.ConnectThread(false, true); });
-                                //reconnectThread.Start();
                                 connectionInfo.StartConnection(archipelagoData, false, true, false);
                             }
                         }
@@ -313,7 +301,6 @@ namespace HammerwatchAP.Archipelago
                                 {
                                     mkeys = new int[] { 10 };
                                 }
-                                //ResourceContext.Log($"Swapping floor master keys for new level {currentLevelName}");
                                 for (int k = 0; k < mkeys.Length; k++)
                                 {
                                     int arrayIndex = k;
@@ -323,6 +310,11 @@ namespace HammerwatchAP.Archipelago
                                     if (GameBase.Instance.Players[0].GetKey(mkeys[k]) != correctAmount)
                                         GameBase.Instance.Players[0].SetKeys(mkeys[k], correctAmount);
                                 }
+                            }
+                            //Traplink
+                            if(trapLinkQueue.Count > 0)
+                            {
+
                             }
                         }
                         break;
@@ -363,28 +355,6 @@ namespace HammerwatchAP.Archipelago
                 GameInterface.SetGlobalFlag($"quest_bar", true);
             }
 
-            //Initialize the buttonProgress dictionary if it hasn't been loaded
-            //Now defunct I think
-            //if (buttonProgress == null)
-            //    buttonProgress = new Dictionary<string, int>();
-            //if (buttonProgress.Count == 0)
-            //{
-            //    if (map == MapType.Castle)
-            //    {
-            //        foreach (string buttonProgressItem in APData.castleButtonProgressCounts.Keys)
-            //        {
-            //            buttonProgress[buttonProgressItem] = 0;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        foreach (string buttonProgressItem in APData.templeButtonProgressCounts.Keys)
-            //        {
-            //            buttonProgress[buttonProgressItem] = 0;
-            //        }
-            //    }
-            //}
-
             //Add hammer if hammer fragments are zero
             if (archipelagoData.totalHammerFragments == 0)
                 GameInterface.SetGlobalFlag($"has_hammer", true);
@@ -393,7 +363,7 @@ namespace HammerwatchAP.Archipelago
 
             SyncUpgrades();
 
-            if (connectionInfo.ConnectionActive) return;
+            if (!connectionInfo.ConnectionActive) return;
             connectionInfo.SetClientReady(archipelagoData.GetOption(SlotDataKeys.deathLink) > 0);
         }
         public static void ChangedLevel(string levelId)
@@ -460,7 +430,8 @@ namespace HammerwatchAP.Archipelago
                 //Auto tab switching
                 if (connectionInfo.connectedToAP)
                 {
-                    session.DataStorage[$"{connectionInfo.playerTeam}:{connectionInfo.playerId}:CurrentRegion"] = levelId;
+                    //session.DataStorage[$"{connectionInfo.playerTeam}:{connectionInfo.playerId}:CurrentRegion"] = levelId;
+                    connectionInfo.SetDataStorageValue($"{connectionInfo.playerTeam}:{connectionInfo.playerId}:CurrentRegion", levelId);
                 }
 
                 //Apply deathlink if it was queued
@@ -547,7 +518,7 @@ namespace HammerwatchAP.Archipelago
                         if (item.Player != connectionInfo.playerId)
                             return;
 
-                        ReceiveItem(item);
+                        CreateItemInWorld(item, false);
                     }
                     foreach (string buttonEvent in buttonEventDict.Keys)
                     {
@@ -558,8 +529,11 @@ namespace HammerwatchAP.Archipelago
         }
         public static void DataStorageMarkBossCompleted(int boss)
         {
-            if (connectionInfo.ConnectionActive)
-                session.DataStorage[$"{connectionInfo.playerTeam}:{connectionInfo.playerId}:boss_{boss}"] = 1;
+            //if (connectionInfo.ConnectionActive)
+            //{
+            //    session.DataStorage[$"{connectionInfo.playerTeam}:{connectionInfo.playerId}:boss_{boss}"] = 1;
+            //}
+            connectionInfo.SetDataStorageValue($"{connectionInfo.playerTeam}:{connectionInfo.playerId}:boss_{boss}", "1");
         }
 
         public static void GetBossRuneFlagFromItem(string itemName, bool receive)
@@ -600,7 +574,6 @@ namespace HammerwatchAP.Archipelago
         }
         public static Upgrade GetNextShopUpgrade(Upgrade baseUpgrade)
         {
-            Logging.Debug("GetNextShopUpgrade: " + baseUpgrade.ID);
             if (baseUpgrade.ID.StartsWith("ap-"))
             {
                 int locId = int.Parse(baseUpgrade.ID.Substring(3));
@@ -608,9 +581,6 @@ namespace HammerwatchAP.Archipelago
                 Upgrade? upgrade = GetNextShopUpgrade(item, false);
                 if (upgrade.HasValue)
                 {
-                    Logging.Debug("Next shop upgrade: " + upgrade.Value.ID);
-                    Logging.Debug($"Next shop upgrade data: {upgrade.Value.Data}");
-                    Logging.Debug($"Next shop upgrade description: {upgrade.Value.Description}");
                     return upgrade.Value;
                 }
             }
@@ -775,7 +745,7 @@ namespace HammerwatchAP.Archipelago
                 archipelagoData.CheckLocation(locId, false);
                 NetworkItem item = archipelagoData.GetItemFromLoc(locId);
                 if (IsItemOurs(item, false))
-                    ReceiveItem(item);
+                    CreateItemInWorld(item, false);
             }
         }
 
@@ -888,6 +858,20 @@ namespace HammerwatchAP.Archipelago
             }
             return baseMessage.Replace("_", player.Name);
         }
+        public static void SetTrapLink(bool on)
+        {
+            if (TrapLink == on) return;
+            TrapLink = on;
+            connectionInfo.UpdateTags();
+        }
+        public static void ReceiveTrapLinkItem(string linkedItemName)
+        {
+            trapLinkQueue.Add(linkedItemName);
+        }
+        public static void ReceiveCustomTrap(string customTrapName)
+        {
+
+        }
 
         public static void KilledEnemy(WorldActor actor)
         {
@@ -976,9 +960,13 @@ namespace HammerwatchAP.Archipelago
                     pref.ProduceInGame(actor.Position, GameBase.Instance.resources, GameBase.Instance.world, scriptCollection);
                     continue;
                 }
+                else if(lootXmlName == APData.chaserTrapXmlName)
+                {
+                    lootXmlName = APData.chaserTrapActorXmlName;
+                }
                 if (!APData.IsItemXmlNameCorporeal(lootXmlName))
                 {
-                    archipelagoData.CheckLocation(locId, true);
+                    AddPickupMessageToQueue(item);
                     PickupItemEffects(item, false);
                     continue;
                 }
@@ -1061,18 +1049,18 @@ namespace HammerwatchAP.Archipelago
         public static void AddTranslatedMessageToQueue(string translationKey)
         {
             string message = ArchipelagoMessageManager.GetLanguageString(translationKey, new string[0]);
-            announceMessageQueue.Add(message);
+            ArchipelagoMessageManager.announceMessageQueue.Add(message);
         }
         public static void AddMessageToQueue(string message)
         {
-            announceMessageQueue.Add(message);
+            ArchipelagoMessageManager.announceMessageQueue.Add(message);
         }
         public static void AddPickupMessageToQueue(NetworkItem item)
         {
             if (!IsItemOurs(item, false))
             {
                 string popupMessage = GetSendItemMessage(item);
-                pickupTextQueue.Add(popupMessage);
+                ArchipelagoMessageManager.pickupTextQueue.Add(popupMessage);
             }
         }
 
@@ -1082,7 +1070,7 @@ namespace HammerwatchAP.Archipelago
         }
         public static string GetItemName(NetworkItem item)
         {
-            return session.Items.GetItemName(item.Item, archipelagoData.playerGames[item.Player]);
+            return connectionInfo.session.Items.GetItemName(item.Item, archipelagoData.playerGames[item.Player]);
         }
         public static string GetItemName(long itemId, string gameName = "Hammerwatch")
         {
@@ -1098,7 +1086,7 @@ namespace HammerwatchAP.Archipelago
                 }
             }
 
-            return session.Items.GetItemName(itemId, gameName);
+            return connectionInfo.session.Items.GetItemName(itemId, gameName);
         }
         public static string GetSendItemMessageFromPos(Vector2 pos)
         {
@@ -1122,7 +1110,7 @@ namespace HammerwatchAP.Archipelago
         }
         public static string GetReceiveItemMessage(NetworkItem item)
         {
-            var playerInfo = session.Players.Players[connectionInfo.playerTeam][item.Player];
+            var playerInfo = connectionInfo.session.Players.Players[connectionInfo.playerTeam][item.Player];
             string itemName = GetReceiveItemName(item);
             string playerName = playerInfo.Alias;
             string endString = GetItemMessageEndString(item);
@@ -1259,13 +1247,13 @@ namespace HammerwatchAP.Archipelago
             return APData.GetAPXmlItemFromItemFlags(item.Flags);
         }
 
-        public static void ReceiveItem(NetworkItem item)
+        public static void CreateItemInWorld(NetworkItem item, bool receivedFromServer)
         {
             string itemName = GetReceiveItemName(item);
 
             bool remote = !IsHostPlayer();
 
-            PickupItemEffects(item, true, remote);
+            PickupItemEffects(item, receivedFromServer, remote);
 
             if (!APData.itemNameToXML.ContainsKey(itemName))
             {
@@ -1289,7 +1277,7 @@ namespace HammerwatchAP.Archipelago
             //If we're not the host, don't spawn the item but pretend like we picked it up
             if (remote)
             {
-                PickupItemEffectsXml(GetItemXmlName(item, true), true);
+                PickupItemEffectsXml(GetItemXmlName(item, receivedFromServer), receivedFromServer);
                 return;
             }
 
@@ -1352,6 +1340,19 @@ namespace HammerwatchAP.Archipelago
                 pref.ProduceInGame(spawnPos, GameBase.Instance.resources, GameBase.Instance.world, scriptCollection);
                 QoL.ResetExploreSpeed(defaultPlayer);
             }
+            else if(itemName == "Chaser Trap")
+            {
+                spawnPos = GameBase.Instance.GetSpawnPos(defaultPlayer);
+                ActorType actorType = GameBase.Instance.resources.GetResource<ActorType>(APData.chaserTrapActorXmlName);
+                WorldObject worldActor = actorType.Produce(spawnPos);
+                GameBase.Instance.world.Place(spawnPos.X, spawnPos.Y, worldActor, true);
+                Network.SendToAll("SpawnUnit", new object[]
+                {
+                    ResourceBank.PathHash(actorType.Name),
+                    worldActor.NodeId,
+                    spawnPos
+                });
+            }
             else
             {
                 ItemType type;
@@ -1399,32 +1400,29 @@ namespace HammerwatchAP.Archipelago
             archipelagoData.PickupItemEffectsXml(xmlName, receive);
         }
         //Should only be called on static items or when receiving an item from the server (NOT from enemy loot)
-        public static void PickupItemEffects(NetworkItem item, bool receive, bool silent = false)
+        public static void PickupItemEffects(NetworkItem item, bool receiveFromServer, bool silent = false)
         {
-            //Logging.GameLog("PickupItemEffects id: " + item.Item);
             //If this is someone else's item in our world don't run this
-            if (!IsItemOurs(item, receive))
+            if (!IsItemOurs(item, receiveFromServer))
                 return;
 
-            string itemName = receive ? GetReceiveItemName(item) : GetItemName(item);
-            string xmlName = GetItemXmlName(item, receive);
-            //Logging.GameLog("itemName: " + itemName + " | xmlName: " + xmlName);
+            string itemName = receiveFromServer ? GetReceiveItemName(item) : GetItemName(item);
+            string xmlName = GetItemXmlName(item, receiveFromServer);
 
-            if (xmlName == APData.buttonEffectItemXmlName)// || xmlName.StartsWith("items/boss_rune_"))
+            if (xmlName == APData.buttonEffectItemXmlName)
             {
-                if (!receive && !silent)
+                //Logging.GameLog($"receive {receiveFromServer} | silent {silent}");
+                if (!receiveFromServer && !silent)
+                {
                     AddMessageToQueue(APData.GetButtonEventName(itemName));
+                }
 
-                //SetGlobalFlag.GlobalFlags[itemName] = true;
                 GameInterface.SetGlobalFlag(itemName, true);
                 EventSystem.Instance.FireEvent(BUTTON_EVENT_NAME);
-                //AddMessageToQueue(GetButtonEventName(itemName));
             }
 
             //Button effect specific
             string progressBaseName = itemName.Replace(" Progress", "");
-            int itemOffsetId;
-            Dictionary<string, int> buttonProgressCounts;
             if (archipelagoData.mapType == ArchipelagoData.MapType.Castle)
             {
                 if (itemName.Contains("Boss Rune"))
@@ -1455,7 +1453,6 @@ namespace HammerwatchAP.Archipelago
                         archipelagoData.bossRunes[levelIndex] += 1;
                         if (archipelagoData.bossRunes[levelIndex] >= bossRuneProgressCount)
                         {
-                            //SetGlobalFlag.GlobalFlags[flagName] = true;
                             GameInterface.SetGlobalFlag(flagName, true);
                             EventSystem.Instance.FireEvent(BUTTON_EVENT_NAME);
                             if (!silent)
@@ -1463,9 +1460,6 @@ namespace HammerwatchAP.Archipelago
                         }
                     }
                 }
-
-                itemOffsetId = (int)(item.Item - APData.castleButtonItemStartID);
-                buttonProgressCounts = APData.castleButtonProgressCounts;
             }
             else
             {
@@ -1492,39 +1486,17 @@ namespace HammerwatchAP.Archipelago
                     };
                     for (int p = 0; p < pyramids; p++)
                     {
-                        //SetGlobalFlag.GlobalFlags[pyramidFlags[p]] = true;
                         GameInterface.SetGlobalFlag(pyramidFlags[p], true);
                     }
                     archipelagoData.pofRaiseLevel = newPofRaiseLevel;
                     EventSystem.Instance.FireEvent("pyramid_update");
                 }
-                itemOffsetId = (int)(item.Item - APData.templeButtonItemStartID);
-                buttonProgressCounts = APData.templeButtonProgressCounts;
             }
-            //if (buttonProgressCounts.TryGetValue(progressBaseName, out int count))
-            //{
-            //    if (itemName == progressBaseName)
-            //    {
-            //        archipelagoData.buttonProgress[progressBaseName] = count;
-            //    }
-            //    else
-            //    {
-            //        archipelagoData.buttonProgress[progressBaseName]++;
-            //    }
-            //    if (archipelagoData.buttonProgress[progressBaseName] >= count)
-            //    {
-            //        EventSystem.Instance.FireEvent(BUTTON_EVENT_NAME);
-            //        //SetGlobalFlag.GlobalFlags[progressBaseName] = true;
-            //        GameInterface.SetGlobalFlag(progressBaseName, true);
-            //        if (!silent)
-            //            AddMessageToQueue(APData.GetButtonEventName(progressBaseName));
-            //    }
-            //}
 
             if (itemName.Contains("Master") || itemName.StartsWith("Dune Sharks Arena"))
             {
                 if (!silent)
-                    pickupTextQueue.Add(itemName + "!");
+                    ArchipelagoMessageManager.pickupTextQueue.Add(itemName + "!");
                 string[] nameSplits = itemName.Split(' ');
                 if (int.TryParse(nameSplits[2], out int floorIndex))
                 {

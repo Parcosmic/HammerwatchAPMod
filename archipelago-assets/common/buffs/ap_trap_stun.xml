@@ -1,0 +1,24 @@
+<buff>
+	<behavior>
+		<dictionary>
+			<string name="color">255 255 255</string>
+			
+			<int name="duration">3000</int>
+			
+			<float name="dmg-mul">1.0</float>
+			<float name="speed-mul">0.0</float>
+			<bool name="snare">false</bool>
+			<bool name="stun">true</bool>
+			
+			<array name="effects">
+				<dictionary>
+					<string name="type">sprite</string>
+					<string name="sprite">effects/misc.xml:stun</string>
+					<string name="color">255 255 255</string>
+					<int name="layer">21</int>
+				</dictionary>
+			</array>			
+			
+		</dictionary>
+	</behavior>
+</buff>

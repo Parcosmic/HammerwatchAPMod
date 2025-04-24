@@ -27,7 +27,7 @@ namespace HammerwatchAP.Game
         {
             get
             {
-                return Color.Yellow;
+                return Color.White;
             }
         }
 

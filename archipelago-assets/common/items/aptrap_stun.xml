@@ -1,0 +1,36 @@
+<item behavior="bomb">
+	<behavior>
+		<dictionary>
+			<entry name="no-lamp"><bool>true</bool></entry>
+			<entry name="dmg"><int>1</int></entry>
+			<entry name="splash"><float>10.0</float></entry>
+			<entry name="buff"><string>buffs/ap_trap_stun.xml</string></entry>
+			<entry name="explode-delay"><int>1000</int></entry>
+			<entry name="explode-snd"><string>sound/misc.xml:open_gate</string></entry>
+			<entry name="explode-particle"><string>effects/particles.xml:dust-particle</string></entry>
+		</dictionary>
+	</behavior>
+
+	<sprite scale="16">
+		<texture>items/bomb_2.png</texture>
+		<origin>16 19</origin>
+		<frame time="100">0 0 32 32</frame>
+		<frame time="100">32 0 32 32</frame>
+		<frame time="100">64 0 32 32</frame>
+		<frame time="100">96 0 32 32</frame>
+		<frame time="100">128 0 32 32</frame>
+		<frame time="100">160 0 32 32</frame>
+		<frame time="100">0 32 32 32</frame>
+		<frame time="100">32 32 32 32</frame>
+		<frame time="100">64 32 32 32</frame>
+		<frame time="100">96 32 32 32</frame>
+		<frame time="50">128 32 32 32</frame>
+		<frame time="50">160 32 32 32</frame>
+		<frame time="33">160 32 32 32</frame>
+		<frame time="33">192 32 32 32</frame>
+		<frame time="33">224 32 32 32</frame>		
+	</sprite>	
+	
+	<collision shoot-through="true">
+	</collision>
+</item>

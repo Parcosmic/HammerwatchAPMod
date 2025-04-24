@@ -17,6 +17,11 @@ namespace HammerwatchAP.Archipelago
 
         public static Dictionary<string, string> groupSwapMapping;
 
+        private static Dictionary<string, List<string>> levelExcludedActors = new Dictionary<string, List<string>>()
+        {
+            {"level_bonus_1.xml" , new List<string>(){ "17 20.5" } },
+        };
+
         private static void InitDictionaries()
         {
             random = new Random();
@@ -80,6 +85,21 @@ namespace HammerwatchAP.Archipelago
                     foreach (XElement enemyPosNode in groupElements)
                         enemyNodeData[actorType][actIndex, groupTier].Add(new EnemyNodeData(enemyPosNode, false, fullGroupName, levelName, actIndex, groupTier));
                     group.Remove();
+                }
+                //Remove that one problematic spawner if this is the bonus level
+                if (levelName == "level_bonus_1.xml")
+                {
+                    List<EnemyNodeData> bonus1EnemyNodes = enemyNodeData[ActorType.Spawner][APData.GetActFromLevelFileName(levelName, archipelagoData) - 1, 0];
+                    for(int e = 0; e < bonus1EnemyNodes.Count; e++)
+                    {
+                        if(bonus1EnemyNodes[e].enemyNode.Element("vec2").Value == "17 20.5")
+                        {
+                            Logging.Debug("Replaced problematic spawner in bonus 1");
+                            bonus1EnemyNodes.RemoveAt(e);
+                            actors["actors/spawners/bonus/skeleton_1.xml"]--;
+                            break;
+                        }
+                    }
                 }
                 //Script nodes
                 foreach (XElement node in scriptNodes)

@@ -63,6 +63,8 @@ namespace HammerwatchAP.Archipelago
         public const string apHoloProgItemXmlName = "items/archipelago_holo_prog.xml";
 
         public const string bombTrapXmlName = "items/chest_trap_bomb.xml";
+        public const string chaserTrapXmlName = "items/chest_trap_chaser.xml";
+        public const string chaserTrapActorXmlName = "actors/ap_chaser.xml";
 
         public static readonly List<string> deathlinkMessages = new List<string>()
         {
@@ -134,6 +136,67 @@ namespace HammerwatchAP.Archipelago
             },
         };
 
+        public static string GetTrapLinkTrap(string linkedTrapName)
+        {
+            if (trapNameToXML.ContainsKey(linkedTrapName))
+                return linkedTrapName;
+            if (trapLinkInterpretNames.TryGetValue(linkedTrapName, out string interpretedTrapName))
+                return interpretedTrapName;
+            return null;
+        }
+        private static readonly Dictionary<string, string> trapLinkInterpretNames = new Dictionary<string, string>()
+        {
+            { "OmoTrap", "Chaser Trap" },
+            { "Chaos Control Trap", "Stun Trap" },
+            //{ "Tiny Trap", "" },
+            //{ "Gravity Trap", "" },
+            //{ "Exposition Trap", "Hey! Trap" },
+            { "Ice Trap", "Frost Trap" },
+            { "Slow Trap", "Frost Trap" },
+            //{ "Cutscene Trap", "Hey! Trap" },
+            { "Reverse Trap", "Confuse Trap" },
+            //{ "Literature Trap", "Hey! Trap" },
+            { "Bee Trap", "Chaser Trap" },
+            //{ "Pong Trap", "" },
+            //{ "Breakout Trap", "" },
+            //{ "Fishing Trap", "" },
+            //{ "Trivia Trap", "Hey! Trap" },
+            //{ "Pokemon Trivia Trap", "Hey! Trap" },
+            //{ "Number Sequence Trap", "" },
+            //{ "Light Up Path Trap", "" },
+            //{ "Pinball Trap", "" },
+            //{ "Math Quiz Trap", "Hey! Trap" },
+            { "Snake Trap", "Poison Trap" },
+            //{ "Input Sequence Trap", "" },
+            //{ "Timer Trap", "" },
+            { "Thwimp Trap", "Chaser Trap" },
+            { "Freeze Trap", "Frost Trap" },
+            { "Frozen Trap", "Frost Trap" },
+            { "Paralyze Trap", "Stun Trap" },
+            { "Slowness Trap", "Frost Trap" },
+            { "Reversal Trap", "Confuse Trap" },
+            { "Fuzzy Trap", "Confuse Trap" },
+            { "Confound Trap", "Confuse Trap" },
+            { "Confusion Trap", "Confuse Trap" },
+            //{ "Spring Trap", "" },
+            { "Police Trap", "Chaser Trap" },
+            //{ "Buyon Trap", "" },
+            { "Damage Trap", "Fire Trap" },
+            { "Instant Death Trap", "Bomb Trap" },
+            { "Eject Ability", "Mana Drain Trap" },
+            { "Gooey Bag", "Poison Trap" },
+            { "TNT Barrel Trap", "Bomb Trap" },
+            { "Honey Trap", "Poison Trap" },
+            { "Screen Flip Trap", "Confuse Trap" },
+            //{ "Deisometric Trap", "" },
+            { "Poison Mushroom", "Poison Trap" },
+            { "Banana Trap", "Frost Trap" },
+            { "Bomb Trap", "Bomb Trap" },
+            { "Bonk Trap", "Stun Trap" },
+            { "Posession Trap", "Poison Trap" },
+            { "Ghost", "Chaser Trap" },
+        };
+
         public static readonly Dictionary<string, string> itemNameToXML = new Dictionary<string, string>()
         {
             { "Bonus Chest", "items/bonus_chest.xml" },
@@ -198,7 +261,10 @@ namespace HammerwatchAP.Archipelago
             { "Fire Trap", "items/chest_trap_fire.xml" },
             { "Confuse Trap", "items/chest_trap_confuse.xml" },
             { "Banner Trap", "items/chest_trap_banner.xml" },
+            { "Disarm Trap", "items/chest_trap_disarm.xml" },
+            { "Stun Trap", "items/chest_trap_stun.xml" },
             { "Fly Trap", "items/chest_trap_flies.xml" },
+            { "Chaser Trap", chaserTrapXmlName },
             { "Big Bronze Key", "items/key_bronze_big.xml" },
             { "Big Prison Bronze Key", "items/key_bronze_big_prison.xml" },
             { "Big Armory Bronze Key", "items/key_bronze_big_armory.xml" },
@@ -241,7 +307,10 @@ namespace HammerwatchAP.Archipelago
             { "Frost Trap", "items/aptrap_frost.xml" },
             { "Fire Trap", "items/aptrap_fire.xml" },
             { "Confuse Trap", "items/aptrap_confuse.xml" },
-            { "Fly Trap", "projectiles/enemy_mummy_1_mb.xml" },
+            { "Fly Trap", "items/aptrap_flies.xml" },
+            { "Chaser Trap", chaserTrapActorXmlName },
+            { "Disarm Trap", "items/aptrap_disarm.xml" },
+            { "Stun Trap", "items/aptrap_stun.xml" },
         };
         public static readonly List<string> consumableItemXmlName = new List<string>()
         {

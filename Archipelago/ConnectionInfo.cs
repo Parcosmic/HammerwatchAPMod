@@ -24,6 +24,9 @@ namespace HammerwatchAP.Archipelago
 {
     public class ConnectionInfo
     {
+        const string TAG_DEATHLINK = "DeathLink";
+        const string TAG_TRAPLINK = "TrapLink";
+
         public string slotName;
         public string ip;
         public string apPassword;
@@ -39,7 +42,7 @@ namespace HammerwatchAP.Archipelago
         public bool gotTryConnectResult = false;
         public bool connectIgnoringWarnings = false;
 
-        int reconnectTimer = 0;
+        private int reconnectTimer = 0;
 
         public ArchipelagoSession session;
         private DeathLinkService deathLinkService;
@@ -51,16 +54,18 @@ namespace HammerwatchAP.Archipelago
             }
         }
 
-        Task connectTask;
-        Exception connectException;
+        private Task connectTask;
+        private Exception connectException;
 
-        LoginResult loginResult;
+        private LoginResult loginResult;
+
+        private List<int> hintedLocationIds;
 
         //Message vars
-        bool sentMessage;
-        bool sentCommand;
-        int absorbMessages;
-        List<string> absorbedMessages = new List<string>();
+        private bool sentMessage;
+        private bool sentCommand;
+        private int absorbMessages;
+        private List<string> absorbedMessages = new List<string>();
 
         public ConnectionInfo()
         {
@@ -72,6 +77,8 @@ namespace HammerwatchAP.Archipelago
             playerTeam = -1;
 
             failedConnectMsg = null;
+
+            hintedLocationIds = new List<int>();
         }
         public ConnectionInfo(string slotName, string ip, string password)
         {
@@ -83,6 +90,8 @@ namespace HammerwatchAP.Archipelago
             playerTeam = -1;
 
             failedConnectMsg = null;
+
+            hintedLocationIds = new List<int>();
         }
 
         public void StartConnection(ArchipelagoData loadedData, bool resetVars = false, bool inGame = false, bool wait = true)
@@ -130,6 +139,7 @@ namespace HammerwatchAP.Archipelago
         }
         private bool ConnectToArchipelago(string ip, string slotName, string password, ArchipelagoData loadedArchipelagoData, bool resetVars)
         {
+            ArchipelagoManager.gameState = ArchipelagoManager.GameState.Connecting;
             connectionState = ConnectionState.SetupSession;
 
             Logging.LogConnectionInfo(ip);
@@ -226,7 +236,6 @@ namespace HammerwatchAP.Archipelago
             };
             session.Socket.PacketReceived += packet =>
             {
-                //Logging.Debug("Received packet " + packet.PacketType);
                 try
                 {
                     switch (packet.PacketType)
@@ -276,10 +285,13 @@ namespace HammerwatchAP.Archipelago
                             break;
                         case ArchipelagoPacketType.RoomUpdate:
                             RoomUpdatePacket ruPacket = (RoomUpdatePacket)packet;
-                            foreach (long loc in ruPacket.CheckedLocations)
+                            if(ruPacket.CheckedLocations != null)
                             {
-                                if (archipelagoData.checkedLocations.Contains(loc)) continue;
-                                archipelagoData.checkedLocations.Add(loc);
+                                foreach (long loc in ruPacket.CheckedLocations)
+                                {
+                                    if (archipelagoData.checkedLocations.Contains(loc)) continue;
+                                    archipelagoData.checkedLocations.Add(loc);
+                                }
                             }
                             break;
                         case ArchipelagoPacketType.Connected:
@@ -291,7 +303,6 @@ namespace HammerwatchAP.Archipelago
                             {
                                 case MiscHelper.VersionMisMatch.Major:
                                 case MiscHelper.VersionMisMatch.Minor:
-                                    //ArchipelagoManager.failedConnectMsg = $"Server requires higher mod version ({clientVersion}) than is currently installed. Update your mod!";
                                     ArchipelagoManager.DisconnectFromArchipelago($"Server requires higher mod version ({clientVersion}) than is currently installed. Update your mod!");
                                     connectionState = ConnectionState.ConnectionFailure;
                                     return;
@@ -322,11 +333,6 @@ namespace HammerwatchAP.Archipelago
                                 connectionState = ConnectionState.ConnectionFailure;
                                 return;
                             }
-                            //Console.WriteLine("Slot data dump:");
-                            //foreach (string key in archipelagoData.slotData.Keys)
-                            //{
-                            //    Console.WriteLine($"{key} : {archipelagoData.slotData[key]}");
-                            //}
 
                             archipelagoData.playerGames = new string[session.Players.Players[playerTeam].Count];
                             foreach (var playerInfo in session.Players.Players[playerTeam])
@@ -353,7 +359,6 @@ namespace HammerwatchAP.Archipelago
                                 archipelagoData.checkedLocations.Add(loc);
                             }
 
-                            //TODO: Sync loaded AP data with info on the server
                             if (loadedArchipelagoData != null)
                             {
                                 if (loadedArchipelagoData.seed != null && session.RoomState.Seed != loadedArchipelagoData.seed)
@@ -440,12 +445,12 @@ namespace HammerwatchAP.Archipelago
                                     }
                                     continue;
                                 }
-                                //ReceiveItem(item);
                                 Logging.Debug($"Received {itemName}");
                             }
                             ArchipelagoManager.archipelagoData.itemsToReceive.AddRange(items);
                             break;
                         case ArchipelagoPacketType.LocationInfo:
+                            if (archipelagoData.locationToItem.Count > 0) return;
                             LocationInfoPacket locPacket = (LocationInfoPacket)packet;
                             Dictionary<long, NetworkItem> locationToItem = new Dictionary<long, NetworkItem>(locPacket.Locations.Length);
                             foreach (NetworkItem item in locPacket.Locations)
@@ -473,6 +478,22 @@ namespace HammerwatchAP.Archipelago
                             }
                             ArchipelagoManager.CompletedGeneration();
                             break;
+                        case ArchipelagoPacketType.Bounced:
+                            BouncedPacket bouncedPacket = (BouncedPacket)packet;
+                            if(bouncedPacket.Tags.Contains(TAG_TRAPLINK))
+                            {
+                                string trapLinkPlayerName = bouncedPacket.Data["source"].ToString();
+                                if (trapLinkPlayerName == GetPlayerName(playerId))
+                                {
+                                    break;
+                                }
+                                //string trapLinkSentTime = bouncedPacket.Data["time"].ToString();
+                                string trapLinkTrapName = bouncedPacket.Data["trap_name"].ToString();
+                                string hwTrapName = APData.GetTrapLinkTrap(trapLinkTrapName);
+                                if(hwTrapName != null)
+                                    ArchipelagoManager.ReceiveTrapLinkItem(hwTrapName);
+                            }
+                            break;
                     }
                 }
                 catch (Exception e)
@@ -482,11 +503,6 @@ namespace HammerwatchAP.Archipelago
             };
             ArchipelagoManager.datapackageUpToDate = false;
             loginResult = session.TryConnectAndLogin("Hammerwatch", slotName, ItemsHandlingFlags.IncludeStartingInventory, ArchipelagoManager.AP_VERSION, null, null, password);
-
-            //while ((!gotTryConnectResult || !ArchipelagoManager.datapackageUpToDate) && loginResult.Successful)
-            //{
-            //    //Wait for it to connect
-            //}
 
             return failedConnectMsg == null;
         }
@@ -550,13 +566,24 @@ namespace HammerwatchAP.Archipelago
                 session.Socket.DisconnectAsync();
             connectionState = ConnectionState.Disconnected;
         }
+        private void DisconnectedFromArchipelago()
+        {
+            connectedToAP = false;
+            session = null;
+            deathLinkService = null;
+            ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
+            reconnectTimer = 15000;
+        }
 
         public void GameUpdate(int ms)
         {
-            //Logging.Log($"State {connectionState}, datapackage up to date: {ArchipelagoManager.datapackageUpToDate}");
             if((connectionState == ConnectionState.ConnectionResult || connectionState == ConnectionState.ConnectionFailure) && ArchipelagoManager.datapackageUpToDate)
             {
                 ConnectionResponse();
+            }
+            if(ArchipelagoManager.gameState == ArchipelagoManager.GameState.Generating && (GameBase.Instance.menus.GetTopMenu() as MessageMenu) == null)
+            {
+                GameBase.Instance.SetMenu(MenuType.MESSAGE, "Generation In Progress", "Generating map file...");
             }
         }
 
@@ -572,16 +599,10 @@ namespace HammerwatchAP.Archipelago
         {
             return session.Players.Players[playerTeam][slot].Game == session.Players.Players[playerTeam][playerId].Game;
         }
-        private void DisconnectedFromArchipelago()
+        public void SetDataStorageValue(string key, string value)
         {
-            //archipelagoSave = false;
-            connectedToAP = false;
-            session = null;
-            deathLinkService = null;
-            ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
-            reconnectTimer = 15000;
-
-            //ResetAbsorb();
+            if (!ConnectionActive) return;
+            session.DataStorage[key] = value;
         }
 
         public void SetClientReady(bool deathlink)
@@ -589,11 +610,19 @@ namespace HammerwatchAP.Archipelago
             if(ConnectionActive)
             {
                 session.Socket.SendPacketAsync(new StatusUpdatePacket() { Status = ArchipelagoClientState.ClientPlaying });
-                string[] tags = new string[0];
-                if (deathlink)
-                    tags = new[] { "DeathLink" };
-                session.Socket.SendPacketAsync(new ConnectUpdatePacket() { ItemsHandling = ItemsHandlingFlags.IncludeStartingInventory, Tags = tags });
+                SetDeathlink(deathlink);
+                UpdateTags();
             }
+        }
+        public void UpdateTags()
+        {
+            List<string> tags = new List<string>();
+            if (ArchipelagoManager.TrapLink)
+                tags.Add(TAG_TRAPLINK);
+            if (ArchipelagoManager.Deathlink)
+                tags.Add(TAG_DEATHLINK);
+            if(ConnectionActive)
+                session.Socket.SendPacketAsync(new ConnectUpdatePacket() { ItemsHandling = ItemsHandlingFlags.IncludeStartingInventory, Tags = tags.ToArray() });
         }
         public void SendGoal()
         {
@@ -618,6 +647,18 @@ namespace HammerwatchAP.Archipelago
             if (connectedToAP)
                 deathLinkService.SendDeathLink(deathlink);
         }
+        public void SendTrapLink(NetworkItem item)
+        {
+            string itemName = ArchipelagoManager.GetItemName(item);
+            //Logging.GameLog("Sending TrapLink of item " + itemName);
+            Dictionary<string, Newtonsoft.Json.Linq.JToken> data = new Dictionary<string, Newtonsoft.Json.Linq.JToken>()
+            {
+                { "source", GetPlayerName(playerId) },
+                { "time", DateTime.Now },
+                { "trap_name", itemName }
+            };
+            session.Socket.SendPacketAsync(new BouncePacket() { Tags = new List<string>() { TAG_TRAPLINK }, Data = data });
+        }
         public void SendCheckedLocations(ArchipelagoData archipelagoData)
         {
             session.Socket.SendPacketAsync(new LocationChecksPacket { Locations = archipelagoData.checkedLocations.ToArray() });
@@ -626,6 +667,18 @@ namespace HammerwatchAP.Archipelago
         public void SendAPChatMessage(string message)
         {
             session.Socket.SendPacketAsync(new SayPacket { Text = message });
+        }
+
+        public void HintLocations(List<int> locationIds)
+        {
+            List<long> locationsToHint = new List<long>();
+            foreach(int locId in locationIds)
+            {
+                if (hintedLocationIds.Contains(locId)) continue;
+                locationsToHint.Add(locId);
+                hintedLocationIds.Add(locId);
+            }
+            session.Socket.SendPacketAsync(new LocationScoutsPacket() { Locations = locationsToHint.ToArray(), CreateAsHint = 2 });
         }
 
         public enum ConnectionState
