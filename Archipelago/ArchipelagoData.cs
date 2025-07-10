@@ -115,7 +115,6 @@ namespace HammerwatchAP.Archipelago
         }
         public void PickupItemEffectsXml(string xmlName, bool receive) //For item effects based on the xml name of the item
         {
-            //Logging.GameLog("PickupItemEffectsXml receive: " + xmlName);
             bool hasPickaxe = false;
             bool hasFryingPan = false;
             bool hasPumpsLever = false;
@@ -316,7 +315,6 @@ namespace HammerwatchAP.Archipelago
         }
         public object GetSlotObj(string key)
         {
-            //Console.WriteLine(key);
             if (slotData.TryGetValue(key, out object value))
                 return value;
             return 0;
@@ -329,12 +327,6 @@ namespace HammerwatchAP.Archipelago
         {
             return (int)(long)GetSlotObj(key);
         }
-        //public static string GetSlotString(string key)
-        //{
-        //    if (!TryGetSlotObj(key, out object objValue))
-        //        ResourceContext.Log($"Failed to get slot data key: {key}");
-        //    return (string)objValue;
-        //}
         public Newtonsoft.Json.Linq.JObject GetSlotJObject(string key)
         {
             return GetSlotValue<Newtonsoft.Json.Linq.JObject>(key);
