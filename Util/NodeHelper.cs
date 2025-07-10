@@ -14,6 +14,10 @@ namespace HammerwatchAP.Util
             Vector2 pos = new Vector2(float.Parse(posStrs[0], System.Globalization.CultureInfo.InvariantCulture), float.Parse(posStrs[1], System.Globalization.CultureInfo.InvariantCulture));
             return pos;
         }
+        public static Vector2 GetNodePos(XElement node)
+        {
+            return PosFromString(node.Element("vec2").Value);
+        }
 
         public static XElement[] CreateDestroySpawnNodes(int id, string spawnObject, Vector2 pos, int checkDestroyedId, bool isDynamic)
         {
@@ -88,9 +92,9 @@ namespace HammerwatchAP.Util
             }));
             return baseNode;
         }
-        public static XElement CreateGlobalEventTriggerNode(int id, int triggerTimes, Vector2 pos, string eventName, int[] connections = null, int[] connectionDelays = null)
+        public static XElement CreateGlobalEventTriggerNode(int id, int triggerTimes, Vector2 pos, string eventName, int[] connections = null, int[] connectionDelays = null, bool enabled=true)
         {
-            XElement node = CreateScriptNodeBase(id, "GlobalEventTrigger", true, triggerTimes, pos);
+            XElement node = CreateScriptNodeBase(id, "GlobalEventTrigger", enabled, triggerTimes, pos);
             node.Add(CreateXNode("parameters", eventName));
             if (connections == null) return node;
             AddConnectionNodes(node, connections, connectionDelays);

@@ -140,11 +140,11 @@ namespace HammerwatchAP.Archipelago
         {
             if (trapNameToXML.ContainsKey(linkedTrapName))
                 return linkedTrapName;
-            if (trapLinkInterpretNames.TryGetValue(linkedTrapName, out string interpretedTrapName))
+            if (ArchipelagoManager.activeTrapLinkDict.TryGetValue(linkedTrapName, out string interpretedTrapName))
                 return interpretedTrapName;
             return null;
         }
-        private static readonly Dictionary<string, string> trapLinkInterpretNames = new Dictionary<string, string>()
+        public static readonly Dictionary<string, string> trapLinkInterpretNames = new Dictionary<string, string>()
         {
             { "OmoTrap", "Chaser Trap" },
             { "Chaos Control Trap", "Stun Trap" },
@@ -156,18 +156,20 @@ namespace HammerwatchAP.Archipelago
             //{ "Cutscene Trap", "Hey! Trap" },
             { "Reverse Trap", "Confuse Trap" },
             //{ "Literature Trap", "Hey! Trap" },
+            { "Controller Drift Trap", "Confuse Trap" },
             { "Bee Trap", "Chaser Trap" },
             //{ "Pong Trap", "" },
             //{ "Breakout Trap", "" },
             //{ "Fishing Trap", "" },
             //{ "Trivia Trap", "Hey! Trap" },
             //{ "Pokemon Trivia Trap", "Hey! Trap" },
+            //{ "Pokemon Count Trap", "Hey! Trap" },
             //{ "Number Sequence Trap", "" },
             //{ "Light Up Path Trap", "" },
             //{ "Pinball Trap", "" },
             //{ "Math Quiz Trap", "Hey! Trap" },
             { "Snake Trap", "Poison Trap" },
-            //{ "Input Sequence Trap", "" },
+            { "Input Sequence Trap", "Stun Trap" },
             //{ "Timer Trap", "" },
             { "Thwimp Trap", "Chaser Trap" },
             { "Freeze Trap", "Frost Trap" },
@@ -186,15 +188,26 @@ namespace HammerwatchAP.Archipelago
             { "Eject Ability", "Mana Drain Trap" },
             { "Gooey Bag", "Poison Trap" },
             { "TNT Barrel Trap", "Bomb Trap" },
-            { "Honey Trap", "Poison Trap" },
+            { "Honey Trap", "Stun Trap" },
             { "Screen Flip Trap", "Confuse Trap" },
             //{ "Deisometric Trap", "" },
             { "Poison Mushroom", "Poison Trap" },
             { "Banana Trap", "Frost Trap" },
-            { "Bomb Trap", "Bomb Trap" },
+            { "Bomb", "Bomb Trap" },
             { "Bonk Trap", "Stun Trap" },
             { "Posession Trap", "Poison Trap" },
             { "Ghost", "Chaser Trap" },
+            //{ "Bald Trap", "" },
+            //{ "Invisible Trap", "" },
+            //{ "Fast Trap", "" },
+            //{ "Laughter Trap", "Stun Trap" },
+            { "Hiccup Trap", "Stun Trap" },
+            //{ "Zoom Trap", "" },
+            { "Nut Trap", "Bomb Trap" },
+            { "Army Trap", "Chaser Trap" },
+            //{ "Jump Trap", "Stun Trap" },
+            //{ "Animal Bonus Trap", "" },
+            { "Sticky Floor Trap", "Stun Trap" },
         };
 
         public static readonly Dictionary<string, string> itemNameToXML = new Dictionary<string, string>()
@@ -615,12 +628,15 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Silver", "items/valuable_6.xml" },
                 new string[]{ "Gold", "items/valuable_9.xml" },
                 new string[]{ "Wood", "items/collectable_2.xml" },
+                new string[]{ "wood", "items/collectable_2.xml" },
                 new string[]{ "Stone", "doodads/theme_g/g_deco_ground_stone_v2.xml" },
+                new string[]{ "stone", "doodads/theme_g/g_deco_ground_stone_v2.xml" }, //For words such as Grindstone, Whetstone, etc.
                 new string[]{ "Rock", "doodads/theme_g/g_deco_ground_stone_v2.xml" },
             }},
             { "Cuphead", new List<string[]>()
             {
                 new string[]{ "Coin", "items/collectable_1.xml" }, //So all multiples of coins appear as vendor coins
+                new string[]{ "Ingredient", "items/health_2.xml" },
 
                 new string[]{"Peashooter", "items/powerup_potion2.xml"}, //Yellow
                 new string[]{"Chaser", "items/powerup_potion2.xml"}, //Yellow
@@ -2070,7 +2086,7 @@ namespace HammerwatchAP.Archipelago
 
         public static Difficulty GetDifficulty(ArchipelagoData archipelagoData)
         {
-            int difficultyIndex = archipelagoData.GetOption("difficulty");
+            int difficultyIndex = archipelagoData.GetOption(SlotDataKeys.difficulty);
             return (Difficulty)difficultyIndex;
         }
 
@@ -4885,11 +4901,11 @@ namespace HammerwatchAP.Archipelago
         };
         public static readonly Dictionary<string, Dictionary<Vector2, (string, Vector2)>> templeLinkedPositions = new Dictionary<string, Dictionary<Vector2, (string, Vector2)>>
         {
-            { "level_boss_2_special.xml", new Dictionary<Vector2, (string, Vector2)>()
-            {
-                {new Vector2(-10f, -14f), ("level_boss_2.xml", new Vector2(-10f, -14.5f))},
-                {new Vector2(15f, 7.5f), ("level_boss_2.xml", new Vector2(15f, 7.5f))},
-            }},
+            //{ "level_boss_2_special.xml", new Dictionary<Vector2, (string, Vector2)>()
+            //{
+            //    {new Vector2(-10f, -14f), ("level_boss_2.xml", new Vector2(-10f, -14.5f))},
+            //    {new Vector2(15f, 7.5f), ("level_boss_2.xml", new Vector2(15f, 7.5f))},
+            //}},
         };
 
         public static readonly Dictionary<string, Dictionary<string, int>> castleButtonEventToLocationId = new Dictionary<string, Dictionary<string, int>>()
@@ -5083,6 +5099,7 @@ namespace HammerwatchAP.Archipelago
             "actors/tower_battlement_empty.xml",
             "actors/tower_static_frost.xml",
             "actors/tower_static_frost_grounded.xml",
+            "actors/boss_krilith/skeleton_1_mb.xml",
             "actors/spawners/doomspawn_1_razed.xml",
         };
 

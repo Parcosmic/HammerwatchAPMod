@@ -37,16 +37,6 @@ namespace HammerwatchAP.Hooks
 				List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
 				MethodInfo _mi_PatchMainMenuDoc = typeof(LoadGUI).GetMethod(nameof(PatchMainMenuDoc), BindingFlags.NonPublic | BindingFlags.Static);
 
-    //            for(int c = 0; c < codes.Count; c++)
-    //            {
-    //                if (codes[c].opcode == OpCodes.Callvirt)
-    //                {
-				//		codes[c + 1] = new CodeInstruction(OpCodes.Nop);
-				//		codes[c + 2] = new CodeInstruction(OpCodes.Nop);
-				//		codes[c + 3] = new CodeInstruction(OpCodes.Call, _mi_PatchMainMenuDoc);
-				//		break;
-    //                }
-				//}
 				HooksHelper.PatchLoadMenu(codes, _mi_PatchMainMenuDoc);
 
 				return codes;
@@ -57,8 +47,6 @@ namespace HammerwatchAP.Hooks
 				int versionLabels = ArchipelagoManager.MOD_VERSION.Build == 0 ? 2 : 3;
 				string modString = $"APMod Ver. {ArchipelagoManager.MOD_VERSION.ToString(versionLabels)}";
 				((TextWidget)__instance.Document.GetWidget("modVersion")).SetText(modString);
-				//Logging.Log("---------------------Postfix");
-				//Logging.Log(modString);
 
 				if (ArchipelagoManager.ConnectedToAP())
 				{

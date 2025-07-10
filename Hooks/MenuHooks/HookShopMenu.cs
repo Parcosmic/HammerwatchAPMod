@@ -3,8 +3,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections.Generic;
 using HarmonyLib;
+using TiltedEngine;
 using ARPGGame;
 using ARPGGame.Menus;
+using ARPGGame.ScriptNodes;
 using HammerwatchAP.Archipelago;
 using HammerwatchAP.Util;
 using Archipelago.MultiClient.Net.Enums;
@@ -18,16 +20,31 @@ namespace HammerwatchAP.Hooks
 
 		internal static void Hook()
 		{
+			HooksHelper.Hook(typeof(ShopMenuCtor));
 			HooksHelper.Hook(typeof(Back));
 			HooksHelper.Hook(typeof(BuySharedUpgrade));
 			HooksHelper.Hook(typeof(Focus));
 		}
+
+		[HarmonyPatch(typeof(ShopMenu), MethodType.Constructor, new Type[] { typeof(GameBase), typeof(ResourceBank), typeof(PlayerInfo), typeof(ShopArea) })]
+		internal static class ShopMenuCtor
+		{
+            static void Postfix()
+            {
+				if(ArchipelagoManager.playingArchipelagoSave && ArchipelagoManager.archipelagoData.IsShopSanityOn())
+					ArchipelagoManager.connectionInfo.SetMapTrackingKey("shop");
+            }
+        }
 
 		[HarmonyPatch(typeof(ShopMenu), nameof(ShopMenu.Back))]
 		internal static class Back
 		{
 			static void Prefix(Upgrade[] ___upgrades)
 			{
+				if (!ArchipelagoManager.playingArchipelagoSave)
+					return;
+				if (ArchipelagoManager.archipelagoData.IsShopSanityOn())
+					ArchipelagoManager.connectionInfo.SetMapTrackingKey(ArchipelagoManager.archipelagoData.currentLevelId);
 				List<int> hintLocationIds = new List<int>();
 				foreach(Upgrade upgrade in ___upgrades)
 				{
@@ -54,7 +71,9 @@ namespace HammerwatchAP.Hooks
 		internal static class BuySharedUpgrade
 		{
 			static void Postfix(PlayerInfo buyer, string id)
-            {
+			{
+				if (!ArchipelagoManager.playingArchipelagoSave)
+					return;
 				Logging.Debug($"Bought upgrade: {id}");
 				ArchipelagoManager.BoughtAPShopItem(buyer, id);
 			}

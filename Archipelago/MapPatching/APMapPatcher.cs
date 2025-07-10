@@ -167,7 +167,7 @@ namespace HammerwatchAP.Archipelago
             infoReader.Close();
             //File.Delete(infoFileName);
             string[] infoStrs = infoText.Split(new[] { "<lives>" }, StringSplitOptions.RemoveEmptyEntries);
-            string newText = $"{infoStrs[0]}<lives>{archipelagoData.GetOption("starting_life_count")}{infoStrs[1].Substring(1)}";
+            string newText = $"{infoStrs[0]}<lives>{archipelagoData.GetOption(SlotDataKeys.startingLifeCount)}{infoStrs[1].Substring(1)}";
             File.WriteAllText(infoFileName, newText);
 
             Logging.Log("Edit level info file");
@@ -177,7 +177,7 @@ namespace HammerwatchAP.Archipelago
             {
                 levelDoc = XDocument.Parse(levelsReader.ReadToEnd());
                 //Set the starting level
-                string startCode = APData.exitIdToCode[archipelagoData.GetOption("Start Exit")];
+                string startCode = APData.exitIdToCode[archipelagoData.GetSlotInt("Start Exit")];
                 string[] startSplits = startCode.Split('|');
                 levelDoc.Root.SetAttributeValue("start", startSplits[0]);
                 //levelsReader.Close();
@@ -209,18 +209,18 @@ namespace HammerwatchAP.Archipelago
             Directory.CreateDirectory(mapTweakDir);
             sharedDoc.Save(Path.Combine(mapTweakDir, "shared.xml"));
             bool shopsanity = archipelagoData.IsShopSanityOn();
-            int category_shuffle = archipelagoData.GetOption("shop_upgrade_category_shuffle");
-            float minCostMod = archipelagoData.GetOption("shop_cost_min") / 100f;
-            float maxCostMod = archipelagoData.GetOption("shop_cost_max") / 100f;
+            int category_shuffle = archipelagoData.GetOption(SlotDataKeys.shopUpgradeCategoryShuffle);
+            float minCostMod = archipelagoData.GetOption(SlotDataKeys.shopCostMin) / 100f;
+            float maxCostMod = archipelagoData.GetOption(SlotDataKeys.shopCostMax) / 100f;
             TweakPatcher.EditTweaks(assetsPath, mapTweakDir, sharedUpgrades, shopsanity, category_shuffle, minCostMod, maxCostMod, archipelagoData, random);
 
             Logging.Log("Loading slot data dictionaries");
-            exitRando = archipelagoData.GetOption("exit_randomization") > 0;
+            exitRando = archipelagoData.GetOption(SlotDataKeys.exitRandomization) > 0;
             Newtonsoft.Json.Linq.JObject gateTypesObj = archipelagoData.GetSlotJObject("Gate Types");
             Newtonsoft.Json.Linq.JObject exitSwapsObj = archipelagoData.GetSlotJObject("Exit Swaps");
             gateTypes = gateTypesObj.ToObject<Dictionary<string, string>>();
             exitSwaps = exitSwapsObj.ToObject<Dictionary<string, string>>();
-            enemyShuffleKeepTier = archipelagoData.GetOption("enemy_shuffle_keep_tier") > 0;
+            enemyShuffleKeepTier = archipelagoData.GetOption(SlotDataKeys.enemyShuffleKeepTier) > 0;
             //See if the values are in int format, if they are we gotta convert them to strings
             if (gateTypes.Count > 0 && int.TryParse(gateTypes.Values.First(), out _))
             {
@@ -348,11 +348,11 @@ namespace HammerwatchAP.Archipelago
             string hudFile = Path.Combine("menus", "gui", "hud.xml");
             string guiFilePath = Path.Combine(hwAssetPath, hudFile);
             string apGuiPath = Path.Combine(campaignAssetPath, "menus", "gui");
-            string plankOffset = "-66 20";
+            string plankOffset = "-80 20";
             if (archipelagoData.mapType == ArchipelagoData.MapType.Temple)
             {
                 guiFilePath = Path.Combine(templeMapPath, hudFile);
-                plankOffset = "-20 20";
+                plankOffset = "-34 20";
             }
             string apGuiFilePath = Path.Combine(apGuiPath, "hud.xml");
             if (!File.Exists(apGuiFilePath))
@@ -757,17 +757,18 @@ namespace HammerwatchAP.Archipelago
                             int shapeNodeId = modNodeStartId++;
                             int areaTriggerNodeId = modNodeStartId++;
                             int checkGoalNodeId = modNodeStartId++;
+                            int goalEventTriggerNodeId = modNodeStartId++;
                             scriptNodesToAdd.Add(NodeHelper.CreateRectangleShapeNode(shapeNodeId, new Vector2(-73, -2), 2.5f, 2, 1));
-                            scriptNodesToAdd.Add(NodeHelper.CreateAreaTriggerNode(areaTriggerNodeId, -1, new Vector2(-73, 0), 0, 1, new int[] { shapeNodeId }, new[] { checkGoalNodeId }));
-                            scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(checkGoalNodeId, new Vector2(-73, 2), "goal", new int[] { modNodeStartId }, new int[] { modNodeStartId + 1, modNodeStartId + 2 }, false));
-                            scriptNodesToAdd.Add(NodeHelper.CreateGlobalEventTriggerNode(modNodeStartId++, -1, new Vector2(-73, 4), "ap_check_end_game"));
-                            scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(modNodeStartId++, new Vector2(-71, 2), -1, 1, new int[] { checkGoalNodeId }));
+                            scriptNodesToAdd.Add(NodeHelper.CreateAreaTriggerNode(areaTriggerNodeId, -1, new Vector2(-73, 0), 0, 1, new int[] { shapeNodeId }, new[] { goalEventTriggerNodeId }));
+                            //scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(checkGoalNodeId, new Vector2(-73, 2), "goal", new int[] { modNodeStartId }, new int[] { modNodeStartId + 1, modNodeStartId + 2 }, false));
+                            scriptNodesToAdd.Add(NodeHelper.CreateGlobalEventTriggerNode(goalEventTriggerNodeId, -1, new Vector2(-73, 4), "ap_check_end_game", new int[] { modNodeStartId, modNodeStartId + 1 }, null, false));
+                            scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(modNodeStartId++, new Vector2(-71, 2), -1, 1, new int[] { goalEventTriggerNodeId }));
                             scriptNodesToAdd.Add(NodeHelper.CreateSpeechBubbleNode(modNodeStartId++, new Vector2(-75, 2), -1, "menus/speech/normal_speech.xml", goalCheckText1, new int[] { 1648 }, new Vector2(0.1f, -1.2f), 100, 0, 4000));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
                             scriptNodesToAdd.Add(NodeHelper.CreateSpeechBubbleNode(modNodeStartId++, new Vector2(-77, 2), -1, "menus/speech/normal_speech.xml", goalCheckText2, new int[] { 1648 }, new Vector2(0.8f, -0.85f), 100, 0, 4000));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { 1654 }, new int[] { 5000 });
                             int resetNodeId = modNodeStartId++;
-                            scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(resetNodeId, new Vector2(-71, -4), -1, 0, new int[] { checkGoalNodeId }));
+                            scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(resetNodeId, new Vector2(-71, -4), -1, 0, new int[] { goalEventTriggerNodeId }));
                             NodeHelper.AddConnectionNodes(idToNode["1734"], new int[] { resetNodeId }, new int[] { 5000 });
 
                             if (buttonsanity > 0)
@@ -994,7 +995,7 @@ namespace HammerwatchAP.Archipelago
                             }
 
                             //Create return teleporter for shortcut return
-                            if (archipelagoData.GetOption("shortcut_teleporter") > 0)
+                            if (archipelagoData.GetOption(SlotDataKeys.shortcutTeleporter) > 0)
                             {
                                 //Remove existing teleport exit
                                 foreach (XElement doodadNode in doodadsNodeRoot.Elements())
@@ -1071,16 +1072,18 @@ namespace HammerwatchAP.Archipelago
 
                             int bossKillStatusId = modNodeStartId++;
                             int rightAreaTriggerId = modNodeStartId++;
-                            foreach (XElement node in scriptNodes)
-                            {
-                                //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
-                                string nodeId = node.Element("int").Value;
-                                XElement[] strNodes = node.Elements("string").ToArray();
-                                if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_1")
-                                {
-                                    NodeHelper.AddConnectionNodes(node, new[] { b1SetGlobalFlagNodeId, bossKillStatusId }, new[] { 0, bossDefeatMessageDelay });
-                                }
-                            }
+                            //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
+                            NodeHelper.AddConnectionNodes(idToNode["200"], new[] { b1SetGlobalFlagNodeId, bossKillStatusId }, new[] { 0, bossDefeatMessageDelay });
+                            //foreach (XElement node in scriptNodes)
+                            //{
+                            //    //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
+                            //    string nodeId = node.Element("int").Value;
+                            //    XElement[] strNodes = node.Elements("string").ToArray();
+                            //    if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_1")
+                            //    {
+                            //        NodeHelper.AddConnectionNodes(node, new[] { b1SetGlobalFlagNodeId, bossKillStatusId }, new[] { 0, bossDefeatMessageDelay });
+                            //    }
+                            //}
                             if (buttonsanity > 0)
                             {
                                 //Button AreaTrigger
@@ -1220,26 +1223,42 @@ namespace HammerwatchAP.Archipelago
 
                             NodeHelper.AddConnectionNodes(idToNode["126"], new[] { b2ReturnFlagNodeId });
 
-                            foreach (XElement node in scriptNodes)
+                            foreach(string b2DeleteNodePanelId in b2DeleteNodePanelDoodads.Keys)
                             {
-                                string nodeId = node.Element("int").Value;
-                                if (b2DeleteNodePanelDoodads.TryGetValue(nodeId, out List<string> deleteDoodads))
-                                {
-                                    XElement deleteDoodadsNode = node.Element("dictionary").Element("int-arr");
-                                    deleteDoodadsNode.Value = string.Join(" ", deleteDoodadsNode.Value.Split(' ').Where(str => !deleteDoodads.Contains(str)));
-                                }
-                                else if (b2AreaTriggerDestroyNodes.TryGetValue(nodeId, out string deleteNodeId))
-                                {
-                                    XElement[] connectionNodes = node.Elements("int-arr").ToArray();
-                                    connectionNodes[0].Value += $" {modNodeStartId}";
-                                    connectionNodes[1].Value += $" 0";
-
-                                    List<string> panelDoodads = b2DeleteNodePanelDoodads[deleteNodeId];
-                                    XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.PosFromString(node.Element("vec2").Value) + new Vector2(0, 5f), 1, new int[0]);
-                                    panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
-                                    scriptNodesToAdd.Add(panelDeleteNode);
-                                }
+                                List<string> deleteDoodads = b2DeleteNodePanelDoodads[b2DeleteNodePanelId];
+                                XElement deleteDoodadsNode = idToNode[b2DeleteNodePanelId].Element("dictionary").Element("int-arr");
+                                deleteDoodadsNode.Value = string.Join(" ", deleteDoodadsNode.Value.Split(' ').Where(str => !deleteDoodads.Contains(str)));
                             }
+                            foreach (string b2AreaTriggerDestroyNodeId in b2AreaTriggerDestroyNodes.Keys)
+                            {
+                                XElement node = idToNode[b2AreaTriggerDestroyNodeId];
+                                NodeHelper.AddConnectionNodes(node, new int[] { modNodeStartId });
+
+                                List<string> panelDoodads = b2DeleteNodePanelDoodads[b2AreaTriggerDestroyNodes[b2AreaTriggerDestroyNodeId]];
+                                XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.PosFromString(node.Element("vec2").Value) + new Vector2(0, 5f), 1, new int[0]);
+                                panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
+                                scriptNodesToAdd.Add(panelDeleteNode);
+                            }
+                            //foreach (XElement node in scriptNodes)
+                            //{
+                            //    string nodeId = node.Element("int").Value;
+                            //    if (b2DeleteNodePanelDoodads.TryGetValue(nodeId, out List<string> deleteDoodads))
+                            //    {
+                            //        XElement deleteDoodadsNode = node.Element("dictionary").Element("int-arr");
+                            //        deleteDoodadsNode.Value = string.Join(" ", deleteDoodadsNode.Value.Split(' ').Where(str => !deleteDoodads.Contains(str)));
+                            //    }
+                            //    else if (b2AreaTriggerDestroyNodes.TryGetValue(nodeId, out string deleteNodeId))
+                            //    {
+                            //        XElement[] connectionNodes = node.Elements("int-arr").ToArray();
+                            //        connectionNodes[0].Value += $" {modNodeStartId}";
+                            //        connectionNodes[1].Value += $" 0";
+
+                            //        List<string> panelDoodads = b2DeleteNodePanelDoodads[deleteNodeId];
+                            //        XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.PosFromString(node.Element("vec2").Value) + new Vector2(0, 5f), 1, new int[0]);
+                            //        panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
+                            //        scriptNodesToAdd.Add(panelDeleteNode);
+                            //    }
+                            //}
 
                             XElement[] n2TpDoodads = CreateTeleporter(ref modNodeStartId, new Vector2(-26.5f, 18.5f), -1, "5", 88, -1, false, out List<XElement> n2TpScriptNodes);//, out List<int> n2NodesToRun);
                             //nodesToGuaranteeSpawn.AddRange(n2NodesToRun);
@@ -1340,15 +1359,17 @@ namespace HammerwatchAP.Archipelago
                             XElement b2SetFlagNode = NodeHelper.CreateSetGlobalFlagNode(b2SetGlobalFlagNodeId, new Vector2(9, -45), -1, "killed_boss_2", true);
                             scriptNodesToAdd.Add(b2SetFlagNode);
 
-                            foreach (XElement node in scriptNodes)
-                            {
-                                //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
-                                XElement[] strNodes = node.Elements("string").ToArray();
-                                if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_2")
-                                {
-                                    NodeHelper.AddConnectionNodes(node, new[] { b2SetGlobalFlagNodeId });
-                                }
-                            }
+                            //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
+                            NodeHelper.AddConnectionNodes(idToNode["229"], new[] { b2SetGlobalFlagNodeId });
+                            //foreach (XElement node in scriptNodes)
+                            //{
+                            //    //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
+                            //    XElement[] strNodes = node.Elements("string").ToArray();
+                            //    if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_2")
+                            //    {
+                            //        NodeHelper.AddConnectionNodes(node, new[] { b2SetGlobalFlagNodeId });
+                            //    }
+                            //}
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId + 14, new Vector2(1, -57.5f), 1)); //Offset +0,+2 from RectangleShape
 
@@ -1611,15 +1632,17 @@ namespace HammerwatchAP.Archipelago
                             XElement b3SetFlagNode = NodeHelper.CreateSetGlobalFlagNode(b3SetGlobalFlagNodeId, new Vector2(9, -45), -1, "killed_boss_3", true);
                             scriptNodesToAdd.Add(b3SetFlagNode);
 
-                            foreach (XElement node in scriptNodes)
-                            {
-                                //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
-                                XElement[] strNodes = node.Elements("string").ToArray();
-                                if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_3")
-                                {
-                                    NodeHelper.AddConnectionNodes(node, new[] { b3SetGlobalFlagNodeId });
-                                }
-                            }
+                            //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
+                            NodeHelper.AddConnectionNodes(idToNode["201"], new[] { b3SetGlobalFlagNodeId });
+                            //foreach (XElement node in scriptNodes)
+                            //{
+                            //    //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
+                            //    XElement[] strNodes = node.Elements("string").ToArray();
+                            //    if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_3")
+                            //    {
+                            //        NodeHelper.AddConnectionNodes(node, new[] { b3SetGlobalFlagNodeId });
+                            //    }
+                            //}
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId++, new Vector2(1, -38.5f), 1)); //Offset +0,+2 from RectangleShape
 
@@ -1840,115 +1863,175 @@ namespace HammerwatchAP.Archipelago
 
                             int b4SetGlobalFlagNodeId = modNodeStartId + 25;
                             scriptNodesToAdd.Add(NodeHelper.CreateSetGlobalFlagNode(b4SetGlobalFlagNodeId, new Vector2(-11, -35), -1, "killed_boss_4", true));
-                            foreach (XElement node in scriptNodes)
-                            {
-                                //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
-                                XElement[] strNodes = node.Elements("string").ToArray();
-                                if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_4")
-                                {
-                                    NodeHelper.AddConnectionNodes(node, new[] { b4SetGlobalFlagNodeId });
-                                }
-                            }
+                            //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
+                            NodeHelper.AddConnectionNodes(idToNode["23"], new[] { b4SetGlobalFlagNodeId });
+                            //foreach (XElement node in scriptNodes)
+                            //{
+                            //    //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
+                            //    XElement[] strNodes = node.Elements("string").ToArray();
+                            //    if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_4")
+                            //    {
+                            //        NodeHelper.AddConnectionNodes(node, new[] { b4SetGlobalFlagNodeId });
+                            //    }
+                            //}
 
-                            List<string> plankNodeIds = new List<string>() { "784", "786", "802", "801", "800", "799", "798", "797", "839", "1244", "1243", "1242" };
+                            string[] plankNodeIds = new string[] { "784", "786", "802", "801", "800", "799", "798", "797", "839", "1244", "1243", "1242" };
 
                             int plankNodeIdCounter = modNodeStartId + 30;
 
                             //Music node, make it so reentering will replay boss music
                             idToNode["1215"].Elements("int").ToArray()[1].Value = "-1";
 
-                            foreach (XElement node in scriptNodes)
+                            if(archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
                             {
-                                string nodeId = node.Element("int").Value;
-                                switch (nodeId)
-                                {
-                                    case "1136": //If you have at least 1 plank and not playing the escape goal prevent the escape sequence from opening
-                                        if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                                        {
-                                            //Deactivate the node
-                                            node.Element("bool").Value = "False";
-                                        }
-                                        else //Else ensure the passage will open even if we don't have any planks
-                                        {
-                                            globalScriptNodesToTriggerOnceOnLoad.Add(1136);
-                                        }
-                                        break;
-                                    case "37": //CameraShake node
-                                        if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                                        {
-                                            //Deactivate the node
-                                            node.Element("bool").Value = "False";
-                                        }
-                                        break;
-                                    case "2": //Countdown announce node
-                                        if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                                        {
-                                            //Edit text
-                                            XElement dict = node.Element("dictionary");
-                                            XElement[] parameters = dict.Elements().ToArray();
-                                            parameters[0].Value = "Or is it?";
-                                            parameters[1].Value = "6000"; //Duration
-                                            //parameters[2].Value = "0"; //Title
-                                            XElement[] connections = node.Elements("int-arr").ToArray();
-                                            connections[0].Value = "6"; //Remove sound node connection
-                                            connections[1].Value = "2000";
-                                        }
-                                        break;
-                                    case "6":
-                                        if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                                        {
-                                            XElement dict = node.Element("dictionary");
-                                            XElement[] parameters = dict.Elements().ToArray();
-                                            parameters[0].Value = "The castle is NOT falling apart!";
-                                            parameters[1].Value = "6000"; //Duration
-                                            parameters[2].Value = "0"; //Title
-                                            XElement[] connections = node.Elements("int-arr").ToArray();
-                                            connections[0].Value = "7"; //Remove sound node connection
-                                            connections[1].Value = "2000";
-                                        }
-                                        break;
-                                    case "7":
-                                        if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                                        {
-                                            XElement dict = node.Element("dictionary");
-                                            XElement[] parameters = dict.Elements().ToArray();
-                                            parameters[0].Value = "Go do whatever you want I guess";
-                                            parameters[1].Value = "4000"; //Duration
-                                            XElement[] connections = node.Elements("int-arr").ToArray();
-                                            connections[0].Remove();
-                                            connections[1].Remove();
-                                        }
-                                        break;
-                                }
-                                //Plank nodes
-                                int plankNodeIndex = plankNodeIds.IndexOf(nodeId);
-                                if (plankNodeIndex != -1)
-                                {
-                                    XElement[] connectionNodes = node.Elements("int-arr").ToArray();
-                                    node.Element("bool").Value = "True"; //Make sure the node is enabled!
-                                    XElement triggerTimesNode = node.Elements("int").ToArray()[1];
-                                    string posString = node.Element("vec2").Value;
+                                //If you have at least 1 plank and not playing the escape goal prevent the escape sequence from opening
+                                idToNode["1136"].Element("bool").Value = "False"; //Deactivate the node
+                                idToNode["37"].Element("bool").Value = "False"; //Deactivate the CameraShake node
+                                //Countdown announce node
+                                XElement[] parameters = idToNode["2"].Element("dictionary").Elements().ToArray();
+                                parameters[0].Value = "Or is it?";
+                                parameters[1].Value = "6000"; //Duration
+                                NodeHelper.SetConnectionNodes(idToNode["2"], new int[] { 6 }, new int[] { 2000 }); //Remove sound node connection
 
-                                    string connectionNodeValues = connectionNodes[0].Value;
-                                    int globalFlagNodeId = plankNodeIdCounter++;
-                                    int scriptNodeId = plankNodeIdCounter++;
-                                    connectionNodes[0].Value = globalFlagNodeId.ToString();
-                                    connectionNodes[1].Value = "0";
-                                    triggerTimesNode.Value = "-1";
-                                    Vector2 globalFlagNodePos = NodeHelper.PosFromString(posString) + new Vector2(1, 3);
-                                    string[] connectionNodeValuesSplits = connectionNodeValues.Split(' ');
-                                    int[] connectionNodeIds = new int[connectionNodeValuesSplits.Length];
-                                    for (int c = 0; c < connectionNodeIds.Length; c++)
-                                    {
-                                        connectionNodeIds[c] = int.Parse(connectionNodeValuesSplits[c]);
-                                    }
-                                    XElement plankFlagNode = NodeHelper.CreateCheckGlobalFlagNode(globalFlagNodeId, globalFlagNodePos, $"l{plankNodeIndex + 1}_plank", false, new int[] { scriptNodeId }, false, null);
-                                    XElement scriptLinkNode = NodeHelper.CreateScriptNodeBase(scriptNodeId, "ScriptLink", true, 1, globalFlagNodePos + new Vector2(2, 0));
-                                    NodeHelper.AddConnectionNodes(scriptLinkNode, connectionNodeIds);
-                                    scriptNodesToAdd.Add(plankFlagNode);
-                                    scriptNodesToAdd.Add(scriptLinkNode);
-                                }
+                                XElement[] parameters2 = idToNode["6"].Element("dictionary").Elements().ToArray();
+                                parameters2[0].Value = "The castle is NOT falling apart!";
+                                parameters2[1].Value = "6000"; //Duration
+                                parameters2[2].Value = "0"; //Title
+                                NodeHelper.SetConnectionNodes(idToNode["6"], new int[] { 7 }, new int[] { 2000 }); //Remove sound node connection
+
+                                XElement[] parameters3 = idToNode["7"].Element("dictionary").Elements().ToArray();
+                                parameters3[0].Value = "Go do whatever you want I guess";
+                                parameters3[1].Value = "4000"; //Duration
+                                XElement[] connections = idToNode["7"].Elements("int-arr").ToArray();
+                                connections[0].Remove();
+                                connections[1].Remove();
                             }
+                            else
+                            {
+                                //Else ensure the passage will open even if we don't have any planks
+                                globalScriptNodesToTriggerOnceOnLoad.Add(1136);
+                            }
+                            //Plank nodes
+                            for(int p = 0; p < plankNodeIds.Length; p++)
+                            {
+                                string plankNodeId = plankNodeIds[p];
+                                XElement node = idToNode[plankNodeId];
+                                XElement[] connectionNodes = node.Elements("int-arr").ToArray();
+                                node.Element("bool").Value = "True"; //Make sure the node is enabled!
+                                XElement triggerTimesNode = node.Elements("int").ToArray()[1];
+                                string posString = node.Element("vec2").Value;
+
+                                string connectionNodeValues = connectionNodes[0].Value;
+                                int globalFlagNodeId = plankNodeIdCounter++;
+                                int scriptNodeId = plankNodeIdCounter++;
+                                connectionNodes[0].Value = globalFlagNodeId.ToString();
+                                connectionNodes[1].Value = "0";
+                                triggerTimesNode.Value = "-1";
+                                Vector2 globalFlagNodePos = NodeHelper.PosFromString(posString) + new Vector2(1, 3);
+                                string[] connectionNodeValuesSplits = connectionNodeValues.Split(' ');
+                                int[] connectionNodeIds = new int[connectionNodeValuesSplits.Length];
+                                for (int c = 0; c < connectionNodeIds.Length; c++)
+                                {
+                                    connectionNodeIds[c] = int.Parse(connectionNodeValuesSplits[c]);
+                                }
+                                XElement plankFlagNode = NodeHelper.CreateCheckGlobalFlagNode(globalFlagNodeId, globalFlagNodePos, $"l{p + 1}_plank", false, new int[] { scriptNodeId }, false, null);
+                                XElement scriptLinkNode = NodeHelper.CreateScriptNodeBase(scriptNodeId, "ScriptLink", true, 1, globalFlagNodePos + new Vector2(2, 0));
+                                NodeHelper.AddConnectionNodes(scriptLinkNode, connectionNodeIds);
+                                scriptNodesToAdd.Add(plankFlagNode);
+                                scriptNodesToAdd.Add(scriptLinkNode);
+                            }
+                            //foreach (XElement node in scriptNodes)
+                            //{
+                            //    string nodeId = node.Element("int").Value;
+                            //    switch (nodeId)
+                            //    {
+                            //        case "1136": //If you have at least 1 plank and not playing the escape goal prevent the escape sequence from opening
+                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
+                            //            {
+                            //                //Deactivate the node
+                            //                node.Element("bool").Value = "False";
+                            //            }
+                            //            else //Else ensure the passage will open even if we don't have any planks
+                            //            {
+                            //                globalScriptNodesToTriggerOnceOnLoad.Add(1136);
+                            //            }
+                            //            break;
+                            //        case "37": //CameraShake node
+                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
+                            //            {
+                            //                //Deactivate the node
+                            //                node.Element("bool").Value = "False";
+                            //            }
+                            //            break;
+                            //        case "2": //Countdown announce node
+                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
+                            //            {
+                            //                //Edit text
+                            //                XElement dict = node.Element("dictionary");
+                            //                XElement[] parameters = dict.Elements().ToArray();
+                            //                parameters[0].Value = "Or is it?";
+                            //                parameters[1].Value = "6000"; //Duration
+                            //                //parameters[2].Value = "0"; //Title
+                            //                XElement[] connections = node.Elements("int-arr").ToArray();
+                            //                connections[0].Value = "6"; //Remove sound node connection
+                            //                connections[1].Value = "2000";
+                            //            }
+                            //            break;
+                            //        case "6":
+                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
+                            //            {
+                            //                XElement dict = node.Element("dictionary");
+                            //                XElement[] parameters = dict.Elements().ToArray();
+                            //                parameters[0].Value = "The castle is NOT falling apart!";
+                            //                parameters[1].Value = "6000"; //Duration
+                            //                parameters[2].Value = "0"; //Title
+                            //                XElement[] connections = node.Elements("int-arr").ToArray();
+                            //                connections[0].Value = "7"; //Remove sound node connection
+                            //                connections[1].Value = "2000";
+                            //            }
+                            //            break;
+                            //        case "7":
+                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
+                            //            {
+                            //                XElement dict = node.Element("dictionary");
+                            //                XElement[] parameters = dict.Elements().ToArray();
+                            //                parameters[0].Value = "Go do whatever you want I guess";
+                            //                parameters[1].Value = "4000"; //Duration
+                            //                XElement[] connections = node.Elements("int-arr").ToArray();
+                            //                connections[0].Remove();
+                            //                connections[1].Remove();
+                            //            }
+                            //            break;
+                            //    }
+                            //    //Plank nodes
+                            //    int plankNodeIndex = plankNodeIds.IndexOf(nodeId);
+                            //    if (plankNodeIndex != -1)
+                            //    {
+                            //        XElement[] connectionNodes = node.Elements("int-arr").ToArray();
+                            //        node.Element("bool").Value = "True"; //Make sure the node is enabled!
+                            //        XElement triggerTimesNode = node.Elements("int").ToArray()[1];
+                            //        string posString = node.Element("vec2").Value;
+
+                            //        string connectionNodeValues = connectionNodes[0].Value;
+                            //        int globalFlagNodeId = plankNodeIdCounter++;
+                            //        int scriptNodeId = plankNodeIdCounter++;
+                            //        connectionNodes[0].Value = globalFlagNodeId.ToString();
+                            //        connectionNodes[1].Value = "0";
+                            //        triggerTimesNode.Value = "-1";
+                            //        Vector2 globalFlagNodePos = NodeHelper.PosFromString(posString) + new Vector2(1, 3);
+                            //        string[] connectionNodeValuesSplits = connectionNodeValues.Split(' ');
+                            //        int[] connectionNodeIds = new int[connectionNodeValuesSplits.Length];
+                            //        for (int c = 0; c < connectionNodeIds.Length; c++)
+                            //        {
+                            //            connectionNodeIds[c] = int.Parse(connectionNodeValuesSplits[c]);
+                            //        }
+                            //        XElement plankFlagNode = NodeHelper.CreateCheckGlobalFlagNode(globalFlagNodeId, globalFlagNodePos, $"l{plankNodeIndex + 1}_plank", false, new int[] { scriptNodeId }, false, null);
+                            //        XElement scriptLinkNode = NodeHelper.CreateScriptNodeBase(scriptNodeId, "ScriptLink", true, 1, globalFlagNodePos + new Vector2(2, 0));
+                            //        NodeHelper.AddConnectionNodes(scriptLinkNode, connectionNodeIds);
+                            //        scriptNodesToAdd.Add(plankFlagNode);
+                            //        scriptNodesToAdd.Add(scriptLinkNode);
+                            //    }
+                            //}
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(plankNodeIdCounter, new Vector2(30, -26.5f), 1)); //Offset +0,+2 from RectangleShape
                             break;
@@ -2127,65 +2210,52 @@ namespace HammerwatchAP.Archipelago
                                 globalScriptNodesToTriggerOnceOnLoad.Add(c3PanNodes[panLocation]);
                             }
 
-                            //Change npc dialogue
-                            foreach (XElement node in scriptNodes)
+                            //Change npc dialogue of the guard at the entrance
+                            NetworkItem c1Guarditem = archipelagoData.GetItemFromPos(new Vector2(-74.375f, 27.375f), "level_cave_1.xml");
+                            string itemName = ArchipelagoManager.GetItemName(c1Guarditem);
+                            if(itemName != null)
                             {
-                                string nodeId = node.Element("int").Value;
-                                if (nodeId == "137595") //Guard at entrance
+                                string message = ArchipelagoMessageManager.GetLanguageString("d.cave1.npc.guardtrapped1a", new string[0]);
+                                string[] sentences = message.Split('.');
+                                message = message.Remove(message.Length - sentences[sentences.Length - 1].Length + 1);
+                                string customMessage = "";
+                                if (ArchipelagoManager.connectionInfo.IsPlayerPlayingSameGame(c1Guarditem.Player))
                                 {
-                                    NetworkItem item = archipelagoData.GetItemFromPos(new Vector2(-74.375f, 27.375f), "level_cave_1.xml");
-                                    string itemName = ArchipelagoManager.GetItemName(item);
-                                    string message = ArchipelagoMessageManager.GetLanguageString("d.cave1.npc.guardtrapped1a", new string[0]);
-                                    //If the item is a chest keep it the same, the dialogue fits!
-                                    if (itemName != null && (itemName.Contains("Chest") || itemName.Contains("Trap")))
+                                    if (itemName.Contains("Chest") || itemName.Contains("Trap"))
+                                        customMessage = "Maybe you can use something from this chest?";
+                                    else if (itemName.Contains("Ankh"))
+                                        customMessage = "Maybe you could use this weird ankh thing?";
+                                    else if (itemName == "Rune Key")
+                                        customMessage = "Some dude ran past here and dropped this thing. It looks important so you should take it!";
+                                    else if (itemName.Contains("Diamond"))
+                                        customMessage = "This diamond will probably be useful!";
+                                    else if (itemName.Contains("Upgrade") || itemName == "Serious Health" || APData.IsItemButton(c1Guarditem.Item))
+                                        customMessage = "Maybe you could use this odd glowy thing?";
+                                    else if (itemName.Contains("Potion"))
+                                        customMessage = "Maybe you could use this strange potion?";
+                                    else if (itemName.Contains("Pumps Lever") || itemName.Contains("Pickaxe") || itemName.Contains("Frying Pan"))
+                                        customMessage = $"Take this {itemName.ToLowerInvariant()}, it looks important!";
+                                    else
+                                        customMessage = $"Maybe you could use this {itemName.ToLowerInvariant()}?";
+                                }
+                                else
+                                {
+                                    //Someone else's item
+                                    if (c1Guarditem.Flags.HasFlag(ItemFlags.NeverExclude) || c1Guarditem.Flags.HasFlag(ItemFlags.Advancement))
                                     {
-                                        NodeHelper.EditShowSpeechBubbleNode(node, message);
-                                        continue;
-                                    }
-                                    string[] sentences = message.Split('.');
-                                    message = message.Remove(message.Length - sentences[sentences.Length - 1].Length + 1);
-                                    string customMessage = "";
-                                    if (ArchipelagoManager.connectionInfo.IsPlayerPlayingSameGame(item.Player))
-                                    {
-                                        if (itemName.Contains("Ankh"))
-                                            customMessage = "Maybe you could use this weird ankh thing?";
-                                        else if (itemName == "Rune Key")
-                                            customMessage = "Some dude ran past here and dropped this thing. It looks important so you should take it!";
-                                        else if (itemName.Contains("Diamond"))
-                                            customMessage = "This diamond will probably be useful!";
-                                        else if (itemName.Contains("Upgrade") || itemName == "Serious Health" || APData.IsItemButton(item.Item))
-                                            customMessage = "Maybe you could use this odd glowy thing?";
-                                        else if (itemName.Contains("Potion"))
-                                            customMessage = "Maybe you could use this strange potion?";
-                                        else if (itemName.Contains("Pumps Lever") || itemName.Contains("Pickaxe") || itemName.Contains("Frying Pan"))
-                                            customMessage = $"Take this {itemName.ToLowerInvariant()}, it looks important!";
-                                        else
-                                            customMessage = $"Maybe you could use this {itemName.ToLowerInvariant()}?";
+                                        customMessage = "Maybe you could use whatever this thing is?";
                                     }
                                     else
                                     {
-                                        //Someone else's item
-                                        if (item.Flags.HasFlag(ItemFlags.Advancement))
-                                        {
-                                            customMessage += " It does look important!";
-                                        }
-                                        else if (item.Flags.HasFlag(ItemFlags.Trap))
-                                        {
-                                            customMessage += " It looks kinda suspicious though.";
-                                        }
-                                        else if (item.Flags.HasFlag(ItemFlags.NeverExclude))
-                                        {
-                                            customMessage = "Maybe you could use whatever this thing is?";
-                                        }
-                                        else
-                                        {
-                                            customMessage = "Maybe you could use whatever this weird thing is...?";
-                                        }
+                                        customMessage = "Maybe you could use whatever this weird thing is...?";
                                     }
-                                    message += customMessage;
-                                    NodeHelper.EditShowSpeechBubbleNode(node, message);
-                                    continue;
+                                    if (c1Guarditem.Flags.HasFlag(ItemFlags.Trap))
+                                    {
+                                        customMessage += " It looks kinda suspicious though.";
+                                    }
                                 }
+                                message += customMessage;
+                                NodeHelper.EditShowSpeechBubbleNode(idToNode["137595"], message);
                             }
 
                             //Hiding guard
@@ -2194,7 +2264,7 @@ namespace HammerwatchAP.Archipelago
                             {
                                 string message = "Ah... Someone took the rune key needed to activate the teleporter.\n\n";
                                 message += "I managed to kill him when he came back, but I think he hid it somewhere";
-                                if (archipelagoData.GetOption("portal_accessibility") > 0)
+                                if (archipelagoData.GetOption(SlotDataKeys.portalAccessibility) > 0)
                                 {
                                     message += " around this level.";
                                 }
@@ -2315,18 +2385,22 @@ namespace HammerwatchAP.Archipelago
                             {
                                 if (exitSwaps.ContainsKey("boss_2|0"))
                                     nodesToNuke.Add(156483); //Storage room node
-                                foreach (XElement node in scriptNodes)
-                                {
-                                    string nodeId = node.Element("int").Value;
-                                    if (nodeId == "141426") //Move Krilith boss return node up so you don't spawn in the wall
-                                    {
-                                        node.Element("vec2").Value = "-3 33.5";
-                                    }
-                                    if (nodeId == "156394") //Remove disabling the main exit node
-                                    {
-                                        node.Element("dictionary").Element("dictionary").Element("int-arr").Value = "156380 156381";
-                                    }
-                                }
+                                //Move Krilith boss return node up so you don't spawn in the wall
+                                idToNode["141426"].Element("vec2").Value = "-3 33.5";
+                                //Remove disabling the main exit node
+                                idToNode["156394"].Element("dictionary").Element("dictionary").Element("int-arr").Value = "156380 156381";
+                                //foreach (XElement node in scriptNodes)
+                                //{
+                                //    string nodeId = node.Element("int").Value;
+                                //    if (nodeId == "141426") //Move Krilith boss return node up so you don't spawn in the wall
+                                //    {
+                                //        node.Element("vec2").Value = "-3 33.5";
+                                //    }
+                                //    if (nodeId == "156394") //Remove disabling the main exit node
+                                //    {
+                                //        node.Element("dictionary").Element("dictionary").Element("int-arr").Value = "156380 156381";
+                                //    }
+                                //}
                             }
 
                             //Add delay to executing the portal event trigger node
@@ -2436,8 +2510,8 @@ namespace HammerwatchAP.Archipelago
                             //Create pumps lever item
                             Vector2 telarianItemPos = new Vector2(36, -35.25f);
                             int pumpsItemNodeId = modNodeStartId;
-                            string telarianItemName = CreateItemScriptNodes(levelFile, pumpsItemNodeId, telarianItemPos, ref modNodeStartId, out List<XElement> pumpsLeverScriptNodesToAdd, true, out int holoEffectNodeId);
-                            XElement pumpsItemNode = NodeHelper.CreateSpawnObjectNode(pumpsItemNodeId, telarianItemName, telarianItemPos);
+                            string telarianItemXmlName = CreateItemScriptNodes(levelFile, pumpsItemNodeId, telarianItemPos, ref modNodeStartId, out List<XElement> pumpsLeverScriptNodesToAdd, true, out int holoEffectNodeId);
+                            XElement pumpsItemNode = NodeHelper.CreateSpawnObjectNode(pumpsItemNodeId, telarianItemXmlName, telarianItemPos);
                             if (holoEffectNodeId != -1)
                                 NodeHelper.AddConnectionNodes(pumpsItemNode, new int[] { holoEffectNodeId });
                             pumpsLeverScriptNodesToAdd.Add(pumpsItemNode);
@@ -2506,7 +2580,7 @@ namespace HammerwatchAP.Archipelago
                             //Removes the DangerArea that has the stairs buff at the beginning of the level, useless unless you're a wizard :P
                             //nodesToNuke.Add(141465);
 
-                            if (archipelagoData.GetOption("no_sunbeam_damage") > 0)
+                            if (archipelagoData.GetOption(SlotDataKeys.noSunbeamDamage) > 0)
                                 nodesToNuke.AddRange(new[] { 132507, 132505, 132514, 132517, 4279, 127124, 127127, 134527, 132520, 132526, 132523 }); //Beam shape nodes
 
                             //Create NPC button push nodes and hook up events to their effects
@@ -2524,55 +2598,45 @@ namespace HammerwatchAP.Archipelago
 
                                 nodesToNuke.Add(154103); //puzzle_bonus_solved GlobalEventTrigger
                             }
-                            //Change npc dialogue
-                            foreach (XElement node in scriptNodes)
+                            //Change npc dialogues
+                            //Guard 2nd dialogue
+                            string t1Guard2ndMessage = ArchipelagoMessageManager.GetLanguageString("d.temple1.npc.guardmirrorb", new string[0]);
+                            string[] t1Guard2ndSentences = t1Guard2ndMessage.Split('.');
+                            t1Guard2ndMessage = t1Guard2ndMessage.Remove(t1Guard2ndMessage.Length - t1Guard2ndSentences[t1Guard2ndSentences.Length - 2].Length);
+                            t1Guard2ndMessage += "They're scattered around everywhere.";
+                            NodeHelper.EditShowSpeechBubbleNode(idToNode["142439"], t1Guard2ndMessage);
+                            //Guard 3nd dialogue
+                            if (archipelagoData.GetOption(SlotDataKeys.noSunbeamDamage) > 0)
                             {
-                                string nodeId = node.Element("int").Value;
-                                if (nodeId == "142439") //Guard 2nd dialogue
-                                {
-                                    string message = ArchipelagoMessageManager.GetLanguageString("d.temple1.npc.guardmirrorb", new string[0]);
-                                    string[] sentences = message.Split('.');
-                                    message = message.Remove(message.Length - sentences[sentences.Length - 2].Length);
-                                    message += "They're scattered around everywhere.";
-                                    NodeHelper.EditShowSpeechBubbleNode(node, message);
-                                    continue;
-                                }
-                                else if (nodeId == "142398" && archipelagoData.GetOption("no_sunbeam_damage") > 0) //Guard 3nd dialogue
-                                {
-                                    string message = ArchipelagoMessageManager.GetLanguageString("d.temple1.npc.guardmirrorc", new string[0]);
-                                    string[] sentences = message.Split('.');
-                                    message = message.Remove(message.Length - sentences[sentences.Length - 1].Length + 1);
-                                    message += "Don't worry about the light beams, they may look intense but they're actually quite pleasant!";
-                                    NodeHelper.EditShowSpeechBubbleNode(node, message);
-                                    continue;
-                                }
-                                else if (nodeId == "153410") //Telarian dialouge
-                                {
-                                    string message = ArchipelagoMessageManager.GetLanguageString("d.temple1.npc.telariana", new string[0]);
-                                    string[] sentences = message.Split('.');
-                                    message = message.Remove(message.Length - sentences[sentences.Length - 2].Length);
-                                    switch (telarianItemName)
-                                    {
-                                        case "Pumps Lever":
-                                            message += sentences[message.Length - 1]; //Keep the dialogue as normal
-                                            break;
-                                        case "Pumps Lever Fragment":
-                                            message += "However, when I got here all I found was that piece of it! If you want to lower the water, find the rest of them and bring the whole lever to the pump station.";
-                                            break;
-                                        case APData.checkItemXmlName:
-                                            message += $"However, when I got here it was missing. I think someone stole it. If you want to lower the water, find it and bring the lever to the pump station.";
-                                            break;
-                                        default:
-                                            string extraString = "";
-                                            if (telarianItemName.Contains("archipelago"))
-                                                extraString = " weird thing";
-                                            message += $"However, when I got here it was missing. That{extraString} was in its place. If you want to lower the water, find it and bring the lever to the pump station.";
-                                            break;
-                                    }
-                                    NodeHelper.EditShowSpeechBubbleNode(node, message);
-                                    continue;
-                                }
+                                string message = ArchipelagoMessageManager.GetLanguageString("d.temple1.npc.guardmirrorc", new string[0]);
+                                string[] sentences = message.Split('.');
+                                message = message.Remove(message.Length - sentences[sentences.Length - 1].Length + 1);
+                                message += "Don't worry about the light beams, they may look intense but they're actually quite pleasant!";
+                                NodeHelper.EditShowSpeechBubbleNode(idToNode["142398"], message);
                             }
+                            //Telarian dialouge
+                            string t1TelarianMessage = ArchipelagoMessageManager.GetLanguageString("d.temple1.npc.telariana", new string[0]);
+                            string[] t1TelarianSentences = t1TelarianMessage.Split('.');
+                            t1TelarianMessage = t1TelarianMessage.Remove(t1TelarianMessage.Length - t1TelarianSentences[t1TelarianSentences.Length - 2].Length);
+                            switch (telarianItemXmlName)
+                            {
+                                case "items/tool_lever.xml":
+                                    t1TelarianMessage += t1TelarianSentences[t1TelarianMessage.Length - 2]; //Keep the dialogue as normal
+                                    break;
+                                case "items/tool_lever_fragment.xml":
+                                    t1TelarianMessage += "However, when I got here all I found was that piece of it! If you want to lower the water, find the rest of them and bring the whole lever to the pump station.";
+                                    break;
+                                case APData.checkItemXmlName:
+                                    t1TelarianMessage += $"However, when I got here it was missing. I think someone stole it. If you want to lower the water, find it and bring the lever to the pump station.";
+                                    break;
+                                default:
+                                    string extraString = "";
+                                    if (telarianItemXmlName.Contains("archipelago"))
+                                        extraString = " weird thing";
+                                    t1TelarianMessage += $"However, when I got here it was missing. That{extraString} was in its place. If you want to lower the water, find it and bring the lever to the pump station.";
+                                    break;
+                            }
+                            NodeHelper.EditShowSpeechBubbleNode(idToNode["153410"], t1TelarianMessage);
 
                             //Telarian hit node, make it spawn his item
                             NodeHelper.AddConnectionNodes(idToNode["153407"], new[] { pumpsItemNodeId });
@@ -2678,7 +2742,7 @@ namespace HammerwatchAP.Archipelago
                             nodesToNuke = new List<int> { 138196, 145356, 136508, 136509, 144533, 144535, 144463, 144469, 150198 };
                             //Portal, keystone, puzzle spawn 1, puzzle spawn 2, Jones reward, gold key, silver key 1, silver key 2
 
-                            if (archipelagoData.GetOption("no_sunbeam_damage") > 0)
+                            if (archipelagoData.GetOption(SlotDataKeys.noSunbeamDamage) > 0)
                                 nodesToNuke.AddRange(new[] { 154509, 154512, 154515, 154506, 154488, 154503, 154494, 154497, 154491, 154500 }); //Beam shape nodes
                             //Last two are below the bottom of the map
 
@@ -2752,7 +2816,7 @@ namespace HammerwatchAP.Archipelago
                                 NodeHelper.AddConnectionNodes(idToNode["148447"], leverItemNodeIds);
                             }
 
-                            if (archipelagoData.GetOption("no_sunbeam_damage") > 0)
+                            if (archipelagoData.GetOption(SlotDataKeys.noSunbeamDamage) > 0)
                             {
                                 nodesToNuke.AddRange(new[] { 154587, 154590, 154503, 154554, 154557, 154596, 154599, 154602, 154605, 154548, 154551, 154563, 154560, 154566, 154500, 154491 });
                                 //Beam shape nodes, last two are below the bottom of the map
@@ -2786,28 +2850,49 @@ namespace HammerwatchAP.Archipelago
                                 { "87632" , "87634" },
                                 { "87991" , "87990" },
                             };
-                            foreach (XElement node in scriptNodes)
+                            foreach(string exitNodeId in exitNodeIds)
                             {
-                                string nodeId = node.Element("int").Value;
-                                if (exitNodeIds.Contains(nodeId))
-                                {
-                                    NodeHelper.AddConnectionNodes(node, new[] { pofCompleteFlagNode });
-                                }
-                                else if (bonusDeleteNodePanelDoodads.TryGetValue(nodeId, out List<string> deleteDoodads))
-                                {
-                                    XElement deleteDoodadsNode = node.Element("dictionary").Element("int-arr");
-                                    deleteDoodadsNode.Value = string.Join(" ", deleteDoodadsNode.Value.Split(' ').Where(str => !deleteDoodads.Contains(str)));
-                                }
-                                else if (areaTriggerDestroyNodes.TryGetValue(nodeId, out string deleteNodeId))
-                                {
-                                    NodeHelper.AddConnectionNodes(node, new[] { modNodeStartId });
-
-                                    List<string> panelDoodads = bonusDeleteNodePanelDoodads[deleteNodeId];
-                                    XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.PosFromString(node.Element("vec2").Value) + new Vector2(0, 5f), 1, new int[0]);
-                                    panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
-                                    scriptNodesToAdd.Add(panelDeleteNode);
-                                }
+                                NodeHelper.AddConnectionNodes(idToNode[exitNodeId], new[] { pofCompleteFlagNode });
                             }
+                            foreach(var bonusDeleteNodePanel in bonusDeleteNodePanelDoodads)
+                            {
+                                List<string> deleteDoodads = bonusDeleteNodePanel.Value;
+                                XElement deleteDoodadsNode = idToNode[bonusDeleteNodePanel.Key].Element("dictionary").Element("int-arr");
+                                deleteDoodadsNode.Value = string.Join(" ", deleteDoodadsNode.Value.Split(' ').Where(str => !deleteDoodads.Contains(str)));
+                            }
+                            foreach (var areaTriggerDestroyNode in areaTriggerDestroyNodes)
+                            {
+                                string deleteNodeId = areaTriggerDestroyNode.Value;
+                                NodeHelper.AddConnectionNodes(idToNode[areaTriggerDestroyNode.Key], new[] { modNodeStartId });
+
+                                List<string> panelDoodads = bonusDeleteNodePanelDoodads[deleteNodeId];
+                                XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.GetNodePos(idToNode[areaTriggerDestroyNode.Key]) + new Vector2(0, 5f), 1, new int[0]);
+                                panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
+                                scriptNodesToAdd.Add(panelDeleteNode);
+                            }
+
+                            //foreach (XElement node in scriptNodes)
+                            //{
+                            //    string nodeId = node.Element("int").Value;
+                            //    if (exitNodeIds.Contains(nodeId))
+                            //    {
+                            //        NodeHelper.AddConnectionNodes(node, new[] { pofCompleteFlagNode });
+                            //    }
+                            //    else if (bonusDeleteNodePanelDoodads.TryGetValue(nodeId, out List<string> deleteDoodads))
+                            //    {
+                            //        XElement deleteDoodadsNode = node.Element("dictionary").Element("int-arr");
+                            //        deleteDoodadsNode.Value = string.Join(" ", deleteDoodadsNode.Value.Split(' ').Where(str => !deleteDoodads.Contains(str)));
+                            //    }
+                            //    else if (areaTriggerDestroyNodes.TryGetValue(nodeId, out string deleteNodeId))
+                            //    {
+                            //        NodeHelper.AddConnectionNodes(node, new[] { modNodeStartId });
+
+                            //        List<string> panelDoodads = bonusDeleteNodePanelDoodads[deleteNodeId];
+                            //        XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.PosFromString(node.Element("vec2").Value) + new Vector2(0, 5f), 1, new int[0]);
+                            //        panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
+                            //        scriptNodesToAdd.Add(panelDeleteNode);
+                            //    }
+                            //}
 
                             List<string> intermediateExitNodeIds = new List<string>() { "87662", "87660", "86426", "86429", "86327", "86323" };
                             //Top area (left, middle, exit), middle area (exit, top left, top right, bottom right)
@@ -2823,19 +2908,21 @@ namespace HammerwatchAP.Archipelago
                             XElement b3SetFlagNode = NodeHelper.CreateSetGlobalFlagNode(b3FlagId, new Vector2(25, -17), -1, "killed_boss_3", true);
                             scriptNodesToAdd.Add(b3SetFlagNode);
 
-                            foreach (XElement node in scriptNodes)
-                            {
-                                string nodeId = node.Element("int").Value;
-                                if (nodeId == "158133") //ObjectEventNode that triggers the killed_boss_3 flag
-                                {
-                                    NodeHelper.AddConnectionNodes(node, new int[] { b3FlagId });
-                                }
-                            }
+                            //Connect the killed boss SetGlobalFlag node to run after the event is triggered. Also trigger the nodes to fix the bridges to the other platforms in case the player kills the boss too fast
+                            NodeHelper.AddConnectionNodes(idToNode["158133"], new int[] { b3FlagId, 154469, 154743, 156550 });
+                            //foreach (XElement node in scriptNodes)
+                            //{
+                            //    string nodeId = node.Element("int").Value;
+                            //    if (nodeId == "158133") //ObjectEventNode that triggers the killed_boss_3 flag
+                            //    {
+                            //        NodeHelper.AddConnectionNodes(node, new int[] { b3FlagId, 154469, 154743, 156550 });
+                            //    }
+                            //}
                             break;
                     }
                     break;
             }
-            if (archipelagoData.GetOption("shop_shuffle") > 0)
+            if (archipelagoData.GetOption(SlotDataKeys.shopShuffle) > 0)
             {
                 ShuffleShops(levelFile, doc, out List<XElement> shopDoodadsToAdd, out List<XElement> shopDoodadsToNuke);
                 doodadsToAdd.AddRange(shopDoodadsToAdd);
@@ -3133,7 +3220,7 @@ namespace HammerwatchAP.Archipelago
             }
             int randomPrefabIndex = 1;
             //Secret randomization
-            if (archipelagoData.GetOption("randomize_secrets") == 1)
+            if (archipelagoData.GetOption(SlotDataKeys.randomizeSecrets) == 1)
             {
                 XElement secretRoom = new XElement("array");
                 secretRoom.SetAttributeValue("name", "prefabs/theme_e/parts/secret_random_1_blank.xml");
@@ -3179,7 +3266,7 @@ namespace HammerwatchAP.Archipelago
                 prefabsNode.Add(secretDud);
             }
             //Puzzle randomization
-            if (archipelagoData.GetOption("randomize_puzzles") == 1)
+            if (archipelagoData.GetOption(SlotDataKeys.randomizePegPuzzles) == 1)
             {
                 int puzzleCounter = 1;
                 int puzzleItemCounter = 800000;
@@ -3236,8 +3323,9 @@ namespace HammerwatchAP.Archipelago
                         generatedGroup.SetAttributeValue("name", resultPrefab);
                         posElement.Remove();
                         generatedGroup.Add(posElement);
-                        if (levelPrefix == "Cave 1" && archipelagoData.TryGetRandomLocation("Cave 1 East Shortcut Hall", out int shortcutIndex))
+                        if (levelPrefix == "Cave 1")
                         {
+                            int shortcutIndex = archipelagoData.GetRandomLocation("Cave 1 East Shortcut Hall");
                             string shortcutResultPrefab = $"prefabs/theme_e/parts/alley_med_v_{shortcutIndex + 1}.xml";
                             int shortcutPosIndex = 2; //Technically index 3 but we removed the first one
                             XElement generatedShortcutGroup;
@@ -3261,7 +3349,7 @@ namespace HammerwatchAP.Archipelago
                 prefabsNode.Add(generatedGroup);
             }
             //Shop shuffle
-            if (archipelagoData.mapType == ArchipelagoData.MapType.Temple && archipelagoData.GetOption("shop_shuffle") > 0)
+            if (archipelagoData.mapType == ArchipelagoData.MapType.Temple && archipelagoData.GetOption(SlotDataKeys.shopShuffle) > 0)
             {
                 foreach (XElement prefabGroup in prefabsNode.Elements())
                 {
@@ -3395,7 +3483,7 @@ namespace HammerwatchAP.Archipelago
 
             //Create loot spawn nodes
             List<XElement> lootScriptNodes = new List<XElement>();
-            if (archipelagoData.GetOption("randomize_enemy_loot") == 0) return lootScriptNodes;
+            if (archipelagoData.GetOption(SlotDataKeys.randomizeEnemyLoot) == 0) return lootScriptNodes;
             int lootNodeIdCounter = 400000;
             foreach (XElement actorGroup in actorNodes)
             {

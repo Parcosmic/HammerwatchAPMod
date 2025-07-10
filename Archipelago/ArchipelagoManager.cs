@@ -34,7 +34,7 @@ namespace HammerwatchAP.Archipelago
     {
         public static readonly Version MOD_VERSION = new Version(2, 0, 0);
         public static readonly Version APWORLD_VERSION = new Version(3, 0, 0);
-        public static readonly Version AP_VERSION = new Version(0, 5, 0);
+        public static readonly Version AP_VERSION = new Version(0, 6, 0);
 
         public const string ERROR_MESSAGE = "The game just crashed and created an error file (error.txt). Please send this and the game.log file to Parcosmic on the Archipelago Discord to help me fix it!";
 
@@ -53,6 +53,7 @@ namespace HammerwatchAP.Archipelago
         public static bool playingArchipelagoSave;
 
         static DeathLink deathlinkQueue;
+        public static int trapLinkIndex;
         public static List<string> trapLinkQueue = new List<string>();
         public static Dictionary<string, Dictionary<long, string>> remoteItemToXmlNameCache = new Dictionary<string, Dictionary<long, string>>();
 
@@ -90,7 +91,9 @@ namespace HammerwatchAP.Archipelago
 
         //Item matching
         public static Dictionary<string, List<string[]>> activeGameFuzzyItemNameToXMLDict;
+        public static Dictionary<string, string> activeTrapLinkDict;
         public const string ITEM_MATCH_FILE = "ap_item_matching.json";
+        public const string TRAP_LINK_MATCH_FILE = "trap_link_matching.json";
 
         public static void LoadMod()
         {
@@ -101,7 +104,6 @@ namespace HammerwatchAP.Archipelago
             random = new Random();
 
             //Keyword item mapping
-
             string fuzzyDictFilePath = Path.Combine(Directory.GetCurrentDirectory(), APMapPatcher.AP_ASSETS_FOLDER, ITEM_MATCH_FILE);
             bool alwaysOverride = false;
             if (DEBUG_MODE)
@@ -139,6 +141,33 @@ namespace HammerwatchAP.Archipelago
                 [""] = new Dictionary<long, string>()
             };
 
+            //Trap link item mapping
+            string trapLinkDictFilePath = Path.Combine(Directory.GetCurrentDirectory(), APMapPatcher.AP_ASSETS_FOLDER, TRAP_LINK_MATCH_FILE);
+            if (File.Exists(trapLinkDictFilePath) && !alwaysOverride)
+            {
+                ResourceContext.Log("Reading trap_link_matching list");
+                string readTrapLinkDictString = File.ReadAllText(trapLinkDictFilePath);
+                try
+                {
+                    activeTrapLinkDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(readTrapLinkDictString);
+                }
+                catch (Exception)
+                {
+                    ResourceContext.Log("Error while reading trap_link_matching list, falling back to the default list");
+                    activeTrapLinkDict = APData.trapLinkInterpretNames;
+                    GameBase.Instance.SetMenu(MenuType.MESSAGE, "Mod Load Error", "Failed to load the trap_link_matching.txt file, falling back to the default list");
+                }
+            }
+            else
+            {
+                ResourceContext.Log("trap_link_matching list does not exist, falling back to the default list");
+                activeTrapLinkDict = APData.trapLinkInterpretNames;
+
+                ResourceContext.Log("Creating trap_link_matching list file");
+                string trapLinkDictString = JsonConvert.SerializeObject(APData.trapLinkInterpretNames, Formatting.Indented);
+                File.WriteAllText(trapLinkDictFilePath, trapLinkDictString);
+            }
+
             QoL.Setup();
         }
         
@@ -158,6 +187,7 @@ namespace HammerwatchAP.Archipelago
         public static void ResetAPVars()
         {
             deathlinkQueue = null;
+            trapLinkIndex = 0;
             trapLinkQueue.Clear();
         }
 
@@ -199,7 +229,7 @@ namespace HammerwatchAP.Archipelago
             MainMenu mainMenu = GameBase.Instance.GetMenu<MainMenu>();
             if (mainMenu != null)
             {
-                Hooks.HookMainMenu.SetArchipelagoButtons(mainMenu, false, false);
+                HookMainMenu.SetArchipelagoButtons(mainMenu, false, false);
                 ((TextWidget)mainMenu.Document.GetWidget("ap-connection")).SetText("Not connected to Archipelago");
                 ((TextWidget)mainMenu.Document.GetWidget("ap-slot-name")).SetText("");
             }
@@ -293,11 +323,11 @@ namespace HammerwatchAP.Archipelago
                             }
                             ArchipelagoMessageManager.GameUpdate(ms);
                             //Floor master keys
-                            if (archipelagoData.GetOption("key_mode") == 2)
+                            if (archipelagoData.GetOption(SlotDataKeys.keyMode) == 2)
                             {
                                 int floorIndex = APData.GetFloorIndex(archipelagoData.currentLevelName, archipelagoData);
                                 int[] mkeys = new int[] { 0, 1, 2 };
-                                if (archipelagoData.GetOption("randomize_bonus_keys") > 0 && archipelagoData.currentLevelName.StartsWith("level_bonus_"))
+                                if (archipelagoData.GetOption(SlotDataKeys.randomizeBonusKeys) > 0 && archipelagoData.currentLevelName.StartsWith("level_bonus_"))
                                 {
                                     mkeys = new int[] { 10 };
                                 }
@@ -312,9 +342,9 @@ namespace HammerwatchAP.Archipelago
                                 }
                             }
                             //Traplink
-                            if(trapLinkQueue.Count > 0)
+                            while(trapLinkIndex < trapLinkQueue.Count)
                             {
-
+                                CreateItemInWorld(trapLinkQueue[trapLinkIndex++]);
                             }
                         }
                         break;
@@ -345,7 +375,7 @@ namespace HammerwatchAP.Archipelago
             }
             CheckBossCompletion();
 
-            for (int i = 0; i < archipelagoData.GetOption("open_castle_portals"); i++)
+            for (int i = 0; i < archipelagoData.GetOption(SlotDataKeys.openCastlePortals); i++)
             {
                 GameInterface.SetGlobalFlag($"portal_a{i + 1}", true);
             }
@@ -377,6 +407,7 @@ namespace HammerwatchAP.Archipelago
                 }
                 int keyMode = archipelagoData.GetOption(SlotDataKeys.keyMode);
 
+                archipelagoData.currentLevelId = levelId;
                 archipelagoData.currentLevelName = APData.GetLevelFileNameFromId(levelId, archipelagoData);
                 int newAct = APData.GetActFromLevelId(levelId, archipelagoData);
                 switch (keyMode)
@@ -431,7 +462,7 @@ namespace HammerwatchAP.Archipelago
                 if (connectionInfo.connectedToAP)
                 {
                     //session.DataStorage[$"{connectionInfo.playerTeam}:{connectionInfo.playerId}:CurrentRegion"] = levelId;
-                    connectionInfo.SetDataStorageValue($"{connectionInfo.playerTeam}:{connectionInfo.playerId}:CurrentRegion", levelId);
+                    connectionInfo.SetMapTrackingKey(levelId);
                 }
 
                 //Apply deathlink if it was queued
@@ -574,6 +605,8 @@ namespace HammerwatchAP.Archipelago
         }
         public static Upgrade GetNextShopUpgrade(Upgrade baseUpgrade)
         {
+            if (!playingArchipelagoSave)
+                return baseUpgrade;
             if (baseUpgrade.ID.StartsWith("ap-"))
             {
                 int locId = int.Parse(baseUpgrade.ID.Substring(3));
@@ -880,7 +913,7 @@ namespace HammerwatchAP.Archipelago
         {
             if (actor == null || actor.Producer == null || actor.Producer.Name == null) return lootTable;
             string enemyType = actor.Producer.Name;
-            if (archipelagoData.GetOption("randomize_enemy_loot") == 0 && !enemyType.EndsWith("boss_worm_key.xml")) return lootTable;
+            if (archipelagoData.GetOption(SlotDataKeys.randomizeEnemyLoot) == 0 && !enemyType.EndsWith("boss_worm_key.xml")) return lootTable;
             if (enemyType.Contains("tower_flower") || enemyType.Contains("tower_nova") || enemyType.Contains("tower_tracking"))
             {
                 lootTable.entries.Clear();
@@ -915,8 +948,13 @@ namespace HammerwatchAP.Archipelago
             }
             else if (archipelagoData.currentLevelName == "level_boss_4.xml" && enemyType.EndsWith("lich_1_mb.xml"))
             {
+                if(archipelagoData.droppedBoss4MinibossLoot)
+                {
+                    return lootTable;
+                }
                 lootLocations = new List<int>() { 1323, 1324 };
                 customLootLocations = true;
+                archipelagoData.droppedBoss4MinibossLoot = true;
             }
             string logString = $"Killed miniboss ({enemyType}) with id: {enemyId}";
             if (enemyType.EndsWith("mb.xml"))
@@ -1027,7 +1065,7 @@ namespace HammerwatchAP.Archipelago
                     break;
                 case ArchipelagoData.GoalType.PlankHunt:
                     endGameScreenMessage = "You collected the required strange planks";
-                    endGameScreenMessage += archipelagoData.mapType == ArchipelagoData.MapType.Castle ? " and repaired the bridge to escape!" : "!";
+                    endGameScreenMessage += archipelagoData.mapType == ArchipelagoData.MapType.Castle ? " and repaired the bridge!" : "!";
                     break;
                 case ArchipelagoData.GoalType.Alternate:
                     endGameScreenMessage = "You completed the Pyramid of Fear!";
@@ -1281,8 +1319,17 @@ namespace HammerwatchAP.Archipelago
                 return;
             }
 
-            Vector2 spawnPos;
+            CreateItemInWorld(itemName);
+        }
+        public static void CreateItemInWorld(string itemName)
+        {
+            //If this is an item with a custom effect don't create the item
+            if(itemName == "Hey! Trap")
+            {
+                return;
+            }
 
+            Vector2 spawnPos;
             //Determine player who needs the item the most
             List<PlayerInfo> players = GameBase.Instance.Players.Where(playerInfo => playerInfo != null).ToList();
             List<PlayerInfo> allAvailablePlayers = new List<PlayerInfo>(players);
@@ -1340,7 +1387,7 @@ namespace HammerwatchAP.Archipelago
                 pref.ProduceInGame(spawnPos, GameBase.Instance.resources, GameBase.Instance.world, scriptCollection);
                 QoL.ResetExploreSpeed(defaultPlayer);
             }
-            else if(itemName == "Chaser Trap")
+            else if (itemName == "Chaser Trap")
             {
                 spawnPos = GameBase.Instance.GetSpawnPos(defaultPlayer);
                 ActorType actorType = GameBase.Instance.resources.GetResource<ActorType>(APData.chaserTrapActorXmlName);
@@ -1369,7 +1416,10 @@ namespace HammerwatchAP.Archipelago
                 //Trap items just create the chest on top of you, easier this way
                 type = GameBase.Instance.resources.GetResource<ItemType>(APData.itemNameToXML[itemName]);
                 if (type == null)
+                {
                     ResourceContext.Log($"ERROR: failed to get item resource for item {itemName}!!!");
+                    return;
+                }
                 WorldObject worldItem = type.Produce(spawnPos);
                 GameBase.Instance.world.Place(spawnPos.X, spawnPos.Y, worldItem, true);
                 Network.SendToAll("SpawnItem", new object[]

@@ -27,11 +27,17 @@ namespace HammerwatchAP.Archipelago
         public HashSet<long> allLocalLocations = new HashSet<long>();
         public Dictionary<long, NetworkItem> locationToItem = new Dictionary<long, NetworkItem>();
         public bool completedGoal;
+        public Dictionary<string, Dictionary<int, int>> dynamicItemLocations = new Dictionary<string, Dictionary<int, int>>();
+
+        //Generation variables
+        private Dictionary<string, int> randomLocations;
+        private Dictionary<string, int> shopLocations;
 
         //In game data
         public MapType mapType;
         public GoalType goalType;
         public string currentLevelName;
+        public string currentLevelId;
         public int currentAct;
         public Dictionary<string, bool> gameModifiers = new Dictionary<string, bool>();
 
@@ -53,6 +59,7 @@ namespace HammerwatchAP.Archipelago
         public bool[] killedBosses;
         public int[] bossRunes = new int[12];
         public int pofRaiseLevel;
+        public bool droppedBoss4MinibossLoot = false;
         public int wormCounter = 0;
         public int neededPlayers;
         public PlayerClass?[] shopsanityClasses;
@@ -155,7 +162,7 @@ namespace HammerwatchAP.Archipelago
                         ArchipelagoManager.AddTranslatedMessageToQueue("ig.secret-plank");
                     if (goalType == GoalType.PlankHunt && planks >= plankHuntRequirement)
                     {
-                        ArchipelagoManager.CompleteGoal(GoalType.PlankHunt);
+                        GameInterface.SetGlobalFlag("goal");
                     }
                     break;
             }
@@ -249,11 +256,11 @@ namespace HammerwatchAP.Archipelago
         }
         public void SetMapType()
         {
-            mapType = GetMapType(GetOption("goal"));
+            mapType = GetMapType(GetOption(SlotDataKeys.goal));
         }
         public void SetGoalType()
         {
-            switch (GetOption("goal") % 10)
+            switch (GetOption(SlotDataKeys.goal) % 10)
             {
                 case 0:
                     goalType = GoalType.BeatAllBosses;
@@ -276,25 +283,25 @@ namespace HammerwatchAP.Archipelago
             SetMapType();
             SetGoalType();
 
-            plankHuntRequirement = GetOption("planks_required_count");
-            totalPanFragments = GetOption("pan_fragments");
-            totalLeverFragments = GetOption("lever_fragments");
-            totalPickaxeFragments = GetOption("pickaxe_fragments");
-            totalHammerFragments = GetOption("hammer_fragments");
+            plankHuntRequirement = GetOption(SlotDataKeys.planksRequiredCount);
+            totalPanFragments = GetOption(SlotDataKeys.panFragments);
+            totalLeverFragments = GetOption(SlotDataKeys.leverFragments);
+            totalPickaxeFragments = GetOption(SlotDataKeys.pickaxeFragments);
+            totalHammerFragments = GetOption(SlotDataKeys.hammerFragments);
 
-            int keyMode = GetOption("key_mode");
+            int keyMode = GetOption(SlotDataKeys.keyMode);
             if (keyMode != 1 || mapType == MapType.Temple)
             {
                 actKeys[0, 0] = -1;
                 actKeys[0, 1] = -1;
                 actKeys[0, 2] = -1;
-                if (!(keyMode == 2 && GetOption("randomize_bonus_keys") == 0) || mapType == MapType.Temple)
+                if (!(keyMode == 2 && GetOption(SlotDataKeys.randomizeBonusKeys) == 0) || mapType == MapType.Temple)
                 {
                     actKeys[0, 3] = -1;
                 }
             }
             killedBosses = new bool[GetActCount()];
-            gameModifiers = GetSlotJObject<Dictionary<string, bool>>("game_modifiers");
+            gameModifiers = GetSlotJObject<Dictionary<string, bool>>(SlotDataKeys.gameModifiers);
             neededPlayers = 1;
             shopsanityClasses = new PlayerClass?[4];
             for (int p = 0; p < 4; p++)
@@ -304,15 +311,19 @@ namespace HammerwatchAP.Archipelago
                 neededPlayers = p + 1;
                 shopsanityClasses[p] = (PlayerClass)(shopsanity - 1);
             }
+            randomLocations = GetSlotJObject<Dictionary<string, int>>("Random Locations");
+            shopLocations = GetSlotJObject<Dictionary<string, int>>("Shop Locations");
         }
         public object GetSlotObj(string key)
         {
             //Console.WriteLine(key);
-            return slotData[key];
+            if (slotData.TryGetValue(key, out object value))
+                return value;
+            return 0;
         }
         public T GetSlotValue<T>(string key)
         {
-            return (T)slotData[key];
+            return (T)GetSlotObj(key);
         }
         public int GetSlotInt(string key)
         {
@@ -338,37 +349,26 @@ namespace HammerwatchAP.Archipelago
         }
         public int GetRandomLocation(string rLoc)
         {
-            return (int)(long)GetSlotJObject<Dictionary<string, object>>("Random Locations")[rLoc];
-        }
-        public bool TryGetRandomLocation(string rLoc, out int rLocValue)
-        {
-            if (GetSlotJObject<Dictionary<string, object>>("Random Locations").TryGetValue(rLoc, out object rLocObj))
-            {
-                rLocValue = (int)(long)rLocObj;
-                return true;
-            }
-            rLocValue = 0;
-            return false;
+            return randomLocations[rLoc];
         }
         public int GetShopLocation(string shopLoc)
         {
-            object val = GetSlotJObject<Dictionary<string, object>>("Shop Locations")[shopLoc];
-            return (int)(long)val;
+            return shopLocations[shopLoc];
         }
         public int GetEnemyShuffleMode()
         {
-            return GetOption("enemy_shuffle_mode");
+            return GetOption(SlotDataKeys.enemyShuffleMode);
         }
         public bool IsShopSanityOn()
         {
-            if (GetOption("shopsanity_p1") > 0 || GetOption("shopsanity_p2") > 0 || GetOption("shopsanity_p3") > 0 || GetOption("shopsanity_p4") > 0)
+            if (GetOption(SlotDataKeys.shopsanityP1) > 0 || GetOption(SlotDataKeys.shopsanityP2) > 0 || GetOption(SlotDataKeys.shopsanityP3) > 0 || GetOption(SlotDataKeys.shopsanityP4) > 0)
                 return true;
             return false;
         }
 
         public Difficulty GetDifficulty()
         {
-            int difficultyIndex = GetOption("difficulty");
+            int difficultyIndex = GetOption(SlotDataKeys.difficulty);
             return (Difficulty)difficultyIndex;
         }
         public int GetActCount()
@@ -386,9 +386,7 @@ namespace HammerwatchAP.Archipelago
 
         public string GetStartExitCode()
         {
-            object startExitObj = GetSlotObj("Start Exit");
-            string startCode = APData.exitIdToCode[(int)(long)startExitObj];
-            return startCode;
+            return APData.exitIdToCode[GetSlotInt("Start Exit")];
         }
         public bool IsPositionLinked(string levelFile, Vector2 pos)
         {
@@ -521,6 +519,16 @@ namespace HammerwatchAP.Archipelago
                 ArchipelagoMessageManager.announceMessageQueue.Add(ArchipelagoManager.GetReceiveItemMessage(itemToReceive));
                 ArchipelagoManager.CreateItemInWorld(itemToReceive, true);
             }
+        }
+
+        public void CreatedDynamicItem(NetworkItem apItem, int worldItemId)
+        {
+            if (!dynamicItemLocations.TryGetValue(currentLevelName, out Dictionary<int, int> dynamicItems))
+            {
+                dynamicItems = new Dictionary<int, int>();
+                dynamicItemLocations[currentLevelName] = dynamicItems;
+            }
+            dynamicItems[worldItemId] = (int)apItem.Location;
         }
     }
 }

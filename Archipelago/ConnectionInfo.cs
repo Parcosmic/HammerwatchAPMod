@@ -251,12 +251,12 @@ namespace HammerwatchAP.Archipelago
                         case ArchipelagoPacketType.RoomInfo:
                             RoomInfoPacket rPacket = (RoomInfoPacket)packet;
 
-                            Console.WriteLine("Archipelago server version: " + rPacket.Version.ToVersion());
+                            Logging.Log("Archipelago server version: " + rPacket.Version.ToVersion());
                             Version version = rPacket.Version.ToVersion();
                             if (rPacket.Version.ToVersion() < ArchipelagoManager.AP_VERSION)
                             {
                                 //The client version is greater than the server!
-                                Console.WriteLine("Server is outdated!");
+                                Logging.Log("  WARNING: The server is outdated, some features may not work properly!");
                             }
                             //////TODO: Probably move to ArchipelagoManager
                             //Sanitize datapackage checksum data
@@ -327,7 +327,7 @@ namespace HammerwatchAP.Archipelago
                             string[] splits = apworldVersion.Split('.');
                             if (int.Parse(splits[0]) < ArchipelagoManager.APWORLD_VERSION.Major || (splits.Length > 1 && int.Parse(splits[0]) == ArchipelagoManager.APWORLD_VERSION.Major && int.Parse(splits[1]) < ArchipelagoManager.APWORLD_VERSION.Minor)) //Only check major and minor, bugfix shouldn't break anything
                             {
-                                Console.WriteLine("APWorld is outdated!");
+                                Logging.Log("  WARNING: APWorld is outdated!");
                                 ArchipelagoManager.DisconnectFromArchipelago("Mod version mismatch between mod and server!");
                                 failedConnectMsg = "The Hammerwatch APWorld used to generate the multiworld is out of date, please update it and re-generate!";
                                 connectionState = ConnectionState.ConnectionFailure;
@@ -371,7 +371,7 @@ namespace HammerwatchAP.Archipelago
                                 if (loadedArchipelagoData.mapType != archipelagoData.mapType)
                                 {
                                     //Big problem the server has a different map than us!
-                                    ArchipelagoManager.DisconnectFromArchipelago("Map mismatch between save and server!");
+                                    ArchipelagoManager.DisconnectFromArchipelago("Map mismatch between save and server");
                                     connectionState = ConnectionState.ConnectionFailure;
                                     return;
                                 }
@@ -383,7 +383,6 @@ namespace HammerwatchAP.Archipelago
                             {
                                 ArchipelagoManager.saveFileName = APSaveManager.GetLatestSaveNameWithConnectionInfo(ip, archipelagoData.seed, slotName);
                             }
-
                             if (ArchipelagoManager.saveFileName == null)
                             {
                                 session.Socket.SendPacketAsync(new LocationScoutsPacket() { CreateAsHint = 0, Locations = archipelagoData.allLocalLocations.ToArray() });
@@ -603,6 +602,10 @@ namespace HammerwatchAP.Archipelago
         {
             if (!ConnectionActive) return;
             session.DataStorage[key] = value;
+        }
+        public void SetMapTrackingKey(string key)
+        {
+            SetDataStorageValue($"{playerTeam}:{playerId}:CurrentRegion", key);
         }
 
         public void SetClientReady(bool deathlink)

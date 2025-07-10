@@ -86,8 +86,8 @@ namespace HammerwatchAP.Archipelago
                         enemyNodeData[actorType][actIndex, groupTier].Add(new EnemyNodeData(enemyPosNode, false, fullGroupName, levelName, actIndex, groupTier));
                     group.Remove();
                 }
-                //Remove that one problematic spawner if this is the bonus level
-                if (levelName == "level_bonus_1.xml")
+                //Remove that one problematic spawner if this is the bonus level and enemy shuffle is on
+                if (levelName == "level_bonus_1.xml" && archipelagoData.GetOption(SlotDataKeys.enemyShuffleMode) > 0)
                 {
                     List<EnemyNodeData> bonus1EnemyNodes = enemyNodeData[ActorType.Spawner][APData.GetActFromLevelFileName(levelName, archipelagoData) - 1, 0];
                     for(int e = 0; e < bonus1EnemyNodes.Count; e++)

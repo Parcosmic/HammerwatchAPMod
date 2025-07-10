@@ -164,7 +164,7 @@ namespace HammerwatchAP.Archipelago
             NetworkItem item = archipelagoData.GetItemFromLoc(locId);
             if (item.Item == -1)
                 return null;
-            if (archipelagoData.GetOption("shopsanity_balance_costs") > 0)
+            if (archipelagoData.GetOption(SlotDataKeys.shopsanityBalanceCosts) > 0)
             {
                 switch (item.Flags)
                 {

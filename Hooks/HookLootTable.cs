@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using HarmonyLib;
 using ARPGGame;
+using TiltedEngine.WorldObjects;
 
 namespace HammerwatchAP.Hooks
 {
@@ -10,16 +11,23 @@ namespace HammerwatchAP.Hooks
 	{
 		internal static void Hook()
 		{
-			HooksHelper.Hook(typeof(HookName));
+			HooksHelper.Hook(typeof(SpawnLoot));
 		}
 
-		[HarmonyPatch(typeof(TemplateHook), nameof(TemplateHook.Hook))]
-		internal static class HookName
+		[HarmonyPatch("LootTable", "SpawnLoot")]
+		internal static class SpawnLoot
 		{
-			static void Postfix(TemplateHook __instance)
-            {
-				
+			static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+			{
+				List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+
+				return codes;
 			}
+
+			static void AddDynamicItem(object lootTable, WorldObject lootWorldObject)
+            {
+
+            }
         }
 	}
 }
