@@ -45,7 +45,7 @@ namespace HammerwatchAP.Hooks
         [HarmonyPatch(typeof(WorldItemPickupBehavior), nameof(WorldItemPickupBehavior.NetPickup))]
         internal static class NetPickup
         {
-            static bool Prefix(WorldItemPickupBehavior __instance, WorldItem item, ref bool ___taken, ref string ___pickupText)
+            static void Prefix(WorldItemPickupBehavior __instance, WorldItem item, ref bool ___taken, ref string ___pickupText)
             {
                 ___taken = true;
                 if (ArchipelagoManager.playingArchipelagoSave)
@@ -53,31 +53,42 @@ namespace HammerwatchAP.Hooks
                     WorldItemArchipelagoBehavior apBehavior = __instance as WorldItemArchipelagoBehavior;
                     if (apBehavior != null)
                     {
-                        if (!apBehavior.isCheck && ArchipelagoManager.ConnectedToAP())
+                        if (!apBehavior.isCheck)
                         {
-                            if (apBehavior.itemLocation == -1)
-                            {
-                                ___pickupText = ArchipelagoManager.GetSendItemMessageFromPos(item.Position);
-                            }
-                            else
-                            {
-                                ___pickupText = "";
-                            }
+                            ___pickupText = ArchipelagoManager.GetSendItemMessageFromPos(item.Position); //For floor master keys/boss runes?
+                            //if (apBehavior.itemLocation == -1)
+                            //{
+                            //    ___pickupText = ArchipelagoManager.GetSendItemMessageFromPos(item.Position);
+                            //}
+                            //else
+                            //{
+                            //    ___pickupText = "";
+                            //}
                         }
                     }
-                    if (apBehavior == null || apBehavior.itemLocation == -1)
+                    int dynamicLocationID = ArchipelagoManager.GetDynamicLocation(item.NodeId);
+                    if(dynamicLocationID == -1)
                     {
                         ArchipelagoManager.archipelagoData.CheckLocation(item.Position, string.IsNullOrEmpty(___pickupText));
                         ArchipelagoManager.PickupItemEffects(item.Position);
                     }
                     else
                     {
-                        ArchipelagoManager.archipelagoData.CheckLocation(apBehavior.itemLocation, true);
-                        ArchipelagoManager.PickupItemEffects(apBehavior.itemLocation);
+                        ArchipelagoManager.archipelagoData.CheckLocation(dynamicLocationID, true);
+                        ArchipelagoManager.PickupItemEffects(dynamicLocationID);
                     }
+                    //if (apBehavior == null || apBehavior.itemLocation == -1)
+                    //{
+                    //    ArchipelagoManager.archipelagoData.CheckLocation(item.Position, string.IsNullOrEmpty(___pickupText));
+                    //    ArchipelagoManager.PickupItemEffects(item.Position);
+                    //}
+                    //else
+                    //{
+                    //    ArchipelagoManager.archipelagoData.CheckLocation(apBehavior.itemLocation, true);
+                    //    ArchipelagoManager.PickupItemEffects(apBehavior.itemLocation);
+                    //}
                     ArchipelagoManager.PickupItemEffectsXml(item.Producer.Name, false);
                 }
-                return true;
             }
         }
     }

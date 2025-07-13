@@ -131,6 +131,7 @@
     <Compile Include="Hooks\HookLootTable.cs" />
     <Compile Include="Hooks\HookBaseEnemyBehavior.cs" />
     <Compile Include="Hooks\MenuHooks\HookShopMenu.cs" />
+    <Compile Include="Hooks\HookProgram.cs" />
     <Compile Include="Hooks\TemplateHook.cs" />
     <Compile Include="Hooks\HookPlayerActorBehavior.cs" />
     <Compile Include="Hooks\HookPlayerInfo.cs" />

@@ -37,13 +37,17 @@ namespace HammerwatchAP.Archipelago
             string loadedSeed = save.Get("ap-seed").GetString();
             if (archipelagoData.seed != null && archipelagoData.seed != loadedSeed)
                 return false;
-            connectionData.ip = loadedIp;
+            if(!connectionData.ConnectionActive) //Only set the ip if we're not already connected to a server
+            {
+                connectionData.ip = loadedIp;
+            }
             archipelagoData.seed = loadedSeed;
             string loadedSlotName = save.Get("ap-slot-name").GetString();
             if (connectionData.slotName != null && connectionData.slotName != loadedSlotName)
                 return false;
             connectionData.slotName = loadedSlotName;
             connectionData.apPassword = save.Get("ap-password").GetString();
+
             archipelagoData.mapType = (ArchipelagoData.MapType)save.Get("ap-map").GetInteger();
             archipelagoData.completedGoal = save.Get("ap-goal").GetBoolean();
             if (archipelagoData.completedGoal) ArchipelagoManager.CompleteGoal();
@@ -152,6 +156,23 @@ namespace HammerwatchAP.Archipelago
                     Flags = (ItemFlags)itemClassifications[i].GetInteger()
                 };
                 archipelagoData.locationToItem[item.Location] = item;
+            }
+            //Load dynamic items info
+            archipelagoData.dynamicItemLocations = new Dictionary<string, Dictionary<int, int>>();
+            SValue[] dynamicItemLevels = save.Get("ap-dynamicitem-levels").GetArray();
+            int[] dynamicItemNodeIds = save.Get("ap-dynamicitem-node-ids").GetIntegerArray();
+            int[] dynamicItemLocationIds = save.Get("ap-dynamicitem-location-ids").GetIntegerArray();
+            int dynamicItemLevelCounter = 0;
+            int dynamicItemCounter = 0;
+            foreach(int dynamicItemLevelItemCount in save.Get("ap-dynamicitem-level-counts").GetIntegerArray())
+            {
+                Dictionary<int, int> dynamicItemLevelItems = new Dictionary<int, int>();
+                for (int c = 0; c < dynamicItemLevelItemCount; c++)
+                {
+                    dynamicItemLevelItems.Add(dynamicItemNodeIds[dynamicItemCounter], dynamicItemLocationIds[dynamicItemCounter]);
+                    dynamicItemCounter++;
+                }
+                archipelagoData.dynamicItemLocations.Add(dynamicItemLevels[dynamicItemLevelCounter++].GetString(), dynamicItemLevelItems);
             }
 
             if (!connectionData.ConnectionActive)
@@ -273,6 +294,34 @@ namespace HammerwatchAP.Archipelago
             save.Set("ap-item-location-ids", itemLocationIds);
             save.Set("ap-item-players", itemPlayers);
             save.Set("ap-item-flags", itemClassifications);
+
+            //Save dynamic items dictionaries
+            List<string> dynamicItemLevels = new List<string>();
+            List<int> dynamicItemLevelItemCounts = new List<int>();
+            List<int> dynamicItemNodeIDs = new List<int>();
+            List<int> dynamicItemAPLocationIds = new List<int>();
+            foreach(var dynamicLevelPair in archipelagoData.dynamicItemLocations)
+            {
+                int dynamicItemCount = dynamicLevelPair.Value.Count;
+                if (dynamicItemCount == 0)
+                    continue;
+                dynamicItemLevels.Add(dynamicLevelPair.Key);
+                dynamicItemLevelItemCounts.Add(dynamicItemCount);
+                foreach(var dynamicItemPair in dynamicLevelPair.Value)
+                {
+                    dynamicItemNodeIDs.Add(dynamicItemPair.Key);
+                    dynamicItemAPLocationIds.Add(dynamicItemPair.Value);
+                }
+            }
+            SValue[] dynamicItemLevelsSValue = new SValue[dynamicItemLevels.Count];
+            for(int i = 0; i < dynamicItemLevels.Count; i++)
+            {
+                dynamicItemLevelsSValue[i] = dynamicItemLevels[i];
+            }
+            save.Set("ap-dynamicitem-levels", dynamicItemLevelsSValue);
+            save.Set("ap-dynamicitem-level-counts", new SValue(dynamicItemLevelItemCounts.ToArray()));
+            save.Set("ap-dynamicitem-node-ids", new SValue(dynamicItemNodeIDs.ToArray()));
+            save.Set("ap-dynamicitem-location-ids", new SValue(dynamicItemAPLocationIds.ToArray()));
 
             Logging.Debug("Saved Archipelago data");
         }

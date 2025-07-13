@@ -12,7 +12,7 @@ namespace HammerwatchAP.Game
     public class WorldItemArchipelagoBehavior : WorldItemPickupBehavior
     {
         public bool isCheck;
-        public int itemLocation = -1;
+        //public int itemLocation = -1;
 
         public WorldItemArchipelagoBehavior(BehaviorData param, ResourceBank resBank) : base(param, resBank)
         {

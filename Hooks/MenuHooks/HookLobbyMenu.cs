@@ -58,6 +58,8 @@ namespace HammerwatchAP.Hooks
         {
             static void Postfix(LobbyMenu __instance, bool host)
             {
+                if (!ArchipelagoManager.playingArchipelagoSave)
+                    return;
                 __instance.SetDifficulty(ArchipelagoManager.archipelagoData.GetDifficulty());
                 bool shopsanityPlayerSet = false;
                 for (int p = 3; p >= 0; p--)
@@ -186,6 +188,8 @@ namespace HammerwatchAP.Hooks
         {
             static void Postfix(LobbyMenu __instance, int peerId)
             {
+                if (!ArchipelagoManager.playingArchipelagoSave)
+                    return;
                 if (ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].HasValue)
                 {
                     __instance.ChangeClass(peerId, ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].Value);

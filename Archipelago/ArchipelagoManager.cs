@@ -921,16 +921,13 @@ namespace HammerwatchAP.Archipelago
             }
             int enemyId = actor.NodeId;
             Dictionary<string, Dictionary<int, List<int>>> idDict;
-            int startId;
             if (archipelagoData.mapType == ArchipelagoData.MapType.Castle)
             {
                 idDict = APData.castleMinibossIdToLocations;
-                startId = APData.castleStartID;
             }
             else
             {
                 idDict = APData.templeMinibossIdToLocations;
-                startId = APData.templeStartID;
             }
             List<int> lootLocations = new List<int>();
             bool customLootLocations = false;
@@ -974,18 +971,19 @@ namespace HammerwatchAP.Archipelago
             }
 
             bool createdPrefab = false;
-            int apLocations = 0;
-            //if (lootTable != null)
-            //    lootTable.lootAPLocations = new List<int>();
+            List<int> activeLootLocations = new List<int>();
             for (int i = 0; i < lootLocations.Count; i++)
             {
-                long locId = lootLocations[i] + startId;
+                long locId = APData.GetAdjustedLocationId(lootLocations[i], archipelagoData);
                 NetworkItem item = archipelagoData.GetItemFromLoc(locId);
                 if (item.Item == -1) continue;
 
-                bool itemOurs = IsItemOurs(item, false);
-                archipelagoData.CheckLocation(locId, !itemOurs);
-                if (!itemOurs || lootTable.lootTable == null) continue;
+                //bool itemOurs = IsItemOurs(item, false);
+                //if(!itemOurs)
+                //{
+                //    archipelagoData.CheckLocation(locId, true);
+                //    if (lootTable.lootTable == null) continue;
+                //}
 
                 string lootXmlName = GetItemXmlName(item);
                 if (lootXmlName == APData.bombTrapXmlName)
@@ -996,6 +994,7 @@ namespace HammerwatchAP.Archipelago
                     if (pref == null)
                         ResourceContext.Log("ERROR: failed to get bomb trap resource!!!");
                     pref.ProduceInGame(actor.Position, GameBase.Instance.resources, GameBase.Instance.world, scriptCollection);
+                    archipelagoData.CheckLocation(locId, true);
                     continue;
                 }
                 else if(lootXmlName == APData.chaserTrapXmlName)
@@ -1006,6 +1005,7 @@ namespace HammerwatchAP.Archipelago
                 {
                     AddPickupMessageToQueue(item);
                     PickupItemEffects(item, false);
+                    archipelagoData.CheckLocation(locId, true);
                     continue;
                 }
 
@@ -1017,8 +1017,7 @@ namespace HammerwatchAP.Archipelago
                 else
                 {
                     lootTable.entries.Add(new Tuple<int, List<Tuple<int, IWorldItemProducer>>>(1000, new List<Tuple<int, IWorldItemProducer>>() { new Tuple<int, IWorldItemProducer>(1000, itemProducer) }));
-                    apLocations++;
-                    //lootTable.lootAPLocations.Add((int)locId);
+                    activeLootLocations.Add((int)locId);
                 }
             }
             if (lootTable.lootTable == null)// || (lootTable.lootAPLocations.Count == 0 && !createdPrefab && !customLootLocations))
@@ -1030,9 +1029,9 @@ namespace HammerwatchAP.Archipelago
                 entriesToRemove = 1;
             for (int r = 0; r < entriesToRemove; r++)
             {
-                //lootTable.entries.RemoveAt(lootTable.entries.Count - lootTable.lootAPLocations.Count - 1);
-                lootTable.entries.RemoveAt(lootTable.entries.Count - apLocations - 1);
+                lootTable.entries.RemoveAt(lootTable.entries.Count - activeLootLocations.Count - 1);
             }
+            archipelagoData.lootTableAPLocationIDs.Add(lootTable.lootTable, activeLootLocations);
 
             return lootTable;
         }
@@ -1597,6 +1596,28 @@ namespace HammerwatchAP.Archipelago
                 if (!silent)
                     ArchipelagoMessageManager.ShowPickupMessage(itemName);
             }
+        }
+
+        public static void AddDynamicLocation(int itemNodeID, int locationID)
+        {
+            if (!archipelagoData.dynamicItemLocations.ContainsKey(archipelagoData.currentLevelName))
+                archipelagoData.dynamicItemLocations[archipelagoData.currentLevelName] = new Dictionary<int, int>();
+            archipelagoData.dynamicItemLocations[archipelagoData.currentLevelName][itemNodeID] = locationID;
+        }
+        public static int GetDynamicLocation(int itemNodeID)
+        {
+            if (!archipelagoData.dynamicItemLocations.TryGetValue(archipelagoData.currentLevelName, out Dictionary<int, int> levelDynamicLocs))
+            {
+                //Logging.Log($"Dynamic location doesn't exist for current level (item node ID: {itemNodeID})!");
+                return -1;
+            }
+            if (!levelDynamicLocs.TryGetValue(itemNodeID, out int dynamicLoc))
+            {
+                //Logging.Log($"Dynamic location doesn't exist for item node ID: {itemNodeID}!");
+                return -1;
+            }
+            levelDynamicLocs.Remove(itemNodeID);
+            return dynamicLoc;
         }
 
         public static void OutputError(Exception e)

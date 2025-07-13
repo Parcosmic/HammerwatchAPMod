@@ -13,6 +13,7 @@ namespace HammerwatchAP.Archipelago
     {
         public const int castleStartID = 0x111000;
         public const int templeStartID = 0x110000;
+
         public const int castleButtonItemStartID = templeStartID + 768;
         public const int templeButtonItemStartID = templeStartID + 1024;
         public const int shopLocationIdOffset = templeStartID + 65536; //0x10000
@@ -632,6 +633,8 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Stone", "doodads/theme_g/g_deco_ground_stone_v2.xml" },
                 new string[]{ "stone", "doodads/theme_g/g_deco_ground_stone_v2.xml" }, //For words such as Grindstone, Whetstone, etc.
                 new string[]{ "Rock", "doodads/theme_g/g_deco_ground_stone_v2.xml" },
+
+                new string[]{ "Nothing", "" },
             }},
             { "Cuphead", new List<string[]>()
             {
@@ -2166,6 +2169,18 @@ namespace HammerwatchAP.Archipelago
                 { 139384, new List<int>{ 603, 604 } },
             }},
         };
+
+        public static List<int> GetActorLocations(ArchipelagoData.MapType mapType, string levelName, int actorNodeId)
+        {
+            if (mapType == ArchipelagoData.MapType.Castle)
+            {
+                return castleMinibossIdToLocations[levelName][actorNodeId];
+            }
+            else
+            {
+                return templeMinibossIdToLocations[levelName][actorNodeId];
+            }
+        }
 
         public static Dictionary<string, int> castleButtonProgressCounts = new Dictionary<string, int>()
         {

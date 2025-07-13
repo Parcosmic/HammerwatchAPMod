@@ -27,6 +27,7 @@ namespace HammerwatchAP.Archipelago
         public HashSet<long> allLocalLocations = new HashSet<long>();
         public Dictionary<long, NetworkItem> locationToItem = new Dictionary<long, NetworkItem>();
         public bool completedGoal;
+        public Dictionary<object, List<int>> lootTableAPLocationIDs = new Dictionary<object, List<int>>();  //LootTable, Ids
         public Dictionary<string, Dictionary<int, int>> dynamicItemLocations = new Dictionary<string, Dictionary<int, int>>();
 
         //Generation variables
@@ -430,19 +431,18 @@ namespace HammerwatchAP.Archipelago
                     if (APData.castlePosToLocationId.ContainsKey(levelId) && APData.castlePosToLocationId[levelId].ContainsKey(pos))
                     {
                         locId = APData.castlePosToLocationId[levelId][pos];
-                        locId += APData.castleStartID;
                     }
                     break;
                 case MapType.Temple:
                     if (APData.templePosToLocationId.ContainsKey(levelId) && APData.templePosToLocationId[levelId].ContainsKey(pos))
                     {
                         locId = APData.templePosToLocationId[levelId][pos];
-                        locId += APData.templeStartID;
                     }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            locId = APData.GetAdjustedLocationId((int)locId, this);
             if (locId == -1)
                 return -1;
             return locId;

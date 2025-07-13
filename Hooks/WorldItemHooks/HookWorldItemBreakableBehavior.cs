@@ -41,16 +41,15 @@ namespace HammerwatchAP.Hooks
             static void Postfix(WorldObject attacker, WorldItem item, int dmg, ref bool __result)
             {
                 if (!__result) return;
-                //TODO: fix
-                //if (itemLocation == -1)
-                //{
-                //    ArchipelagoManager.CheckLocation(item.Position);
-                //}
-                //else
-                //{
-                //    ArchipelagoManager.CheckLocation(itemLocation, false);
-                //}
-                ArchipelagoManager.CheckLocation(item.Position);
+                int dynamicLocationID = ArchipelagoManager.GetDynamicLocation(item.NodeId);
+                if (dynamicLocationID == -1)
+                {
+                    ArchipelagoManager.CheckLocation(item.Position);
+                }
+                else
+                {
+                    ArchipelagoManager.archipelagoData.CheckLocation(dynamicLocationID, false);
+                }
             }
         }
     }
