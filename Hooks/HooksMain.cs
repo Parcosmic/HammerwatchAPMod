@@ -10,10 +10,10 @@ namespace HammerwatchAP.Hooks
     {
         public static void ApplyHooks()
         {
-            Logging.Log("Applying Program hooks");
-            HookProgram.Hook();
             Logging.Log("Applying APMod hooks");
             HookARPGGame.Hook();
+            Logging.Debug("Applying ResourceContext hooks");
+            HookResourceContext.Hook();
             Logging.Debug("Applying Menu hooks");
             MenuHooksMain.ApplyHooks();
             Logging.Debug("Applying GameBase hooks");

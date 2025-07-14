@@ -4078,6 +4078,11 @@ namespace HammerwatchAP.Archipelago
                     scriptNodesToAdd.AddRange(bombTrapNodes);
                     extraNodeCounter += 2;
                     break;
+                case APData.SPEECH_TRAP_XML_NAME:
+                    XElement[] speechTrapNodes = NodeHelper.CreateDestroyTriggerNodes(extraNodeCounter, APData.SPEECH_TRAP_EVENT_NAME, pos, itemId, isScriptItem);
+                    scriptNodesToAdd.AddRange(speechTrapNodes);
+                    extraNodeCounter += 2;
+                    break;
                 default:
                     if (!APData.IsItemXmlNameCorporeal(xmlName))
                     {

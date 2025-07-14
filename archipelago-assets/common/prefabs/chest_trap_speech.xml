@@ -1,0 +1,53 @@
+﻿<prefab>
+<dictionary>
+	<dictionary name="tilemap">
+		<array name="tiledata"></array>
+	</dictionary>
+	<dictionary name="doodads">
+		<array name="doodads"></array>
+	</dictionary>
+	<dictionary name="actors">
+	</dictionary>
+	<dictionary name="items">
+		<array name="items/chest_trap_purple_empty.xml">
+			<array><int>10</int><vec2>0 0</vec2></array>
+		</array>
+	</dictionary>
+	<dictionary name="scripting">
+		<array name="nodes">
+			<dictionary>
+				<int name="id">12</int>
+				<string name="type">ObjectEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -2</vec2>
+				<dictionary name="parameters">
+					<string name="event">Destroyed</string>
+					<dictionary name="object">
+						<int-arr name="static">10</int-arr>
+					</dictionary>
+				</dictionary>
+				<int-arr name="connections">13</int-arr>
+				<int-arr name="connection-delays">0</int-arr>
+			</dictionary>
+			<dictionary>
+				<int name="id">13</int>
+				<string name="type">GlobalEventTrigger</string>
+				<bool name="enabled">True</bool>
+				<int name="trigger-times">-1</int>
+				<vec2 name="pos">0 -4</vec2>
+				<string name="parameters">ap_speech_trap</string>
+			</dictionary>
+		</array>
+	</dictionary>
+	<dictionary name="lighting">
+		<array name="lights"></array>
+		<int-arr name="shadow-color">135 128 128 255</int-arr>
+		<int-arr name="ambient-color">50 50 50 255</int-arr>
+		<int-arr name="add-color">0 0 0 255</int-arr>
+		<float name="shadow-length">1</float>
+	</dictionary>
+	<dictionary name="prefabs">
+	</dictionary>
+</dictionary>
+</prefab>

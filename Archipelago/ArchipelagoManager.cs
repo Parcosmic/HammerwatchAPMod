@@ -169,6 +169,7 @@ namespace HammerwatchAP.Archipelago
             }
 
             QoL.Setup();
+            GameInterface.Setup();
         }
         
         public static bool ConnectedToAP()
@@ -347,6 +348,7 @@ namespace HammerwatchAP.Archipelago
                                 CreateItemInWorld(trapLinkQueue[trapLinkIndex++]);
                             }
                         }
+                        GameInterface.GameUpdate(ms);
                         break;
                 }
             }
@@ -556,6 +558,8 @@ namespace HammerwatchAP.Archipelago
                         EventSystem.Instance.Subscibe(buttonEvent, () => SpawnButtonEventItem(buttonEventDict[buttonEvent]));
                     }
                 }
+                //Subscribe trap events
+                EventSystem.Instance.Subscibe(APData.SPEECH_TRAP_EVENT_NAME, () => { GameInterface.StartSpeechTrap(); });
             }
         }
         public static void DataStorageMarkBossCompleted(int boss)
@@ -1001,6 +1005,12 @@ namespace HammerwatchAP.Archipelago
                 {
                     lootXmlName = APData.chaserTrapActorXmlName;
                 }
+                else if (lootXmlName == APData.SPEECH_TRAP_XML_NAME)
+                {
+                    GameInterface.StartSpeechTrap();
+                    archipelagoData.CheckLocation(locId, true);
+                    continue;
+                }
                 if (!APData.IsItemXmlNameCorporeal(lootXmlName))
                 {
                     AddPickupMessageToQueue(item);
@@ -1323,8 +1333,9 @@ namespace HammerwatchAP.Archipelago
         public static void CreateItemInWorld(string itemName)
         {
             //If this is an item with a custom effect don't create the item
-            if(itemName == "Hey! Trap")
+            if(itemName == APData.SPEECH_TRAP_NAME)
             {
+                GameInterface.StartSpeechTrap();
                 return;
             }
 

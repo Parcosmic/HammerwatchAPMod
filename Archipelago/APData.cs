@@ -66,6 +66,9 @@ namespace HammerwatchAP.Archipelago
         public const string bombTrapXmlName = "items/chest_trap_bomb.xml";
         public const string chaserTrapXmlName = "items/chest_trap_chaser.xml";
         public const string chaserTrapActorXmlName = "actors/ap_chaser.xml";
+        public const string SPEECH_TRAP_NAME = "Hey! Trap";
+        public const string SPEECH_TRAP_XML_NAME = "items/chest_trap_speech.xml";
+        public const string SPEECH_TRAP_EVENT_NAME = "ap_speech_trap";
 
         public static readonly List<string> deathlinkMessages = new List<string>()
         {
@@ -151,24 +154,24 @@ namespace HammerwatchAP.Archipelago
             { "Chaos Control Trap", "Stun Trap" },
             //{ "Tiny Trap", "" },
             //{ "Gravity Trap", "" },
-            //{ "Exposition Trap", "Hey! Trap" },
+            { "Exposition Trap", "Hey! Trap" },
             { "Ice Trap", "Frost Trap" },
             { "Slow Trap", "Frost Trap" },
-            //{ "Cutscene Trap", "Hey! Trap" },
+            { "Cutscene Trap", "Hey! Trap" },
             { "Reverse Trap", "Confuse Trap" },
-            //{ "Literature Trap", "Hey! Trap" },
+            { "Literature Trap", "Hey! Trap" },
             { "Controller Drift Trap", "Confuse Trap" },
             { "Bee Trap", "Chaser Trap" },
             //{ "Pong Trap", "" },
             //{ "Breakout Trap", "" },
             //{ "Fishing Trap", "" },
-            //{ "Trivia Trap", "Hey! Trap" },
-            //{ "Pokemon Trivia Trap", "Hey! Trap" },
-            //{ "Pokemon Count Trap", "Hey! Trap" },
+            { "Trivia Trap", "Hey! Trap" },
+            { "Pokemon Trivia Trap", "Hey! Trap" },
+            { "Pokemon Count Trap", "Hey! Trap" },
             //{ "Number Sequence Trap", "" },
             //{ "Light Up Path Trap", "" },
             //{ "Pinball Trap", "" },
-            //{ "Math Quiz Trap", "Hey! Trap" },
+            { "Math Quiz Trap", "Hey! Trap" },
             { "Snake Trap", "Poison Trap" },
             { "Input Sequence Trap", "Stun Trap" },
             //{ "Timer Trap", "" },
@@ -201,12 +204,12 @@ namespace HammerwatchAP.Archipelago
             //{ "Bald Trap", "" },
             //{ "Invisible Trap", "" },
             //{ "Fast Trap", "" },
-            //{ "Laughter Trap", "Stun Trap" },
+            { "Laughter Trap", "Stun Trap" },
             { "Hiccup Trap", "Stun Trap" },
             //{ "Zoom Trap", "" },
             { "Nut Trap", "Bomb Trap" },
             { "Army Trap", "Chaser Trap" },
-            //{ "Jump Trap", "Stun Trap" },
+            { "Jump Trap", "Stun Trap" },
             //{ "Animal Bonus Trap", "" },
             { "Sticky Floor Trap", "Stun Trap" },
         };
@@ -268,17 +271,18 @@ namespace HammerwatchAP.Archipelago
             { "Hammer Fragment", "items/tool_hammer_fragment.xml" },
             { "Gold Ring", "items/special_ring.xml" },
             { "Serious Health Upgrade", "items/special_serious_health.xml" },
-            { "Bomb Trap", bombTrapXmlName }, //If changing this update the generation code
-            { "Mana Drain Trap", "items/chest_trap_drain.xml" },
-            { "Poison Trap", "items/chest_trap_poison.xml" },
-            { "Frost Trap", "items/chest_trap_frost.xml" },
-            { "Fire Trap", "items/chest_trap_fire.xml" },
-            { "Confuse Trap", "items/chest_trap_confuse.xml" },
-            { "Banner Trap", "items/chest_trap_banner.xml" },
-            { "Disarm Trap", "items/chest_trap_disarm.xml" },
-            { "Stun Trap", "items/chest_trap_stun.xml" },
-            { "Fly Trap", "items/chest_trap_flies.xml" },
-            { "Chaser Trap", chaserTrapXmlName },
+            { "Bomb Trap", bombTrapXmlName }, //If changing this update the generation code //Wood
+            { "Mana Drain Trap", "items/chest_trap_drain.xml" }, //Wood
+            { "Poison Trap", "items/chest_trap_poison.xml" }, //Green
+            { "Frost Trap", "items/chest_trap_frost.xml" }, //Blue
+            { "Fire Trap", "items/chest_trap_fire.xml" }, //Red
+            { "Confuse Trap", "items/chest_trap_confuse.xml" }, //Wood
+            { "Banner Trap", "items/chest_trap_banner.xml" }, //Purple
+            { "Disarm Trap", "items/chest_trap_disarm.xml" }, //Wood
+            { "Stun Trap", "items/chest_trap_stun.xml" }, //Blue
+            { "Fly Trap", "items/chest_trap_flies.xml" }, //Green
+            { "Chaser Trap", chaserTrapXmlName }, //Red
+            { SPEECH_TRAP_NAME, SPEECH_TRAP_XML_NAME }, //Purple
             { "Big Bronze Key", "items/key_bronze_big.xml" },
             { "Big Prison Bronze Key", "items/key_bronze_big_prison.xml" },
             { "Big Armory Bronze Key", "items/key_bronze_big_armory.xml" },

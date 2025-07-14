@@ -26,6 +26,13 @@ namespace HammerwatchAP.Util
             nodes[1] = CreateObjectEventTriggerNode(id + 1, pos + new Vector2(0, 5), 1, "Destroyed", new[] { checkDestroyedId }, isDynamic, new[] { id });
             return nodes;
         }
+        public static XElement[] CreateDestroyTriggerNodes(int id, string eventTrigger, Vector2 pos, int checkDestroyedId, bool isDynamic)
+        {
+            XElement[] nodes = new XElement[2];
+            nodes[0] = CreateGlobalEventTriggerNode(id, 1, pos, eventTrigger);
+            nodes[1] = CreateObjectEventTriggerNode(id + 1, pos + new Vector2(0, 5), 1, "Destroyed", new[] { checkDestroyedId }, isDynamic, new[] { id });
+            return nodes;
+        }
 
         public static XElement CreateSpawnObjectNode(int id, string spawnObject, Vector2 pos)
         {
