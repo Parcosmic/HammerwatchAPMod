@@ -33,6 +33,8 @@ namespace HammerwatchAP.Hooks
                     XElement chatMirroringOption = apOptions.Element("APChatMirroring");
                     XElement shopItemHintingOption = apOptions.Element("ShopItemHinting");
                     XElement apDebugModeOption = apOptions.Element("APDebugMode");
+                    XElement lastConnectedIPOption = apOptions.Element("LastConnectedIP");
+                    XElement lastConnectedSlotNameOption = apOptions.Element("LastConnectedSlotName");
                     if (deathlinkOption != null)
                         ArchipelagoManager.Deathlink = bool.Parse(deathlinkOption.Value);
                     if (exploreSpeedOption != null)
@@ -47,6 +49,10 @@ namespace HammerwatchAP.Hooks
                         ArchipelagoManager.ShopItemHinting = bool.Parse(shopItemHintingOption.Value);
                     if (apDebugModeOption != null)
                         ArchipelagoManager.DEBUG_MODE = bool.Parse(apDebugModeOption.Value);
+                    if (lastConnectedIPOption != null)
+                        ArchipelagoManager.LastConnectedIP = lastConnectedIPOption.Value;
+                    if (lastConnectedSlotNameOption != null)
+                        ArchipelagoManager.LastConnectedSlotName = lastConnectedSlotNameOption.Value;
                 }
             }
             static void Postfix()

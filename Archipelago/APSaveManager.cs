@@ -325,41 +325,6 @@ namespace HammerwatchAP.Archipelago
 
             Logging.Debug("Saved Archipelago data");
         }
-        public static APSaveDataInfo LoadSaveInfo(string saveFileName)
-        {
-            string[] saveFiles = Directory.GetFiles("saves");
-            using (MemoryStream memStream = new MemoryStream())
-            {
-                foreach (string saveFile in saveFiles)
-                {
-                    if (saveFile != saveFileName) continue;
-                    try
-                    {
-                        string saveIp;
-                        string saveSeed;
-                        string saveSlotName;
-                        using (FileStream fileStream = File.Open(saveFile, FileMode.Open, FileAccess.Read))
-                        {
-                            memStream.Position = 0L;
-                            fileStream.CopyTo(memStream);
-                            memStream.Position = 0L;
-                            BinaryReader reader = new BinaryReader(memStream);
-                            saveIp = SValue.FindDictionaryEntry(reader, "ap-ip").GetString();
-                            memStream.Position = 0L;
-                            saveSeed = SValue.FindDictionaryEntry(reader, "ap-seed").GetString();
-                            memStream.Position = 0L;
-                            saveSlotName = SValue.FindDictionaryEntry(reader, "ap-slot-name").GetString();
-                        }
-                        return new APSaveDataInfo(saveIp, saveSeed, saveSlotName);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
-            }
-            return new APSaveDataInfo();
-        }
         public static string GetLatestSaveNameWithConnectionInfo(string gameIp, string gameSeed, string gameSlotName)
         {
             string[] saveFiles = Directory.GetFiles("saves");

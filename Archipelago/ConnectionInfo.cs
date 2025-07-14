@@ -321,8 +321,8 @@ namespace HammerwatchAP.Archipelago
                             archipelagoData.seed = session.RoomState.Seed;
                             archipelagoData.SetSlotData(cPacket.SlotData);
 
-                            //Check required ap version
-                            apworldVersion = archipelagoData.GetSlotValue<string>("APWorld Version");
+                             //Check required ap version
+                             apworldVersion = archipelagoData.GetSlotValue<string>("APWorld Version");
                             Logging.Log("Server APWorld version: " + apworldVersion);
                             string[] splits = apworldVersion.Split('.');
                             if (int.Parse(splits[0]) < ArchipelagoManager.APWORLD_VERSION.Major || (splits.Length > 1 && int.Parse(splits[0]) == ArchipelagoManager.APWORLD_VERSION.Major && int.Parse(splits[1]) < ArchipelagoManager.APWORLD_VERSION.Minor)) //Only check major and minor, bugfix shouldn't break anything
@@ -333,6 +333,10 @@ namespace HammerwatchAP.Archipelago
                                 connectionState = ConnectionState.ConnectionFailure;
                                 return;
                             }
+
+                            ArchipelagoManager.LastConnectedIP = ip;
+                            ArchipelagoManager.LastConnectedSlotName = slotName;
+                            OptionsMenu.SaveOptions(); //Need to call this here so we can save the last connected info
 
                             archipelagoData.playerGames = new string[session.Players.Players[playerTeam].Count];
                             foreach (var playerInfo in session.Players.Players[playerTeam])

@@ -237,65 +237,9 @@ namespace HammerwatchAP.Hooks
 								ArchipelagoManager.DisconnectFromArchipelago("User disconnected from server");
 								return;
 							}
-							string defaultIp = "archipelago.gg";
-							string defaultSlotName = "PlayerName";
-							if(ArchipelagoManager.DEBUG_MODE)
-							{
-								defaultIp = "localhost";
-								defaultSlotName = "PlayerName";
-							}
-							DateTime latestSaveTime = DateTime.MinValue;
-							//Get the connection info from the last played game
-							if (Directory.Exists("saves"))
-							{
-								List<Tuple<string, DateTime>> tmp = new List<Tuple<string, DateTime>>();
-								string[] available = Directory.GetFiles("saves");
-								using (MemoryStream ms = new MemoryStream())
-								{
-									foreach (string f in available)
-									{
-										try
-										{
-											using (FileStream fs = File.Open(f, FileMode.Open, FileAccess.Read))
-											{
-												ms.Position = 0L;
-												fs.CopyTo(ms);
-												ms.Position = 0L;
-												BinaryReader r = new BinaryReader(ms);
-												SValue ap = SValue.FindDictionaryEntry(r, "ap");
-												if (ap == null) continue;
-												ms.Position = 0L;
-												SValue apIpValue = SValue.FindDictionaryEntry(r, "ap-ip");
-												if (apIpValue == null) continue;
-												ms.Position = 0L;
-												//SValue apPortValue = SValue.FindDictionaryEntry(r, "ap-port");
-												DateTime fileWriteTime = File.GetLastWriteTime(f);
-												if (fileWriteTime > latestSaveTime)
-												{
-													latestSaveTime = fileWriteTime;
-												}
-												else
-												{
-													continue;
-												}
-												defaultIp = apIpValue.GetString();
-												//int apPort = int.Parse(apPortValue.GetString());
-												//                              if (apPort != 38281)
-												//                              {
-												//                                  defaultIp += $":{apPort}";
-												//                              }
-												ms.Position = 0L;
-												defaultSlotName = SValue.FindDictionaryEntry(r, "ap-slot-name").GetString();
-											}
-										}
-										catch (Exception e)
-										{
-											Console.WriteLine(e);
-										}
-									}
-								}
-							}
-							object[] array = new object[9];
+							string defaultIp = ArchipelagoManager.LastConnectedIP;
+							string defaultSlotName = ArchipelagoManager.LastConnectedSlotName;
+                            object[] array = new object[9];
 							array[0] = "Connect to Archipelago";
 							array[1] = "Enter IP address, slot name, and password";
 							array[2] = new Action<bool, string, string, string>(delegate (bool cancel, string answer, string answer2, string answer3)

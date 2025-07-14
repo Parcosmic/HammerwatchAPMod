@@ -78,7 +78,7 @@ namespace HammerwatchAP.Archipelago
         public static Dictionary<string, GameData> gameData = new Dictionary<string, GameData>();
         public static Dictionary<string, string> gameChecksums = new Dictionary<string, string>();
 
-        //AP Options
+        //Config values
         public static bool Deathlink = false;
         public static bool ExploreSpeed = true;
         public static bool ExploreSpeedPing = true;
@@ -87,7 +87,10 @@ namespace HammerwatchAP.Archipelago
         public static bool ShopItemHinting = true;
         public static bool TrapLink = false;
 
-        public static bool DEBUG_MODE = true;
+        public static bool DEBUG_MODE = false;
+
+        public static string LastConnectedIP = "archipelago.gg";
+        public static string LastConnectedSlotName = "PlayerName";
 
         //Item matching
         public static Dictionary<string, List<string[]>> activeGameFuzzyItemNameToXMLDict;
