@@ -483,18 +483,22 @@ namespace HammerwatchAP.Archipelago
                             break;
                         case ArchipelagoPacketType.Bounced:
                             BouncedPacket bouncedPacket = (BouncedPacket)packet;
-                            if(bouncedPacket.Tags.Contains(TAG_TRAPLINK))
+                            if(bouncedPacket.Tags.Contains(TAG_TRAPLINK) && ArchipelagoManager.TrapLink)
                             {
-                                string trapLinkPlayerName = bouncedPacket.Data["source"].ToString();
+                                if (!bouncedPacket.Data.TryGetValue("source", out Newtonsoft.Json.Linq.JToken source))
+                                    break;
+                                string trapLinkPlayerName = source.ToString();
                                 if (trapLinkPlayerName == GetPlayerName(playerId))
                                 {
                                     break;
                                 }
+                                if (!bouncedPacket.Data.TryGetValue("trap_name", out Newtonsoft.Json.Linq.JToken trap_name))
+                                    break;
                                 //string trapLinkSentTime = bouncedPacket.Data["time"].ToString();
-                                string trapLinkTrapName = bouncedPacket.Data["trap_name"].ToString();
+                                string trapLinkTrapName = trap_name.ToString();
                                 string hwTrapName = APData.GetTrapLinkTrap(trapLinkTrapName);
                                 if(hwTrapName != null)
-                                    ArchipelagoManager.ReceiveTrapLinkItem(hwTrapName);
+                                    ArchipelagoManager.AddTrapLinkTrapToQueue(hwTrapName);
                             }
                             break;
                     }

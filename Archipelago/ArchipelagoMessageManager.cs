@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Reflection;
 using TiltedEngine;
 using ARPGGame;
@@ -238,7 +238,7 @@ namespace HammerwatchAP.Archipelago
                         string startCode = ArchipelagoManager.archipelagoData.GetStartExitCode();
                         string[] startSplits = startCode.Split('|');
                         levelId = startSplits[0];
-                        startId = int.Parse(startSplits[1]);
+                        startId = int.Parse(startSplits[1], CultureInfo.InvariantCulture);
                     }
                     else
                     {
@@ -249,7 +249,7 @@ namespace HammerwatchAP.Archipelago
                         SendHWErrorMessage($"Level code \"{levelId}\" is invalid.");
                         break;
                     }
-                    if (parts.Count == 3 && !int.TryParse(parts[2], out startId))
+                    if (parts.Count == 3 && !int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out startId))
                     {
                         SendHWErrorMessage($"Argument 2 of command \"tp\" should be an integer.");
                         break;
@@ -276,7 +276,7 @@ namespace HammerwatchAP.Archipelago
                             return true;
                         case 3: //Set the flag
                             //Try to see if the argument is a number
-                            if (int.TryParse(parts[2], out int flagIntValue))
+                            if (int.TryParse(parts[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int flagIntValue))
                             {
                                 flagValue = flagIntValue != 0;
                             }
@@ -314,7 +314,7 @@ namespace HammerwatchAP.Archipelago
                     if (GameBase.Instance.Players == null)
                         return true;
                     //If there is a second argument and it's somewhat indicative that we want to kill everyone do it >:)
-                    bool killAllPlayers = parts.Count > 1 && (parts[1].ToLower() == "all" || (bool.TryParse(parts[1], out bool arg1) && arg1) || (int.TryParse(parts[1], out int arg1Int) && arg1Int > 0));
+                    bool killAllPlayers = parts.Count > 1 && (parts[1].ToLower() == "all" || (bool.TryParse(parts[1], out bool arg1) && arg1) || (int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int arg1Int) && arg1Int > 0));
                     foreach (PlayerInfo player in GameBase.Instance.Players)
                     {
                         if (!player.IsLocalPlayer && !killAllPlayers) continue;

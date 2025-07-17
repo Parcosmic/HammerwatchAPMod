@@ -2,7 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Threading.Tasks;
 using ARPGGame;
 using ARPGGame.GUI;
@@ -349,7 +349,7 @@ namespace HammerwatchAP.Archipelago
                             //Traplink
                             while(trapLinkIndex < trapLinkQueue.Count)
                             {
-                                CreateItemInWorld(trapLinkQueue[trapLinkIndex++]);
+                                ReceiveTrapLinkItem(trapLinkQueue[trapLinkIndex++]);
                             }
                         }
                         GameInterface.GameUpdate(ms);
@@ -905,14 +905,44 @@ namespace HammerwatchAP.Archipelago
             if (TrapLink == on) return;
             TrapLink = on;
             connectionInfo.UpdateTags();
+            if(!TrapLink)
+            {
+                trapLinkIndex = 0;
+                trapLinkQueue.Clear();
+            }
         }
-        public static void ReceiveTrapLinkItem(string linkedItemName)
+        public static void AddTrapLinkTrapToQueue(string linkedItemName)
         {
             trapLinkQueue.Add(linkedItemName);
         }
+        public static void ReceiveTrapLinkItem(string linkedItemName)
+        {
+            if(APData.trapLinkCustomTraps.Contains(linkedItemName))
+            {
+                ReceiveCustomTrap(linkedItemName);
+            }
+            else
+            {
+                CreateItemInWorld(linkedItemName);
+            }
+        }
         public static void ReceiveCustomTrap(string customTrapName)
         {
-
+            switch(customTrapName)
+            {
+                case "home_tp_trap":
+                    string startCode = archipelagoData.GetStartExitCode();
+                    string[] startSplits = startCode.Split('|');
+                    string levelId = startSplits[0];
+                    int startId = int.Parse(startSplits[1], CultureInfo.InvariantCulture);
+                    GameBase.Instance.ChangeLevel(levelId, startId);
+                    ArchipelagoMessageManager.SendHWMessage("Whoosh!");
+                    break;
+                case "ap_beetle_tp_trap":
+                    GameBase.Instance.ChangeLevel("ap_hub", 1);
+                    ArchipelagoMessageManager.SendHWMessage("Whoosh!");
+                    break;
+            }
         }
 
         public static void KilledEnemy(WorldActor actor)

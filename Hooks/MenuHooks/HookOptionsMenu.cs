@@ -24,6 +24,7 @@ namespace HammerwatchAP.Hooks
 		static FieldInfo _fi_archipelagoWidget = typeof(HookOptionsMenu).GetField(nameof(archipelagoWidget), BindingFlags.Public | BindingFlags.Static);
 
 		static FieldInfo _fi_OptionsMenu_mainPanel = typeof(OptionsMenu).GetField("mainPanel", BindingFlags.NonPublic | BindingFlags.Instance);
+		static FieldInfo _fi_OptionsMenu_stateMain = typeof(OptionsMenu).GetField("stateMain", BindingFlags.NonPublic | BindingFlags.Instance);
 		static FieldInfo _fi_OptionsMenu_stateRebind = typeof(OptionsMenu).GetField("stateRebind", BindingFlags.NonPublic | BindingFlags.Instance);
 		static FieldInfo _fi_OptionsMenu_stateRebindKeyboard = typeof(OptionsMenu).GetField("stateRebindKeyboard", BindingFlags.NonPublic | BindingFlags.Instance);
 		static FieldInfo _fi_OptionsMenu_stateRebindJoystick = typeof(OptionsMenu).GetField("stateRebindJoystick", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -190,6 +191,7 @@ namespace HammerwatchAP.Hooks
 							new CodeInstruction(OpCodes.Ldarg_0),
 							new CodeInstruction(OpCodes.Call, _mi_HandleArchipelagoMenus),
 							new CodeInstruction(OpCodes.Brtrue, bindVisibleLabel),
+							new CodeInstruction(OpCodes.Ret),
 						};
 						codes.InsertRange(c - 2, apMenuInstructions);
 						break;
@@ -421,8 +423,6 @@ namespace HammerwatchAP.Hooks
 		[HarmonyPatch(typeof(OptionsMenu), nameof(OptionsMenu.Update))]
 		internal static class Update
         {
-			static string state = "";
-
 			static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator iLGenerator)
 			{
 				List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
@@ -447,11 +447,6 @@ namespace HammerwatchAP.Hooks
 			unsafe static bool APBindUpdate(OptionsMenu __instance, bool updateControls)
 			{
 				string optionsState = _fi_OptionsMenu_oState.GetValue(__instance).ToString();
-				if (state != optionsState)
-				{
-					state = optionsState;
-					Logging.Log(state);
-				}
 				if (ArchipelagoManager.inArchipelagoMenu && updateControls && optionsState == "Bind")
 				{
 					object controlToRebind = _fi_OptionsMenu_controlToRebind.GetValue(__instance);

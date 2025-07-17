@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Globalization;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using ARPGGame;
 using TiltedEngine;
 using Archipelago.MultiClient.Net.Models;
@@ -29,7 +28,6 @@ namespace HammerwatchAP.Archipelago
 
         public static bool LoadSave(SObject save)
         {
-            //loadedSave = true;
             ConnectionInfo connectionData = ArchipelagoManager.connectionInfo;
             ArchipelagoData archipelagoData = ArchipelagoManager.archipelagoData;
             ArchipelagoManager.playingArchipelagoSave = save.Get("ap").GetBoolean();
@@ -150,8 +148,8 @@ namespace HammerwatchAP.Archipelago
             {
                 NetworkItem item = new NetworkItem
                 {
-                    Item = long.Parse(itemIds[i].GetString()),
-                    Location = long.Parse(itemLocationIds[i].GetString()),
+                    Item = long.Parse(itemIds[i].GetString(), CultureInfo.InvariantCulture),
+                    Location = long.Parse(itemLocationIds[i].GetString(), CultureInfo.InvariantCulture),
                     Player = itemPlayers[i].GetInteger(),
                     Flags = (ItemFlags)itemClassifications[i].GetInteger()
                 };
