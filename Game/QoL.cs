@@ -7,6 +7,7 @@ using ARPGGame.Behaviors.Players;
 using TiltedEngine;
 using HammerwatchAP.Archipelago;
 using HammerwatchAP.Util;
+using HammerwatchAP.Controls;
 using HammerwatchAP.Hooks;
 
 namespace HammerwatchAP.Game
@@ -36,14 +37,13 @@ namespace HammerwatchAP.Game
                     if (playerExploreSpeedCounter[p] > 0 && playerExploreSpeedCounter[p] - ms <= 0 && ArchipelagoManager.ExploreSpeedPing)
                         SoundHelper.PlayExploreSpeedSound();
                     playerExploreSpeedCounter[p] -= ms;
-                    if (player.Controls.BackPress) //TODO: make this a dedicated button
+                    if (ControlManager.apControlBindings.TryGetValue(player.Controls.Binding, out APControlBindingData apBindingData) && apBindingData.ExploreSpeedPress)
                     {
                         if (playerExploreSpeedCounter[p] <= 0)
                         {
                             if (player.Actor != null)
                             {
-                                PlayerActorBehavior playerBehavior = player.Actor.Behavior as PlayerActorBehavior;
-                                if (playerBehavior != null)
+                                if (player.Actor.Behavior is PlayerActorBehavior playerBehavior)
                                 {
                                     playerBehavior.AddHitEffect(new BuffExploreSpeed());
                                 }
@@ -66,15 +66,7 @@ namespace HammerwatchAP.Game
             if (player == null || player.Actor == null || player.Actor.Behavior.Immortal) return;
             playerExploreSpeedCounter[player.PeerID] = EXPLORE_SPEED_RESET_TIME;
             PlayerActorBehavior playerBehavior = player.Actor.Behavior as PlayerActorBehavior;
-            //List<IBuff> playerActiveHitEffects = HookPlayerActorBehavior.GetPlayerActorBehaviorActiveHitEffects(playerBehavior);
-            //List<IBuff> newActiveHitEffects = new List<IBuff>(playerActiveHitEffects);
             RemovePlayerHitEffectsWithId(playerBehavior, BuffExploreSpeed.EFFECT_ID);
-            //for (int b = 0; b < playerActiveHitEffects.Count; b++)
-            //{
-            //    if (playerActiveHitEffects[b].EffectId != BuffExploreSpeed.EFFECT_ID) continue;
-            //    playerActiveHitEffects.RemoveAt(b--);
-            //}
-            //HookPlayerActorBehavior.SetPlayerActorBehaviorActiveHitEffects(playerBehavior, newActiveHitEffects);
         }
         public static void RefreshImmortalPlayers()
         {

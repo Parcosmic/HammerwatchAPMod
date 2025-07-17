@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Globalization;
 using HarmonyLib;
 using ARPGGame;
 using ARPGGame.Menus;
@@ -11,7 +12,7 @@ using TiltedEngine;
 using TiltedEngine.Drawing;
 using HammerwatchAP.Archipelago;
 using HammerwatchAP.Util;
-using HammerwatchAP.Game;
+using HammerwatchAP.Controls;
 
 namespace HammerwatchAP.Hooks
 {
@@ -22,17 +23,26 @@ namespace HammerwatchAP.Hooks
 		public static Widget archipelagoWidget;
 		static FieldInfo _fi_archipelagoWidget = typeof(HookOptionsMenu).GetField(nameof(archipelagoWidget), BindingFlags.Public | BindingFlags.Static);
 
-		static FieldInfo _fi_OptionsMenu_oState = typeof(OptionsMenu).GetField("oState", BindingFlags.NonPublic | BindingFlags.Instance);
 		static FieldInfo _fi_OptionsMenu_mainPanel = typeof(OptionsMenu).GetField("mainPanel", BindingFlags.NonPublic | BindingFlags.Instance);
 		static FieldInfo _fi_OptionsMenu_stateRebind = typeof(OptionsMenu).GetField("stateRebind", BindingFlags.NonPublic | BindingFlags.Instance);
+		static FieldInfo _fi_OptionsMenu_stateRebindKeyboard = typeof(OptionsMenu).GetField("stateRebindKeyboard", BindingFlags.NonPublic | BindingFlags.Instance);
+		static FieldInfo _fi_OptionsMenu_stateRebindJoystick = typeof(OptionsMenu).GetField("stateRebindJoystick", BindingFlags.NonPublic | BindingFlags.Instance);
+
+		static FieldInfo _fi_OptionsMenu_oState = typeof(OptionsMenu).GetField("oState", BindingFlags.NonPublic | BindingFlags.Instance);
+		static FieldInfo _fi_OptionsMenu_readyToBind = typeof(OptionsMenu).GetField("readyToBind", BindingFlags.NonPublic | BindingFlags.Instance);
+		static FieldInfo _fi_OptionsMenu_controlToRebind = typeof(OptionsMenu).GetField("controlToRebind", BindingFlags.NonPublic | BindingFlags.Instance);
+		static FieldInfo _fi_OptionsMenu_noInput = typeof(OptionsMenu).GetField("noInput", BindingFlags.NonPublic | BindingFlags.Instance);
 		static MethodInfo _mi_OptionsMenu_RefreshState = typeof(OptionsMenu).GetMethod("RefreshState", BindingFlags.NonPublic | BindingFlags.Instance);
 
-		static ArchipelagoManager.ArchipelagoControllerAction apActionToRebind;
+		static PropertyInfo _pi_IPlayerControlBinding_IsReadyToBind = typeof(IPlayerControlBinding).GetProperty("IsReadyToBind", BindingFlags.Public | BindingFlags.Instance);
+		static MethodInfo _mi_IPlayerControlBinding_RebindAction = typeof(IPlayerControlBinding).GetMethod("RebindAction", BindingFlags.Public | BindingFlags.Instance);
+
+		static ControlManager.APControllerAction apActionToRebind;
 
 		internal static void Hook()
 		{
 			HooksHelper.Hook(typeof(LoadGUI));
-			//HooksHelper.Hook(typeof(Update));
+			HooksHelper.Hook(typeof(Update));
 			HooksHelper.Hook(typeof(RefreshState));
 			HooksHelper.Hook(typeof(Back));
 			HooksHelper.Hook(typeof(SaveOptions));
@@ -165,48 +175,80 @@ namespace HammerwatchAP.Hooks
 				List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
 				MethodInfo _mi_HandleArchipelagoMenus = typeof(RefreshState).GetMethod(nameof(RefreshState.HandleArchipelagoMenus), BindingFlags.NonPublic | BindingFlags.Static);
 
+				Label switchLabel = iLGenerator.DefineLabel();
+				Label bindVisibleLabel = iLGenerator.DefineLabel();
+
 				for (int c = 0; c < codes.Count; c++)
 				{
 					if (codes[c].opcode == OpCodes.Stloc_S)
 					{
-						Label switchLabel = iLGenerator.DefineLabel();
 						codes[c - 2].labels.Add(switchLabel);
 						List<CodeInstruction> apMenuInstructions = new List<CodeInstruction>()
 						{
 							new CodeInstruction(OpCodes.Ldsfld, _fi_ArchipelagoManager_inAPOptionsMenu),
 							new CodeInstruction(OpCodes.Brfalse, switchLabel),
-							//new CodeInstruction(OpCodes.Ldsfld, _fi_archipelagoWidget),
-							//new CodeInstruction(OpCodes.Ldc_I4_1),
-							//new CodeInstruction(OpCodes.Callvirt, HooksHelper._mi_Widget_Visible),
 							new CodeInstruction(OpCodes.Ldarg_0),
 							new CodeInstruction(OpCodes.Call, _mi_HandleArchipelagoMenus),
-							new CodeInstruction(OpCodes.Ret),
+							new CodeInstruction(OpCodes.Brtrue, bindVisibleLabel),
 						};
 						codes.InsertRange(c - 2, apMenuInstructions);
 						break;
 					}
 				}
 
+				codes[codes.Count - 12].labels.Add(bindVisibleLabel);
+
 				return codes;
 			}
 
-			static void Prefix()
+			static void Prefix(OptionsMenu __instance)
             {
 				HooksHelper.SetWidgetVisible(archipelagoWidget, false);
+
+				string optionsState = _fi_OptionsMenu_oState.GetValue(__instance).ToString();
+				switch(optionsState)
+                {
+					case "Rebind":
+						IPlayerControlBinding controlToRebind = (IPlayerControlBinding)_fi_OptionsMenu_controlToRebind.GetValue(__instance);
+						if(controlToRebind is PlayerKeyboardControlBinding)
+                        {
+							foreach(ControlManager.APControllerAction apControllerAction in Enum.GetValues(typeof(ControlManager.APControllerAction)))
+							{
+								Widget widget = ((Widget)_fi_OptionsMenu_stateRebindKeyboard.GetValue(__instance)).GetWidget(apControllerAction.ToString());
+								if (widget != null)
+								{
+									((TextWidget)widget.GetWidget("key")).SetText(ControlManager.apControlBindings[controlToRebind].ActionBoundName(apControllerAction));
+								}
+							}
+							break;
+						}
+						foreach (ControlManager.APControllerAction apControllerAction in Enum.GetValues(typeof(ControlManager.APControllerAction)))
+						{
+							Widget widget = ((Widget)_fi_OptionsMenu_stateRebindJoystick.GetValue(__instance)).GetWidget(apControllerAction.ToString());
+							if (widget != null)
+							{
+								((TextWidget)widget.GetWidget("key")).SetText(ControlManager.apControlBindings[controlToRebind].ActionBoundName(apControllerAction));
+							}
+						}
+						break;
+                }
             }
 
-			static void HandleArchipelagoMenus(OptionsMenu optionsMenu)
+			static bool HandleArchipelagoMenus(OptionsMenu optionsMenu)
             {
-				switch((int)_fi_OptionsMenu_oState.GetValue(optionsMenu))
+				switch(_fi_OptionsMenu_oState.GetValue(optionsMenu).ToString())
                 {
-					case 7: //OptionsState.Rebind
+					case "Rebind":
 						HooksHelper.SetWidgetEnabled((Widget)_fi_OptionsMenu_mainPanel.GetValue(optionsMenu), false);
 						HooksHelper.SetWidgetVisible((Widget)_fi_OptionsMenu_stateRebind.GetValue(optionsMenu), false);
 						break;
+					case "Bind":
+						return true;
 					default:
 						HooksHelper.SetWidgetVisible(archipelagoWidget, true);
 						break;
                 }
+				return false;
             }
 		}
 
@@ -265,6 +307,36 @@ namespace HammerwatchAP.Hooks
 				archipelago.Add(new XElement("LastConnectedIP", ArchipelagoManager.LastConnectedIP));
 				archipelago.Add(new XElement("LastConnectedSlotName", ArchipelagoManager.LastConnectedSlotName));
 				optionsNode.Add(archipelago);
+				XElement apControls = new XElement("ArchipelagoControls");
+				IPlayerControlBinding[] controlBindings = HookARPGGame.GetARPGGameControlBindings();
+				for (int p = 0; p < 4; p++)
+                {
+					XElement control;
+					if(controlBindings[p] is PlayerKeyboardControlBinding keyboardBinding)
+                    {
+						APKeyboardControlBindingData apKeyboardBinding = (APKeyboardControlBindingData)ControlManager.apControlBindings[keyboardBinding];
+						control = new XElement("Keyboard");
+						foreach(ControlManager.APControllerAction action in Enum.GetValues(typeof(ControlManager.APControllerAction)))
+                        {
+							control.Add(new XElement(action.ToString(), apKeyboardBinding.ActionBoundName(action)));
+						}
+					}
+					else if (controlBindings[p] is PlayerJoystickControlBinding joystickBinding)
+					{
+						APJoystickControlBindingData apJoystickBinding = (APJoystickControlBindingData)ControlManager.apControlBindings[joystickBinding];
+						control = new XElement("Joystick");
+						foreach (ControlManager.APControllerAction action in Enum.GetValues(typeof(ControlManager.APControllerAction)))
+						{
+							control.Add(new XElement(action.ToString(), apJoystickBinding.ActionToButton(action).ToString(CultureInfo.InvariantCulture)));
+						}
+					}
+                    else
+                    {
+						control = new XElement("Null");
+					}
+					apControls.Add(new XElement($"Player{1 + p}", control));
+				}
+				optionsNode.Add(apControls);
 			}
 		}
 
@@ -329,22 +401,88 @@ namespace HammerwatchAP.Hooks
                 {
 					string[] splits = name.Split(' ');
 					string verb = splits[0];
-					if(verb == "bind" && splits[1] == "ExploreSpeed")
+					if (verb != null && verb == "bind" && splits[1] == "ExploreSpeed")
                     {
-						__result = delegate (Widget w)
-						{
-							//this.actionToBind = (ControllerAction)Enum.Parse(typeof(ControllerAction), arr[1]);
-							//this.readyToBind = false;
-							ArchipelagoManager.inArchipelagoMenu = true;
-							apActionToRebind = (ArchipelagoManager.ArchipelagoControllerAction)Enum.Parse(typeof(ArchipelagoManager.ArchipelagoControllerAction), splits[1]);
-							_fi_OptionsMenu_oState.SetValue(__instance, 7);
-							_mi_OptionsMenu_RefreshState.Invoke(__instance, new object[0]);
-						};
-						return false;
+                        __result = delegate (Widget w)
+                        {
+                            ArchipelagoManager.inArchipelagoMenu = true;
+                            apActionToRebind = (ControlManager.APControllerAction)Enum.Parse(typeof(ControlManager.APControllerAction), splits[1]);
+							_fi_OptionsMenu_readyToBind.SetValue(__instance, false);
+							_fi_OptionsMenu_oState.SetValue(__instance, 7); //OptionState.Bind
+                            _mi_OptionsMenu_RefreshState.Invoke(__instance, new object[0]);
+                        };
+                        return false;
                     }
                 }
 				return true;
             }
+		}
+
+		[HarmonyPatch(typeof(OptionsMenu), nameof(OptionsMenu.Update))]
+		internal static class Update
+        {
+			static string state = "";
+
+			static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator iLGenerator)
+			{
+				List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+				MethodInfo _mi_APBindUpdate = typeof(Update).GetMethod(nameof(Update.APBindUpdate), BindingFlags.NonPublic | BindingFlags.Static);
+
+				Label noInputCounterLabel = iLGenerator.DefineLabel();
+
+				codes[codes.Count - 13].labels.Add(noInputCounterLabel);
+
+				List<CodeInstruction> apBindUpdateInstructions = new List<CodeInstruction>()
+				{
+					new CodeInstruction(OpCodes.Ldarg_0),
+					new CodeInstruction(OpCodes.Ldarg_2),
+					new CodeInstruction(OpCodes.Call, _mi_APBindUpdate),
+					new CodeInstruction(OpCodes.Brfalse, noInputCounterLabel),
+				};
+				codes.InsertRange(4, apBindUpdateInstructions);
+
+				return codes;
+			}
+
+			unsafe static bool APBindUpdate(OptionsMenu __instance, bool updateControls)
+			{
+				string optionsState = _fi_OptionsMenu_oState.GetValue(__instance).ToString();
+				if (state != optionsState)
+				{
+					state = optionsState;
+					Logging.Log(state);
+				}
+				if (ArchipelagoManager.inArchipelagoMenu && updateControls && optionsState == "Bind")
+				{
+					object controlToRebind = _fi_OptionsMenu_controlToRebind.GetValue(__instance);
+					if (!(bool)_fi_OptionsMenu_readyToBind.GetValue(__instance))
+					{
+						_fi_OptionsMenu_readyToBind.SetValue(__instance, _pi_IPlayerControlBinding_IsReadyToBind.GetValue(controlToRebind, null));
+					}
+					else
+					{
+						IPlayerControls playerControl = null;
+						for (int c = 0; c < GameBase.Instance.Controls.PlayerControls.Length; c++)
+						{
+							if (GameBase.Instance.Controls.PlayerControls[c].Binding == controlToRebind)
+							{
+								playerControl = GameBase.Instance.Controls.PlayerControls[c];
+								break;
+							}
+						}
+						if (ControlManager.apControlBindings[playerControl.Binding].RebindAction(apActionToRebind))
+						{
+							ArchipelagoManager.inArchipelagoMenu = false;
+							HookARPGGame.ARPGGameRefreshControls();
+							GameBase.Instance.menus.ReloadUI();
+							__instance.Back(false);
+							_fi_OptionsMenu_noInput.SetValue(__instance, 0);
+						}
+					}
+					return false;
+				}
+				return true;
+			}
         }
 	}
 }

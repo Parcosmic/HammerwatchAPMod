@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.13.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -113,6 +115,10 @@
     <Compile Include="Archipelago\MapPatching\EnemyShuffler.cs" />
     <Compile Include="Archipelago\MapPatching\TweakPatcher.cs" />
     <Compile Include="Archipelago\SlotDataKeys.cs" />
+    <Compile Include="Controls\APJoystickControlBindingData.cs" />
+    <Compile Include="Controls\APKeyboardControlBindingData.cs" />
+    <Compile Include="Controls\APControlBindingData.cs" />
+    <Compile Include="Controls\ControlManager.cs" />
     <Compile Include="Game\BuffInstaKill.cs" />
     <Compile Include="Game\BuffExploreSpeed.cs" />
     <Compile Include="Game\GameInterface.cs" />
@@ -259,6 +265,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y /R "C:\Archipelago Stuff\Archipelago Modding Stuff\HammerwatchAPMod\bin\Release\HammerwatchAP.dll" "C:\Program Files (x86)\Steam\steamapps\common\Hammerwatch\HammerwatchAP.dll"

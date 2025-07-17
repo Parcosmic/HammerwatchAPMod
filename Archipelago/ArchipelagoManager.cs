@@ -15,6 +15,7 @@ using HammerwatchAP.Util;
 using HammerwatchAP.Game;
 using HammerwatchAP.Menus;
 using HammerwatchAP.Hooks;
+using HammerwatchAP.Controls;
 using TiltedEngine;
 using TiltedEngine.Drawing;
 using TiltedEngine.Networking;
@@ -87,7 +88,7 @@ namespace HammerwatchAP.Archipelago
         public static bool ShopItemHinting = true;
         public static bool TrapLink = false;
 
-        public static bool DEBUG_MODE = false;
+        public static bool DEBUG_MODE = true;
 
         public static string LastConnectedIP = "archipelago.gg";
         public static string LastConnectedSlotName = "PlayerName";
@@ -355,6 +356,7 @@ namespace HammerwatchAP.Archipelago
                         break;
                 }
             }
+            ControlManager.Update(ms);
             //Explore speed
             if (GameBase.Instance.Players != null)
             {
@@ -1681,10 +1683,6 @@ namespace HammerwatchAP.Archipelago
             Generated,
             Lobby,
             InGame,
-        }
-        public enum ArchipelagoControllerAction
-        {
-            ExploreSpeed,
         }
     }
 }
