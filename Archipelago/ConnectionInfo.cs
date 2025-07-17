@@ -43,6 +43,8 @@ namespace HammerwatchAP.Archipelago
         public bool connectIgnoringWarnings = false;
 
         private int reconnectTimer = 0;
+        private int lastReconnectWaitTime = 0;
+        private const int RECONNECT_TIMER_START = 15000;
 
         public ArchipelagoSession session;
         private DeathLinkService deathLinkService;
@@ -111,16 +113,13 @@ namespace HammerwatchAP.Archipelago
                 if (TryConnectToArchipelago(loadedData, resetVars))
                 {
                     reconnectTimer = 0;
+                    lastReconnectWaitTime = 0;
                 }
-                if (inGame) return;
-                //if (connectedToAP)
-                //{
-                //    GameBase.Instance.SetMenu(MenuType.MAIN);
-                //}
-                //else
-                //{
-                //    GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connection Error", failedConnectMsg);
-                //}
+                else
+                {
+                    reconnectTimer = Math.Max(lastReconnectWaitTime * 2, RECONNECT_TIMER_START);
+                    lastReconnectWaitTime = reconnectTimer;
+                }
             }
             catch (Exception e)
             {
@@ -579,7 +578,8 @@ namespace HammerwatchAP.Archipelago
             session = null;
             deathLinkService = null;
             ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
-            reconnectTimer = 15000;
+            reconnectTimer = Math.Max(lastReconnectWaitTime * 2, RECONNECT_TIMER_START);
+            lastReconnectWaitTime = reconnectTimer;
         }
 
         public void GameUpdate(int ms)
@@ -592,6 +592,21 @@ namespace HammerwatchAP.Archipelago
             {
                 GameBase.Instance.SetMenu(MenuType.MESSAGE, "Generation In Progress", "Generating map file...");
             }
+            //if(ArchipelagoManager.playingArchipelagoSave && ArchipelagoManager.gameState == ArchipelagoManager.GameState.InGame)
+            //{
+            //    if(GameBase.Instance.Players != null && !connectedToAP && reconnectTimer > 0)
+            //    {
+            //        if(reconnectTimer == lastReconnectWaitTime)
+            //        {
+            //            Logging.GameLog($"Reconnecting to server in {lastReconnectWaitTime / 1000} seconds...");
+            //        }
+            //        reconnectTimer -= ms;
+            //        if(reconnectTimer <= 0)
+            //        {
+            //            StartConnection(ArchipelagoManager.archipelagoData, false, true, false);
+            //        }
+            //    }
+            //}
         }
 
         public string GetPlayerName(int slot)
