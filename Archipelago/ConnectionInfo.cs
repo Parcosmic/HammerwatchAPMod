@@ -320,8 +320,8 @@ namespace HammerwatchAP.Archipelago
                             archipelagoData.seed = session.RoomState.Seed;
                             archipelagoData.SetSlotData(cPacket.SlotData);
 
-                             //Check required ap version
-                             apworldVersion = archipelagoData.GetSlotValue<string>("APWorld Version");
+                            //Check required ap version
+                            apworldVersion = archipelagoData.GetSlotValue<string>("APWorld Version");
                             Logging.Log("Server APWorld version: " + apworldVersion);
                             string[] splits = apworldVersion.Split('.');
                             if (int.Parse(splits[0]) < ArchipelagoManager.APWORLD_VERSION.Major || (splits.Length > 1 && int.Parse(splits[0]) == ArchipelagoManager.APWORLD_VERSION.Major && int.Parse(splits[1]) < ArchipelagoManager.APWORLD_VERSION.Minor)) //Only check major and minor, bugfix shouldn't break anything
@@ -463,22 +463,12 @@ namespace HammerwatchAP.Archipelago
 
                             if (ArchipelagoManager.archipelagoData.saveFileName == null)
                             {
-                                try
-                                {
-                                    string baseFile = ArchipelagoManager.archipelagoData.mapType == MapType.Castle ? "levels\\campaign.hwm" : "levels\\campaign2.hwm";
-                                    ArchipelagoManager.gameState = ArchipelagoManager.GameState.Generating;
-                                    if (!APMapPatcher.CreateAPMapFile(baseFile, session.RoomState.Seed, session.ConnectionInfo.Slot, out ArchipelagoManager.archipelagoData.mapFileName, this, archipelagoData))
-                                    {
-                                        Logging.Log("Save failed to generate!");
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    ArchipelagoManager.gameState = ArchipelagoManager.GameState.FailedGenerate;
-                                    ArchipelagoManager.OutputError(e);
-                                }
+                                ArchipelagoManager.gameState = ArchipelagoManager.GameState.StartGenerate;
                             }
-                            ArchipelagoManager.CompletedGeneration();
+                            else
+                            {
+                                ArchipelagoManager.CompletedGeneration();
+                            }
                             break;
                         case ArchipelagoPacketType.Bounced:
                             BouncedPacket bouncedPacket = (BouncedPacket)packet;
@@ -588,10 +578,35 @@ namespace HammerwatchAP.Archipelago
             {
                 ConnectionResponse();
             }
-            if(ArchipelagoManager.gameState == ArchipelagoManager.GameState.Generating && (GameBase.Instance.menus.GetTopMenu() as MessageMenu) == null)
+            switch(ArchipelagoManager.gameState)
             {
-                GameBase.Instance.SetMenu(MenuType.MESSAGE, "Generation In Progress", "Generating map file...");
+                case ArchipelagoManager.GameState.StartGenerate:
+                    if (GameBase.Instance.GetMenu<MessageMenu>() == null)
+                    {
+                        GameBase.Instance.SetMenu(MenuType.MESSAGE, "Generation In Progress", "Generating map file...");
+                        break;
+                    }
+                    try
+                    {
+                        ArchipelagoManager.gameState = ArchipelagoManager.GameState.Generating;
+                        string baseFile = ArchipelagoManager.archipelagoData.mapType == MapType.Castle ? "levels\\campaign.hwm" : "levels\\campaign2.hwm";
+                        if (!APMapPatcher.CreateAPMapFile(baseFile, session.RoomState.Seed, session.ConnectionInfo.Slot, out ArchipelagoManager.archipelagoData.mapFileName, this, ArchipelagoManager.archipelagoData))
+                        {
+                            Logging.Log("Save failed to generate!");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ArchipelagoManager.gameState = ArchipelagoManager.GameState.FailedGenerate;
+                        ArchipelagoManager.OutputError(e);
+                    }
+                    ArchipelagoManager.CompletedGeneration();
+                    break;
             }
+            //if(ArchipelagoManager.gameState == ArchipelagoManager.GameState.Generating && (GameBase.Instance.menus.GetTopMenu() as MessageMenu) == null)
+            //{
+            //    GameBase.Instance.SetMenu(MenuType.MESSAGE, "Generation In Progress", "Generating map file...");
+            //}
             //if(ArchipelagoManager.playingArchipelagoSave && ArchipelagoManager.gameState == ArchipelagoManager.GameState.InGame)
             //{
             //    if(GameBase.Instance.Players != null && !connectedToAP && reconnectTimer > 0)

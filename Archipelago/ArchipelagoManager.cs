@@ -1708,6 +1708,7 @@ namespace HammerwatchAP.Archipelago
         {
             MainMenu,
             Connecting,
+            StartGenerate,
             Generating,
             FailedGenerate,
             Generated,
