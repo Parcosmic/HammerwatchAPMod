@@ -5057,7 +5057,14 @@ namespace HammerwatchAP.Archipelago
                     }
                     throw new ArgumentOutOfRangeException();
             }
-            buttonItemEventName += $"{buttonItemName.Substring(spaceIndex)}!";
+            if(buttonItemName == "Activate ChF12 Blue Flame Turrets") //This is a trap item
+            {
+                buttonItemEventName += $"{buttonItemName.Substring(spaceIndex)}...";
+            }
+            else
+            {
+                buttonItemEventName += $"{buttonItemName.Substring(spaceIndex)}!";
+            }
             return buttonItemEventName;
         }
 
@@ -6953,6 +6960,10 @@ namespace HammerwatchAP.Archipelago
         public static bool IsItemFloorMasterKey(long itemId)
         {
             return itemId >= templeStartID + 545 && itemId <= templeStartID + 591;
+        }
+        public static bool IsItemXmlNameOffworld(string xmlName)
+        {
+            return xmlName.StartsWith(apHoloPrefix);
         }
 
         public class ShopItemData

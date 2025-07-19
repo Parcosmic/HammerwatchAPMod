@@ -4,7 +4,10 @@ using System.Reflection.Emit;
 using System.Collections.Generic;
 using HarmonyLib;
 using ARPGGame;
+using OpenTK;
+using TiltedEngine;
 using TiltedEngine.WorldObjects;
+using Archipelago.MultiClient.Net.Models;
 using HammerwatchAP.Archipelago;
 using HammerwatchAP.Game;
 using HammerwatchAP.Util;
@@ -38,7 +41,9 @@ namespace HammerwatchAP.Hooks
 				List<CodeInstruction> addDynamicItemInstructions = new List<CodeInstruction>()
 				{
 					new CodeInstruction(OpCodes.Ldarg_0),
+					new CodeInstruction(OpCodes.Ldarg_1),
 					new CodeInstruction(OpCodes.Ldloc_S, (byte)7),
+					new CodeInstruction(OpCodes.Ldloc_S, (byte)4),
 					new CodeInstruction(OpCodes.Call, _mi_AddDynamicItem),
 				};
 				for (int c = 0; c < codes.Count; c++)
@@ -53,7 +58,7 @@ namespace HammerwatchAP.Hooks
 				return codes;
 			}
 
-			static void AddDynamicItem(object lootTable, WorldObject lootWorldObject)
+			static void AddDynamicItem(object lootTable, WorldNode worldNode, WorldObject lootWorldObject, Vector2 itemPosition)
             {
 				if(!ArchipelagoManager.playingArchipelagoSave)
 					return;
@@ -71,6 +76,21 @@ namespace HammerwatchAP.Hooks
 				if(apLocationIndex == locationIDs.Count - 1)
                 {
 					ArchipelagoManager.archipelagoData.lootTableAPLocationIDs.Remove(lootTable);
+				}
+				//If this is an offworld item create an attached effect
+				NetworkItem lootItem = ArchipelagoManager.archipelagoData.GetItemFromLoc(locationIDs[apLocationIndex]);
+				string itemXmlName = ArchipelagoManager.GetItemXmlName(lootItem, false);
+                if (APData.IsItemXmlNameOffworld(itemXmlName))
+                {
+					string holoItemXmlName = ArchipelagoManager.GetItemXmlName(lootItem, false, true);
+					string spriteName = $"{holoItemXmlName}:";
+					Sprite toPlay = GameBase.Instance.resources.GetResource<Sprite>(spriteName);
+					if (toPlay != null)
+					{
+						ObjectAttachedEffect itemEffect = new ObjectAttachedEffect(lootWorldObject, Vector2.Zero, spriteName, toPlay.Copy(), true, 20);
+						worldNode.Place(itemPosition.X, itemPosition.Y, itemEffect, false);
+						itemEffect.SetPlaytime(60000);
+					}
 				}
 			}
 		}
