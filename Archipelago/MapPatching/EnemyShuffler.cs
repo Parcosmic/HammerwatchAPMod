@@ -87,7 +87,7 @@ namespace HammerwatchAP.Archipelago
                     group.Remove();
                 }
                 //Remove that one problematic spawner if this is the bonus level and enemy shuffle is on
-                if (levelName == "level_bonus_1.xml" && archipelagoData.GetOption(SlotDataKeys.enemyShuffleMode) > 0)
+                if (levelName == "level_bonus_1.xml")
                 {
                     List<EnemyNodeData> bonus1EnemyNodes = enemyNodeData[ActorType.Spawner][APData.GetActFromLevelFileName(levelName, archipelagoData) - 1, 0];
                     for(int e = 0; e < bonus1EnemyNodes.Count; e++)
@@ -133,6 +133,8 @@ namespace HammerwatchAP.Archipelago
         }
         public static void ShuffleEnemies(int actRange, int shuffleMode, ArchipelagoData archipelagoData)
         {
+            if (shuffleMode == 0)
+                return;
             int acts = APData.GetActCount(archipelagoData);
             bool extraFirstActWeight = actRange > 0 && actRange < acts - 1;
             for (int a = 1; a <= 4; a++)
@@ -152,17 +154,17 @@ namespace HammerwatchAP.Archipelago
             {
                 for (int t = 0; t < actorTypeActTierCounts[actorType].GetLength(1); t++)
                 {
-                    List<string> availableEnemyNames = actorTypeActTierCounts[actorType][a, t].Keys.Where(aType => !groupSwapMapping.Values.Contains(aType)).ToList();
                     bool breakLoop = false;
                     while (enemyNodeData[actorType][a, t].Count > 0)
                     {
                         if (!PopRandomEnemyNodeData(actorType, maxAct, t, out EnemyNodeData enemyNode))
                             break;
                         //Choose name based off of shuffle mode
-                        string enemyToSwapTo = GetRandomAvailableEnemyType(actorType, a, actRange, t, shuffleMode == 1, extraFirstActWeight);
+                        string enemyToSwapTo;
                         switch (shuffleMode)
                         {
                             case 1: //Individual
+                                enemyToSwapTo = GetRandomAvailableEnemyType(actorType, a, actRange, t, shuffleMode == 1, extraFirstActWeight);
                                 if (enemyToSwapTo == null)
                                 {
                                     breakLoop = true;
@@ -176,6 +178,7 @@ namespace HammerwatchAP.Archipelago
                                 }
                                 else
                                 {
+                                    enemyToSwapTo = GetRandomAvailableEnemyType(actorType, a, actRange, t, shuffleMode == 1, extraFirstActWeight);
                                     if (enemyToSwapTo == null)
                                     {
                                         breakLoop = true;
@@ -186,6 +189,12 @@ namespace HammerwatchAP.Archipelago
                                         actorTypeActTierCounts[actorType][a1, t].Remove(enemyToSwapTo);
                                 }
                                 break;
+                            case 3: //Chaos
+                                List<string> availableEnemyNames = actorTypeActTierCounts[actorType][a, t].Keys.ToList();
+                                enemyToSwapTo = MiscHelper.RandomFromList(random, availableEnemyNames);
+                                break;
+                            default:
+                                throw new NotImplementedException("Shuffle mode was not a supported value!");
                         }
                         if (breakLoop)
                         {
