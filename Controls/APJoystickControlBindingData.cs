@@ -40,7 +40,7 @@ namespace HammerwatchAP.Controls
 		private bool IsActionActive(ControlManager.APControllerAction action)
         {
 			int button = ActionToButton(action);
-			if(((Dictionary<int, bool>)_fi_JoystickDevice_Button.GetValue(_fi_PlayerJoystickControls_joystick.GetValue(controller.Controller))).TryGetValue(button, out bool value))
+			if(controller.Controller != null && ((Dictionary<int, bool>)_fi_JoystickDevice_Button.GetValue(_fi_PlayerJoystickControls_joystick.GetValue(controller.Controller))).TryGetValue(button, out bool value))
             {
 				return value;
             }

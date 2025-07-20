@@ -32,6 +32,7 @@ namespace HammerwatchAP.Controls
 
         public bool GetKeyPress(Keys key)
         {
+            if (controller.Controller == null) return false;
             object keyboard = _fi_PlayerKeyboardControlBinding_keyboard.GetValue(controller.Controller);
             return (bool)_pi_KeyboardState.GetValue(keyboard, new object[] { key });
         }
