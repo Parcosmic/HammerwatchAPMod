@@ -80,28 +80,9 @@ namespace HammerwatchAP.Archipelago
             long longSeed = long.Parse(seed.Substring(Math.Max(seed.Length - int.MaxValue.ToString().Length, 0)));
             int intSeed = (int)longSeed;
             random = new Random(intSeed);
-            Logging.Log(baseFile);
 
-            Logging.Log("Launching resource extractor");
-            //Extract from either of the two campaigns
-            ProcessStartInfo processInfo = new ProcessStartInfo(Path.Combine(editorDir, "ResourceExtractor.exe"))
-            {
-                WorkingDirectory = editorDir,
-                Arguments = "map " + Path.Combine("..", baseFile),
-                CreateNoWindow = true,
-                UseShellExecute = false
-            };
-            Process extractorProcess = Process.Start(processInfo);
-            while (!extractorProcess.HasExited)
-            {
-                //Wait for the process to finish
-            }
-            if (extractorProcess.ExitCode != 0)
-            {
-                //The extractor failed to extract! This should never happen we have a major issue here
-                Logging.Log($"Resource extractor exited with exit code: {extractorProcess.ExitCode}");
+            if(!LaunchMapExtractor(editorDir, editorDir, "map " + Path.Combine("..", baseFile)))
                 return false;
-            }
 
             Logging.Log("Moving extracted files into new folder");
             //Create a new folder for our generated instance
@@ -118,27 +99,8 @@ namespace HammerwatchAP.Archipelago
                 Logging.Log("Extracting assets");
                 Directory.CreateDirectory(assetsPath);
 
-                string assetsExtractorPath = Path.Combine(assetsPath, "ResourceExtractor.exe");
-
-                //Start resource extractor and extract assets.bin into our assets directory
-                ProcessStartInfo assetsExtractorInfo = new ProcessStartInfo(Path.Combine(editorDir, "ResourceExtractor.exe"))
-                {
-                    WorkingDirectory = assetsPath,
-                    Arguments = "..\\..\\assets.bin",
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                };
-                Process assetsExtractorProcess = Process.Start(assetsExtractorInfo);
-                while (!assetsExtractorProcess.HasExited)
-                {
-                    //Wait for the process to finish
-                }
-                if (assetsExtractorProcess.ExitCode != 0)
-                {
-                    //The extractor failed to extract! This should never happen we have a major issue here
-                    Logging.Log($"Resource extractor exited with exit code: {assetsExtractorProcess.ExitCode}");
+                if (!LaunchMapExtractor(editorDir, assetsPath, "..\\..\\assets.bin"))
                     return false;
-                }
             }
             PatchHammerwatchAssets(assetsPath, apAssetPath, mapFolder);
 
@@ -218,27 +180,18 @@ namespace HammerwatchAP.Archipelago
             exitRando = archipelagoData.GetOption(SlotDataKeys.exitRandomization) > 0;
             Newtonsoft.Json.Linq.JObject gateTypesObj = archipelagoData.GetSlotJObject("Gate Types");
             Newtonsoft.Json.Linq.JObject exitSwapsObj = archipelagoData.GetSlotJObject("Exit Swaps");
-            gateTypes = gateTypesObj.ToObject<Dictionary<string, string>>();
-            exitSwaps = exitSwapsObj.ToObject<Dictionary<string, string>>();
             enemyShuffleKeepTier = archipelagoData.GetOption(SlotDataKeys.enemyShuffleKeepTier) > 0;
-            //See if the values are in int format, if they are we gotta convert them to strings
-            if (gateTypes.Count > 0 && int.TryParse(gateTypes.Values.First(), out _))
+            Dictionary<string, long> optimizedGateTypes = gateTypesObj.ToObject<Dictionary<string, long>>();
+            gateTypes = new Dictionary<string, string>(optimizedGateTypes.Count);
+            foreach (var pair in optimizedGateTypes)
             {
-                gateTypes = new Dictionary<string, string>();
-                Dictionary<string, long> optimizedGateTypes = gateTypesObj.ToObject<Dictionary<string, long>>();
-                foreach (var pair in optimizedGateTypes)
-                {
-                    gateTypes[APData.gateIdToCode[int.Parse(pair.Key)]] = GetKeyNameFromCode((int)pair.Value);
-                }
+                gateTypes[APData.gateIdToCode[int.Parse(pair.Key)]] = GetKeyNameFromCode((int)pair.Value);
             }
-            if (exitSwaps.Count > 0 && int.TryParse(exitSwaps.Values.First(), out _))
+            Dictionary<string, long> optimizedExitSwaps = exitSwapsObj.ToObject<Dictionary<string, long>>();
+            exitSwaps = new Dictionary<string, string>(optimizedExitSwaps.Count);
+            foreach (var pair in optimizedExitSwaps)
             {
-                exitSwaps = new Dictionary<string, string>();
-                Dictionary<string, long> optimizedExitSwaps = exitSwapsObj.ToObject<Dictionary<string, long>>();
-                foreach (var pair in optimizedExitSwaps)
-                {
-                    exitSwaps[APData.exitIdToCode[int.Parse(pair.Key)]] = APData.exitIdToCode[(int)pair.Value];
-                }
+                exitSwaps[APData.exitIdToCode[int.Parse(pair.Key)]] = APData.exitIdToCode[(int)pair.Value];
             }
             //Create dictionary of exit code sign to act for the Castle campaign
             if (mapType == ArchipelagoData.MapType.Castle)
@@ -246,7 +199,7 @@ namespace HammerwatchAP.Archipelago
                 foreach (string level in APData.floorSignExits.Keys)
                 {
                     int act = APData.GetActFromLevelFileName(level, archipelagoData);
-                    char actChar = (char)((int)'a' + act - 1);
+                    char actChar = (char)('a' + act - 1);
                     foreach (string exitCode in APData.floorSignExits[level].Values)
                     {
                         exitCodeToActChar[exitCode] = actChar;
@@ -280,6 +233,46 @@ namespace HammerwatchAP.Archipelago
             }
 
             Logging.Log("Packing xml files into map file");
+            if (!LaunchMapPacker(editorDir))
+                return false;
+
+            Logging.Log("Moving file map file into levels folder");
+            //Move the generated map file into the correct levels directory
+            string endFilePath = Path.Combine(dir, "levels", mapFileName);
+            File.Move(Path.Combine(editorDir, "archipelago.hwm"), endFilePath);
+
+            Logging.Log("Loading the level into Hammerwatch's resources");
+            //Load the save into Hammerwatch's resources
+            GameBase.Instance.modList.Load(Path.Combine("levels", mapFileName));
+
+            Logging.Log("Generation complete!");
+            return true;
+        }
+        private static bool LaunchMapExtractor(string editorDir, string workingDir, string args)
+        {
+            Logging.Log("Launching resource extractor");
+            ProcessStartInfo processInfo = new ProcessStartInfo(Path.Combine(editorDir, "ResourceExtractor.exe"))
+            {
+                WorkingDirectory = workingDir,
+                Arguments = args,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+            Process extractorProcess = Process.Start(processInfo);
+            while (!extractorProcess.HasExited)
+            {
+                //Wait for the process to finish
+            }
+            if (extractorProcess.ExitCode != 0)
+            {
+                //The extractor failed to extract! This should never happen we have a major issue here
+                Logging.Log($"Resource extractor exited with exit code: {extractorProcess.ExitCode}");
+                return false;
+            }
+            return true;
+        }
+        private static bool LaunchMapPacker(string editorDir)
+        {
             //Pack the level
             ProcessStartInfo packerInfo = new ProcessStartInfo(Path.Combine(editorDir, "LevelPacker.exe"))
             {
@@ -299,17 +292,6 @@ namespace HammerwatchAP.Archipelago
                 Logging.Log($"Level packer exited with exit code: {packerProcess.ExitCode}");
                 return false;
             }
-
-            Logging.Log("Moving file map file into levels folder");
-            //Move the generated map file into the correct levels directory
-            string endFilePath = Path.Combine(dir, "levels", mapFileName);
-            File.Move(Path.Combine(editorDir, "archipelago.hwm"), endFilePath);
-
-            Logging.Log("Loading the level into Hammerwatch's resources");
-            //Load the save into Hammerwatch's resources
-            GameBase.Instance.modList.Load(Path.Combine("levels", mapFileName));
-
-            Logging.Log("Generation complete!");
             return true;
         }
         private static void PatchHammerwatchAssets(string hwAssetPath, string apAssetsPath, string templeMapPath)
@@ -3168,7 +3150,7 @@ namespace HammerwatchAP.Archipelago
                 {
                     int itemId = int.Parse(item.Element("int").Value);
                     int doorId = APData.GetGateId(levelFile, itemId, archipelagoData);
-                    string doorType = gateTypes[$"{levelIndex}|{doorId}"];
+                    string doorType = GetGateType($"{levelIndex}|{doorId}");
                     string newGateName = itemGroupXmlName.Replace("bronze", doorType);
                     //This one bronze gate piece is named different from the others >:|
                     if (itemGroupXmlName == "items/door_a_bronze_v2.xml" && doorType != "bronze")
@@ -4824,6 +4806,12 @@ namespace HammerwatchAP.Archipelago
             }
 
             return goal;
+        }
+        public static string GetGateType(string key)
+        {
+            if (gateTypes.TryGetValue(key, out string gateType))
+                return gateType;
+            return GetKeyNameFromCode(0);
         }
     }
 }
