@@ -531,7 +531,7 @@ namespace HammerwatchAP.Archipelago
 
             //Setup death link
             deathLinkService = session.CreateDeathLinkService();
-            SetDeathlink(ArchipelagoManager.Deathlink);
+            ArchipelagoManager.SetDeathlink(ArchipelagoManager.archipelagoData.GetOption(SlotDataKeys.deathLink) > 0);
             deathLinkService.OnDeathLinkReceived += (deathLinkObject) =>
             {
                 if (ArchipelagoManager.gameReady)
@@ -646,12 +646,12 @@ namespace HammerwatchAP.Archipelago
             SetDataStorageValue($"{playerTeam}:{playerId}:CurrentRegion", key);
         }
 
-        public void SetClientReady(bool deathlink)
+        public void SetClientReady()
         {
             if(ConnectionActive)
             {
                 session.Socket.SendPacketAsync(new StatusUpdatePacket() { Status = ArchipelagoClientState.ClientPlaying });
-                SetDeathlink(deathlink);
+                SetDeathlink(ArchipelagoManager.Deathlink);
                 UpdateTags();
             }
         }

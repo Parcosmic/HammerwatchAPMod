@@ -401,7 +401,7 @@ namespace HammerwatchAP.Archipelago
             SyncUpgrades();
 
             if (!connectionInfo.ConnectionActive) return;
-            connectionInfo.SetClientReady(archipelagoData.GetOption(SlotDataKeys.deathLink) > 0);
+            connectionInfo.SetClientReady();
         }
         public static void ChangedLevel(string levelId)
         {
@@ -836,7 +836,6 @@ namespace HammerwatchAP.Archipelago
         }
         public static void SetDeathlink(bool on)
         {
-            if (Deathlink == on) return;
             Deathlink = on;
             connectionInfo.SetDeathlink(on);
         }
