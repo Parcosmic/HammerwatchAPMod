@@ -64,8 +64,6 @@ namespace HammerwatchAP.Archipelago
         private List<int> hintedLocationIds;
 
         //Message vars
-        private bool sentMessage;
-        private bool sentCommand;
         private int absorbMessages;
         private List<string> absorbedMessages = new List<string>();
 
@@ -169,9 +167,9 @@ namespace HammerwatchAP.Archipelago
             //Server message mirroring in client
             session.MessageLog.OnMessageReceived += message =>
             {
-                if (sentMessage)
+                if (ArchipelagoMessageManager.sentMessage)
                 {
-                    sentMessage = false;
+                    ArchipelagoMessageManager.sentMessage = false;
                     return;
                 }
                 string wholeMessage = string.Join("", message.Parts.Select(str => str.Text));
@@ -193,7 +191,7 @@ namespace HammerwatchAP.Archipelago
                     //case Archipelago.MultiClient.Net.MessageLog.Messages.:
                     //    break;
                     case CommandResultLogMessage commandMessage:
-                        if (!sentCommand)
+                        if (!ArchipelagoMessageManager.sentCommand)
                         {
                             ArchipelagoMessageManager.SendHWMessage(wholeMessage);
                         }
@@ -231,7 +229,7 @@ namespace HammerwatchAP.Archipelago
                         ArchipelagoMessageManager.SendHWMessage(wholeMessage);
                         break;
                 }
-                sentCommand = false;
+                ArchipelagoMessageManager.sentCommand = false;
             };
             session.Socket.PacketReceived += packet =>
             {
@@ -413,8 +411,6 @@ namespace HammerwatchAP.Archipelago
                                         break;
                                     case ConnectionRefusedError.SlotAlreadyTaken:
                                         break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
                                 }
                                 ResourceContext.Log(errorMessage);
                                 failedConnectMsg = errorMessage;
