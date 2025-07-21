@@ -855,7 +855,15 @@ namespace HammerwatchAP.Archipelago
                 }
             }
             deathlinkQueue = null;
-            string message = deathlink.Cause ?? $"Deathlink: {deathlink.Source}";
+            string message;
+            if(deathlink.Cause == null || deathlink.Cause == "")
+            {
+                message = $"{deathlink.Source} sent a Deathlink!";
+            }
+            else
+            {
+                message = deathlink.Cause;
+            }
             ArchipelagoMessageManager.SendHWMessage(message, TiltedEngine.Color.Red);
         }
         public static void PlayerDeath(PlayerInfo player) //Only is run by the host
