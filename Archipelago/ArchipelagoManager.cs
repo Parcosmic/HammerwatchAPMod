@@ -55,7 +55,7 @@ namespace HammerwatchAP.Archipelago
 
         static DeathLink deathlinkQueue;
         public static int trapLinkIndex;
-        public static List<string> trapLinkQueue = new List<string>();
+        public static List<TrapLinkInfo> trapLinkQueue = new List<TrapLinkInfo>();
         public static Dictionary<string, Dictionary<long, string>> remoteItemToXmlNameCache = new Dictionary<string, Dictionary<long, string>>();
 
         public static GameState gameState;
@@ -918,19 +918,20 @@ namespace HammerwatchAP.Archipelago
                 trapLinkQueue.Clear();
             }
         }
-        public static void AddTrapLinkTrapToQueue(string linkedItemName)
+        public static void AddTrapLinkTrapToQueue(string sender, string originalTrapName, string linkedItemName)
         {
-            trapLinkQueue.Add(linkedItemName);
+            trapLinkQueue.Add(new TrapLinkInfo(sender, originalTrapName, linkedItemName));
         }
-        public static void ReceiveTrapLinkItem(string linkedItemName)
+        public static void ReceiveTrapLinkItem(TrapLinkInfo trapLinkInfo)
         {
-            if(APData.trapLinkCustomTraps.Contains(linkedItemName))
+            AddMessageToQueue(GetReceiveItemMessage(trapLinkInfo.OriginalTrapName, trapLinkInfo.Sender, " via Trap Link!"));
+            if(APData.trapLinkCustomTraps.Contains(trapLinkInfo.InterpretedTrapName))
             {
-                ReceiveCustomTrap(linkedItemName);
+                ReceiveCustomTrap(trapLinkInfo.InterpretedTrapName);
             }
             else
             {
-                CreateItemInWorld(linkedItemName);
+                CreateItemInWorld(trapLinkInfo.InterpretedTrapName);
             }
         }
         public static void ReceiveCustomTrap(string customTrapName)
@@ -1203,6 +1204,10 @@ namespace HammerwatchAP.Archipelago
             string itemName = GetReceiveItemName(item);
             string playerName = playerInfo.Alias;
             string endString = GetItemMessageEndString(item);
+            return GetReceiveItemMessage(itemName, playerName, endString);
+        }
+        public static string GetReceiveItemMessage(string itemName, string playerName, string endString)
+        {
             return $"Received {itemName} from {playerName}{endString}";
         }
         public static string GetItemMessageEndString(NetworkItem item)
@@ -1721,6 +1726,20 @@ namespace HammerwatchAP.Archipelago
             Generated,
             Lobby,
             InGame,
+        }
+
+        public struct TrapLinkInfo
+        {
+            public string Sender;
+            public string OriginalTrapName;
+            public string InterpretedTrapName;
+
+            public TrapLinkInfo(string sender, string originalTrapName, string interpretedTrapName)
+            {
+                Sender = sender;
+                OriginalTrapName = originalTrapName;
+                InterpretedTrapName = interpretedTrapName;
+            }
         }
     }
 }

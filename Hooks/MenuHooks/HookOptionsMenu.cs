@@ -139,7 +139,7 @@ namespace HammerwatchAP.Hooks
 					new Tuple<string, string>( "ap-fragile-breakables", "Fragile Breakables" ),
 					new Tuple<string, string>( "ap-chat-mirroring", "AP Chat Mirroring" ),
 					new Tuple<string, string>( "ap-shop-item-hinting", "Shop Item Hinting" ),
-					new Tuple<string, string>( "ap-traplink", "TrapLink" ),
+					new Tuple<string, string>( "ap-traplink", "Trap Link" ),
 				};
 				for(int i = 0; i < apOptionNames.Length; i++)
                 {

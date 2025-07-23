@@ -63,7 +63,7 @@ namespace HammerwatchAP.Game
         }
         public static void ResetExploreSpeed(PlayerInfo player)
         {
-            if (player == null || player.Actor == null || player.Actor.Behavior.Immortal) return;
+            if (!ArchipelagoManager.playingArchipelagoSave || player == null || player.Actor == null || player.Actor.Behavior.Immortal) return;
             playerExploreSpeedCounter[player.PeerID] = EXPLORE_SPEED_RESET_TIME;
             PlayerActorBehavior playerBehavior = player.Actor.Behavior as PlayerActorBehavior;
             RemovePlayerHitEffectsWithId(playerBehavior, BuffExploreSpeed.EFFECT_ID);

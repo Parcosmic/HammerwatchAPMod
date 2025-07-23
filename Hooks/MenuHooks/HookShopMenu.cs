@@ -41,7 +41,7 @@ namespace HammerwatchAP.Hooks
 		{
 			static void Prefix(Upgrade[] ___upgrades)
 			{
-				if (!ArchipelagoManager.playingArchipelagoSave)
+				if (!ArchipelagoManager.playingArchipelagoSave || !ArchipelagoManager.ShopItemHinting)
 					return;
 				if (ArchipelagoManager.archipelagoData.IsShopSanityOn())
 					ArchipelagoManager.connectionInfo.SetMapTrackingKey(ArchipelagoManager.archipelagoData.currentLevelId);
@@ -60,7 +60,7 @@ namespace HammerwatchAP.Hooks
 						}
 					}
                 }
-				if(hintLocationIds.Count > 0 && ArchipelagoManager.ShopItemHinting)
+				if(hintLocationIds.Count > 0)
 				{
 					ArchipelagoManager.connectionInfo.HintLocations(hintLocationIds);
 				}

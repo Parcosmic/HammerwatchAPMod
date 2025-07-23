@@ -483,7 +483,7 @@ namespace HammerwatchAP.Archipelago
                                 string trapLinkTrapName = trap_name.ToString();
                                 string hwTrapName = APData.GetTrapLinkTrap(trapLinkTrapName);
                                 if(hwTrapName != null)
-                                    ArchipelagoManager.AddTrapLinkTrapToQueue(hwTrapName);
+                                    ArchipelagoManager.AddTrapLinkTrapToQueue(trapLinkPlayerName, trapLinkTrapName, hwTrapName);
                             }
                             break;
                     }
@@ -635,7 +635,8 @@ namespace HammerwatchAP.Archipelago
         public void SetDataStorageValue(string key, string value)
         {
             if (!ConnectionActive) return;
-            session.DataStorage[key] = value;
+            //session.DataStorage[key] = value;
+            session.Socket.SendPacketAsync(new SetPacket() { Key = key, WantReply = false, Operations = new OperationSpecification[] { new OperationSpecification() { OperationType = OperationType.Replace, Value = value} } });
         }
         public void SetMapTrackingKey(string key)
         {
@@ -715,6 +716,7 @@ namespace HammerwatchAP.Archipelago
                 locationsToHint.Add(locId);
                 hintedLocationIds.Add(locId);
             }
+            if (locationsToHint.Count == 0) return;
             session.Socket.SendPacketAsync(new LocationScoutsPacket() { Locations = locationsToHint.ToArray(), CreateAsHint = 2 });
         }
 
