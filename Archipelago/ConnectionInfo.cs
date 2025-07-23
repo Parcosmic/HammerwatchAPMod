@@ -496,6 +496,12 @@ namespace HammerwatchAP.Archipelago
             ArchipelagoManager.datapackageUpToDate = false;
             loginResult = session.TryConnectAndLogin("Hammerwatch", slotName, ItemsHandlingFlags.IncludeStartingInventory, ArchipelagoManager.AP_VERSION, null, null, password);
 
+            if(loginResult is LoginFailure loginFailure)
+            {
+                failedConnectMsg = loginFailure.ToString();
+                connectionState = ConnectionState.ConnectionFailure;
+            }
+
             return failedConnectMsg == null;
         }
         public bool ConnectionResponse()
@@ -570,7 +576,7 @@ namespace HammerwatchAP.Archipelago
 
         public void GameUpdate(int ms)
         {
-            if((connectionState == ConnectionState.ConnectionResult || connectionState == ConnectionState.ConnectionFailure) && ArchipelagoManager.datapackageUpToDate)
+            if((connectionState == ConnectionState.ConnectionResult && ArchipelagoManager.datapackageUpToDate) || connectionState == ConnectionState.ConnectionFailure)
             {
                 ConnectionResponse();
             }

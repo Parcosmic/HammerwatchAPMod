@@ -222,7 +222,7 @@ namespace HammerwatchAP.Archipelago
             connectionInfo = new ConnectionInfo(slotName, ip, password);
             //Start connecting
             GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connecting", "Connecting to Archipelago server...");
-            connectionInfo.StartConnection(null, true, false);
+            gameState = GameState.StartConnect;
         }
         public static void DisconnectFromArchipelago(string reason=null)
         {
@@ -280,6 +280,11 @@ namespace HammerwatchAP.Archipelago
             if (connectionInfo != null)
             {
                 connectionInfo.GameUpdate(ms);
+            }
+            if(gameState == GameState.StartConnect)
+            {
+                gameState = GameState.Connecting;
+                connectionInfo.StartConnection(null, true, false);
             }
             if (playingArchipelagoSave)
             {
@@ -1719,6 +1724,7 @@ namespace HammerwatchAP.Archipelago
         public enum GameState
         {
             MainMenu,
+            StartConnect,
             Connecting,
             StartGenerate,
             Generating,
