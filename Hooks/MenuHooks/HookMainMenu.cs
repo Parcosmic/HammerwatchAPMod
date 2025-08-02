@@ -44,8 +44,7 @@ namespace HammerwatchAP.Hooks
 
 			static void Postfix(MainMenu __instance)
 			{
-				int versionLabels = ArchipelagoManager.MOD_VERSION.Build == 0 ? 2 : 3;
-				string modString = $"APMod Ver. {ArchipelagoManager.MOD_VERSION.ToString(versionLabels)}";
+				string modString = ArchipelagoManager.GetModVersionString();
 				((TextWidget)__instance.Document.GetWidget("modVersion")).SetText(modString);
 
 				if (ArchipelagoManager.ConnectedToAP())

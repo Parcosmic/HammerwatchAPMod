@@ -28,14 +28,14 @@ namespace HammerwatchAP.Archipelago
 
         public static bool LoadSave(SObject save)
         {
+            ArchipelagoManager.playingArchipelagoSave = true;
             ConnectionInfo connectionData = ArchipelagoManager.connectionInfo;
             ArchipelagoData archipelagoData = ArchipelagoManager.archipelagoData;
-            ArchipelagoManager.playingArchipelagoSave = save.Get("ap").GetBoolean();
             string loadedIp = save.Get("ap-ip").GetString();
             string loadedSeed = save.Get("ap-seed").GetString();
             if (archipelagoData.seed != null && archipelagoData.seed != loadedSeed)
                 return false;
-            if(!connectionData.ConnectionActive) //Only set the ip if we're not already connected to a server
+            if(!ArchipelagoManager.ConnectedToAP()) //Only set the ip if we're not already connected to a server
             {
                 connectionData.ip = loadedIp;
             }
@@ -45,6 +45,7 @@ namespace HammerwatchAP.Archipelago
                 return false;
             connectionData.slotName = loadedSlotName;
             connectionData.apPassword = save.Get("ap-password").GetString();
+            archipelagoData.raceMode = save.Get("ap-race-mode").GetBoolean();
 
             archipelagoData.mapType = (ArchipelagoData.MapType)save.Get("ap-map").GetInteger();
             archipelagoData.completedGoal = save.Get("ap-goal").GetBoolean();
@@ -173,7 +174,7 @@ namespace HammerwatchAP.Archipelago
                 archipelagoData.dynamicItemLocations.Add(dynamicItemLevels[dynamicItemLevelCounter++].GetString(), dynamicItemLevelItems);
             }
 
-            if (!connectionData.ConnectionActive)
+            if (!ArchipelagoManager.ConnectedToAP())
             {
                 connectionData.StartConnection(archipelagoData);
                 if (!connectionData.connectedToAP)
@@ -206,6 +207,7 @@ namespace HammerwatchAP.Archipelago
             save.Set("ap-seed", archipelagoData.seed);
             save.Set("ap-slot-name", connectionData.slotName);
             save.Set("ap-password", connectionData.apPassword);
+            save.Set("ap-race-mode", archipelagoData.raceMode.HasValue && archipelagoData.raceMode.Value);
             save.Set("ap-map", (int)archipelagoData.mapType);
             save.Set("ap-goal", archipelagoData.completedGoal);
             save.Set("ap-items-received", archipelagoData.itemsReceived);

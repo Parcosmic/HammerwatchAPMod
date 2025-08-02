@@ -106,7 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archipelago\APData.cs" />
-    <Compile Include="Archipelago\APHelper.cs" />
     <Compile Include="Archipelago\MapPatching\APMapPatcher.cs" />
     <Compile Include="Archipelago\APSaveManager.cs" />
     <Compile Include="Archipelago\ArchipelagoData.cs" />

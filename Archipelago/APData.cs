@@ -36,9 +36,9 @@ namespace HammerwatchAP.Archipelago
         public const int shopItemOffset = 1280;
         public const int shopItemBaseId = templeStartID + shopItemOffset;
 
-        public const string archipelagoItemXmlName = "items/archipelago_item.xml";
-        public const string archipelagoFillerItemXmlName = "items/archipelago_filler_item.xml";
-        public const string archipelagoUsefulItemXmlName = "items/archipelago_useful_item.xml";
+        private const string archipelagoItemXmlName = "items/archipelago_item.xml";
+        private const string archipelagoFillerItemXmlName = "items/archipelago_filler_item.xml";
+        private const string archipelagoUsefulItemXmlName = "items/archipelago_useful_item.xml";
         public const string buttonEffectItemXmlName = "items/button_effect.xml";
         public const string bossRune1ItemXmlName = "items/boss_rune_1.xml";
         public const string bossRune2ItemXmlName = "items/boss_rune_2.xml";
@@ -59,9 +59,9 @@ namespace HammerwatchAP.Archipelago
         }
 
         public const string apHoloPrefix = "items/archipelago_holo";
-        public const string apHoloItemXmlName = "items/archipelago_holo.xml";
-        public const string apHoloFillerItemXmlName = "items/archipelago_holo_filler.xml";
-        public const string apHoloProgItemXmlName = "items/archipelago_holo_prog.xml";
+        private const string apHoloItemXmlName = "items/archipelago_holo.xml";
+        private const string apHoloFillerItemXmlName = "items/archipelago_holo_filler.xml";
+        private const string apHoloProgItemXmlName = "items/archipelago_holo_prog.xml";
 
         public const string bombTrapXmlName = "items/chest_trap_bomb.xml";
         public const string chaserTrapXmlName = "items/chest_trap_chaser.xml";
@@ -343,22 +343,6 @@ namespace HammerwatchAP.Archipelago
             { "Disarm Trap", "items/aptrap_disarm.xml" },
             { "Stun Trap", "items/aptrap_stun.xml" },
         };
-        public static readonly List<string> consumableItemXmlName = new List<string>()
-        {
-            "items/health_1.xml",
-            "items/health_2.xml",
-            "items/health_3.xml",
-            "items/health_4.xml",
-            "items/mana_1.xml",
-            "items/mana_2.xml"
-        };
-        public static readonly string[] randomUpgradeXmlName = new string[]
-        {
-            "items/upgrade_damage.xml",
-            "items/upgrade_defense.xml",
-            "items/upgrade_health.xml",
-            "items/upgrade_mana.xml"
-        };
         public static readonly string[] foodItemNames = new[]
         {
             "Apple",
@@ -367,9 +351,6 @@ namespace HammerwatchAP.Archipelago
             "Fish",
         };
 
-        public static readonly List<(string, string)> fuzzyItemNameToXML = new List<(string, string)>()
-        {
-        };
         public static readonly Dictionary<string, List<string[]>> gameFuzzyItemNameToXML = new Dictionary<string, List<string[]>>()
         {
             { "", new List<string[]>()
@@ -381,7 +362,6 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Twig", "doodads/theme_e/e_deco_vgt_ivy_v4.xml" },
                 new string[]{ "Stick", "doodads/theme_e/e_deco_vgt_ivy_v4.xml" },
                 new string[]{ "Root", "doodads/theme_e/e_deco_vgt_ivy_v4.xml" },
-                //new string[]{ "Seed", "doodads/theme_e/e_deco_vgt_v2.xml" },
                 new string[]{ "Seed", "items/vgt_plant.xml:default" },
                 new string[]{ "Plant", "items/vgt_plant.xml:default" },
                 new string[]{ "Herb", "items/vgt_plant.xml:default" },
@@ -398,12 +378,6 @@ namespace HammerwatchAP.Archipelago
 
                 new string[]{ "Coins", "items/valuable_9.xml" },
 
-                //new string[]{ "Bonus Chest", "items/bonus_chest.xml" },
-                //{ "Bonus Key", "items/bonus_key.xml" },
-                //{ "Blue Chest", "items/chest_blue.xml" },
-                //{ "Green Chest", "items/chest_green.xml" },
-                //{ "Purple Chest", "items/chest_purple.xml" },
-                //{ "Red Chest", "items/chest_red.xml" },
                 new string[]{ "Relic", "items/chest_green.xml" },
                 new string[]{ "Chest", "items/chest_wood.xml" },
                 new string[]{ "Coin", "items/collectable_1.xml" },
@@ -419,11 +393,10 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Glass", "items/key_mirror.xml" },
                 new string[]{ "Lens", "items/key_mirror.xml" },
                 new string[]{ "Ore", "items/key_ore.xml" },
-                //{ "Rune Key", "items/key_teleport.xml" },
-                //{ "1-Up Ankh", "items/powerup_1up.xml" },
-                //{ "5-Up Ankh", "items/powerup_5up.xml" },
-                //{ "7-Up Ankh", "items/powerup_7up.xml" },
-                //{ "Damage Potion", "items/powerup_potion3.xml" },
+                new string[]{ "Rune", "items/key_teleport.xml" },
+                new string[]{ "Red Potion", "items/powerup_potion3.xml" }, //Red
+                new string[]{ "Yellow Potion", "items/powerup_potion2.xml" }, //Yellow
+                new string[]{ "Purple Potion", "items/powerup_potion1.xml" }, //Purple
                 new string[]{ "Potion", "items/powerup_potion2.xml" }, //Yellow
                 new string[]{ "Ambrosia", "items/powerup_potion3.xml" }, //Red
                 new string[]{ "Juice", "items/powerup_potion1.xml" }, //Purple
@@ -469,6 +442,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Suit", "items/upgrade_defense.xml" },
                 new string[]{ "Defend", "items/upgrade_defense.xml" },
                 new string[]{ "Defense", "items/upgrade_defense.xml" },
+                new string[]{ "Mantle", "items/upgrade_defense.xml" },
 
                 new string[]{ "Bow", "doodads/generic/deco_corpse_weapon_bow.xml" },
                 new string[]{ "bow", "doodads/generic/deco_corpse_weapon_bow.xml" }, //To catch items such as Shortbow or Longbow
@@ -489,7 +463,6 @@ namespace HammerwatchAP.Archipelago
 
                 new string[]{ "Rupee", "items/valuable_diamond_small.xml" },
 
-                //
                 new string[]{ "Soul", "actors/wisp_1.xml:south" },
                 new string[]{ "Essence", "actors/wisp_2.xml:south" },
 
@@ -508,14 +481,6 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Gem", "items/valuable_diamond.xml" },
                 new string[]{ "Jewel", "items/valuable_diamond.xml" },
 
-                //{ "Mana Upgrade", "items/upgrade_mana.xml" },
-                //{ "Copper Coin", "items/valuable_1.xml" },
-                //{ "Copper Coins", "items/valuable_2.xml" },
-                //{ "Copper Coin Pile", "items/valuable_3.xml" },
-                //{ "Silver Coin", "items/valuable_4.xml" },
-                //{ "Silver Coins", "items/valuable_5.xml" },
-                //{ "Gold Coin", "items/valuable_7.xml" },
-                //{ "Gold Coins", "items/valuable_8.xml" },
                 new string[]{ "Currency", "items/valuable_9.xml" },
                 new string[]{ "Money", "items/valuable_9.xml" },
                 new string[]{ "Zenny", "items/valuable_9.xml" },
@@ -552,12 +517,6 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Badge", "items/crystal_green.xml" },
                 new string[]{ "Rosary", "items/crystal_red.xml" },
                 new string[]{ "Crystal", "items/crystal_purple.xml" },
-                //{ "Offense Shop Upgrade", "items/shop_item_off.xml" },
-                //{ "Defense Shop Upgrade", "items/shop_item_def.xml" },
-                //{ "Vitality Shop Upgrade", "items/shop_item_misc.xml" },
-                //{ "Combo Shop Upgrade", "items/shop_item_combo.xml" },
-                //{ "Miscellaneous Shop Upgrade", "items/shop_item_power.xml" },
-                //{ "Gamble Shop Upgrade", "items/shop_item_gamble.xml" },
 
                 new string[]{ "Arrow", "items/disp_gold_arrows.xml" },
                 new string[]{ "Quiver", "items/disp_gold_arrows.xml" },
@@ -773,6 +732,16 @@ namespace HammerwatchAP.Archipelago
             {
                 new string[]{ "Rarecrow", "actors/tower_banner_3.xml:north" },
             }},
+            { "Monster Hunter World", new List<string[]>()
+            {
+                new string[]{ "Healing Loot Box", "items/chest_red.xml" },
+                new string[]{ "Trap Loot Box", "items/chest_green.xml" },
+                new string[]{ "Buff Loot Box", "items/chest_purple.xml" },
+                new string[]{ "Ammo Loot Box", "items/chest_blue.xml" },
+                new string[]{ "Ingredient Loot Box", "items/chest_blue.xml" },
+                new string[]{ "Junk Loot Box", "items/chest_wood.xml" },
+                new string[]{ "Chance Loot Box", "items/chest_purple.xml" },
+            }},
         };
         public static string GetItemNameFromXml(string xmlName)
         {
@@ -836,7 +805,7 @@ namespace HammerwatchAP.Archipelago
             return apHoloFillerItemXmlName;
         }
 
-        public static readonly Dictionary<string, Dictionary<int, int>> castleGateIDLookup = new Dictionary<string, Dictionary<int, int>>
+        private static readonly Dictionary<string, Dictionary<int, int>> castleGateIDLookup = new Dictionary<string, Dictionary<int, int>>
         {
             {"level_1.xml", new Dictionary<int, int>{
             { 2175, 0 },
@@ -1394,7 +1363,7 @@ namespace HammerwatchAP.Archipelago
             {"level_esc_4.xml", new Dictionary<int, int>{
             }},
         };
-        public static readonly Dictionary<string, Dictionary<int, int>> templeGateIDLookup = new Dictionary<string, Dictionary<int, int>>
+        private static readonly Dictionary<string, Dictionary<int, int>> templeGateIDLookup = new Dictionary<string, Dictionary<int, int>>
         {
             {"level_hub.xml", new Dictionary<int, int>{
             }},
@@ -1775,7 +1744,7 @@ namespace HammerwatchAP.Archipelago
             }
         }
 
-        public static readonly Dictionary<string, string> castleLevelIdToLevelFile = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> castleLevelIdToLevelFile = new Dictionary<string, string>()
         {
             {"1", "level_1.xml"},
             {"2", "level_2.xml"},
@@ -1804,7 +1773,7 @@ namespace HammerwatchAP.Archipelago
             {"esc_4", "level_esc_4.xml"},
             {"ap_hub", "ap_hub.xml"},
         };
-        public static readonly Dictionary<string, int> castleLevelIdToAct = new Dictionary<string, int>()
+        private static readonly Dictionary<string, int> castleLevelIdToAct = new Dictionary<string, int>()
         {
             {"1", 1},
             {"2", 1},
@@ -1833,7 +1802,7 @@ namespace HammerwatchAP.Archipelago
             {"esc_4", 1},
             {"ap_hub", 1},
         };
-        public static readonly Dictionary<string, int> castleLevelFileToLevelIndex = new Dictionary<string, int>()
+        private static readonly Dictionary<string, int> castleLevelFileToLevelIndex = new Dictionary<string, int>()
         {
             {"level_1.xml", 0},
             {"level_2.xml", 1},
@@ -1853,7 +1822,7 @@ namespace HammerwatchAP.Archipelago
             {"level_12.xml", 11},
             {"level_bonus_4.xml", 3},
         };
-        public static readonly Dictionary<string, string> templeLevelIdToLevelFile = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> templeLevelIdToLevelFile = new Dictionary<string, string>()
         {
             { "hub", "level_hub.xml" },
             { "library", "level_library.xml" },
@@ -1872,7 +1841,7 @@ namespace HammerwatchAP.Archipelago
             { "bonus_5", "level_bonus_5.xml" },
             {"ap_hub", "ap_hub.xml"},
         };
-        public static readonly Dictionary<string, int> templeLevelIdToAct = new Dictionary<string, int>()
+        private static readonly Dictionary<string, int> templeLevelIdToAct = new Dictionary<string, int>()
         {
             { "hub", 3 },
             { "library", 1 },
@@ -1891,7 +1860,7 @@ namespace HammerwatchAP.Archipelago
             { "bonus_5", 4 },
             {"ap_hub", 1},
         };
-        public static readonly Dictionary<string, int> templeLevelFileToLevelIndex = new Dictionary<string, int>()
+        private static readonly Dictionary<string, int> templeLevelFileToLevelIndex = new Dictionary<string, int>()
         {
             { "level_boss_1.xml", 2 },
             { "level_temple_1.xml", 0 },
@@ -2036,14 +2005,6 @@ namespace HammerwatchAP.Archipelago
                             return "Chambers 11";
                         case "level_12.xml":
                             return "Chambers 12";
-                        //case "level_bonus_1.xml":
-                        //    return "N1";
-                        //case "level_bonus_2.xml":
-                        //    return "N2";
-                        //case "level_bonus_3.xml":
-                        //    return "N3";
-                        //case "level_bonus_4.xml":
-                        //    return "N4";
                         case "level_boss_1.xml":
                             return "Boss 1";
                         case "level_boss_2.xml":
@@ -2052,14 +2013,6 @@ namespace HammerwatchAP.Archipelago
                             return "Boss 3";
                         case "level_boss_4.xml":
                             return "Boss 4";
-                            //case "level_esc_1.xml":
-                            //    return "E1";
-                            //case "level_esc_2.xml":
-                            //    return "E2";
-                            //case "level_esc_3.xml":
-                            //    return "E3";
-                            //case "level_esc_4.xml":
-                            //    return "E4";
                     }
                     break;
                 case ArchipelagoData.MapType.Temple:
@@ -2104,14 +2057,8 @@ namespace HammerwatchAP.Archipelago
             }
         }
 
-        public static Difficulty GetDifficulty(ArchipelagoData archipelagoData)
-        {
-            int difficultyIndex = archipelagoData.GetOption(SlotDataKeys.difficulty);
-            return (Difficulty)difficultyIndex;
-        }
-
         //Don't need to put towers in here as they can't move
-        public static readonly Dictionary<string, Dictionary<int, List<int>>> castleMinibossIdToLocations = new Dictionary<string, Dictionary<int, List<int>>>
+        private static readonly Dictionary<string, Dictionary<int, List<int>>> castleMinibossIdToLocations = new Dictionary<string, Dictionary<int, List<int>>>
         {
             {"level_2.xml", new Dictionary<int, List<int>>{
                 { 3346, new List<int>{ 1201, 1202 } },
@@ -2159,7 +2106,7 @@ namespace HammerwatchAP.Archipelago
                 { 99999, new List<int>{ 1323, 1324 } },
             }},
         };
-        public static readonly Dictionary<string, Dictionary<int, List<int>>> templeMinibossIdToLocations = new Dictionary<string, Dictionary<int, List<int>>>
+        private static readonly Dictionary<string, Dictionary<int, List<int>>> templeMinibossIdToLocations = new Dictionary<string, Dictionary<int, List<int>>>
         {
             {"level_cave_1.xml", new Dictionary<int, List<int>>{
                 { 104090, new List<int>{ 515, 516 } },
@@ -2189,53 +2136,26 @@ namespace HammerwatchAP.Archipelago
 
         public static List<int> GetActorLocations(ArchipelagoData.MapType mapType, string levelName, int actorNodeId)
         {
-            if (mapType == ArchipelagoData.MapType.Castle)
+            Dictionary<string, Dictionary<int, List<int>>> idDict;
+            switch(mapType)
             {
-                return castleMinibossIdToLocations[levelName][actorNodeId];
+                case ArchipelagoData.MapType.Castle:
+                    idDict = castleMinibossIdToLocations;
+                    break;
+                case ArchipelagoData.MapType.Temple:
+                    idDict = templeMinibossIdToLocations;
+                    break;
+                default:
+                    return null;
             }
-            else
-            {
-                return templeMinibossIdToLocations[levelName][actorNodeId];
-            }
+            if (idDict.TryGetValue(levelName, out var levelDict) && levelDict.TryGetValue(actorNodeId, out List<int> lootLocations))
+                return lootLocations;
+            return null;
         }
 
-        public static Dictionary<string, int> castleButtonProgressCounts = new Dictionary<string, int>()
+        private static readonly Dictionary<string, Dictionary<Vector2, int>> castlePosToLocationId = new Dictionary<string, Dictionary<Vector2, int>>
         {
-            //{ 0, 4 }, //Activate Prison Boss Rune
-            //{ 2, 4 }, //Activate Armory Boss Rune
-            //{ 4, 4 }, //Activate Archives Boss Rune
-            //{ 6, 4 }, //Activate Chambers Boss Rune
-            { "Enable PrF2 Spike Puzzle East Buttons", 3 }, //Enable PrF2 Spike Puzzle East Buttons //16
-            { "Enable PrF2 Spike Puzzle South Buttons", 3 }, //Enable PrF2 Spike Puzzle South Buttons //17
-            { "Enable PrF2 Spike Puzzle North Buttons", 3 }, //Enable PrF2 Spike Puzzle North Buttons //18
-            { "Teleport PrF2 West Rune Puzzle Item", 4 }, //Teleport PrF2 West Rune Puzzle Item //26
-            { "Activate PrF2 SE Rune Puzzle Reward", 4 }, //Activate PrF2 SE Rune Puzzle Reward //28
-            { "Open PrF3 Bonus Portal", 5 }, //Open PrF3 Bonus Portal //39
-            { "Open PrF3 Bonus Room", 9 }, //Open PrF3 Bonus Room //41
-            { "Open AmF4 SE Cache", 4 }, //Open AmF4 SE Cache //63
-            { "Teleport AmF5 NE Gates Item", 4 }, //Teleport AmF5 NE Gates Item //78
-            { "Open AmF6 Spike Turret Reward Rooms", 5 }, //Open AmF6 Spike Turret Reward Rooms //88
-            { "Open AmF6 Spike Turret 2nd Reward Rooms", 2 }, //Open AmF6 Spike Turret 2nd Reward Rooms //92
-            { "Open ArF8 Puzzle Room", 4 }, //Open ArF8 Puzzle Room //115
-            { "Activate ArF9 Bonus Return Light Bridge", 4 }, //Activate ArF9 Bonus Return Light Bridge //134
-            { "Open ArF9 Bonus Portal Passage", 6 }, //Open ArF9 Bonus Portal Passage //136
-            { "Open ArF9 Simon Says Room", 5 }, //Open ArF9 Simon Says Room //142
-            { "Activate PrF1 SW Light Bridge", 4 }, //Activate PrF1 SW Light Bridge //152
-            { "Open ChF11 Bonus Portal", 8 }, //Open ChF11 Bonus Portal //157
-            { "Teleport ChF11 West Spike Items", 4 }, //Teleport ChF11 West Spike Items //159
-            { "Open ChF11 Bonus Room", 5 }, //Open ChF11 Bonus Room //161
-            { "Open ChF12 Hidden Hall", 6 }, //Open ChF12 Hidden Hall //171
-        };
-        public static Dictionary<string, int> templeButtonProgressCounts = new Dictionary<string, int>()
-        {
-            { "Activate TF2 Light Bridges", 5 }, //Activate TF2 Light Bridges //33
-            { "Open TF2 Portal Room Shortcut", 2 }, //Open TF2 Portal Room Shortcut //43
-            { "Open TF3 Puzzle Room", 4 }, //Open TF3 Puzzle Room //51
-        };
-
-        public static readonly Dictionary<string, Dictionary<Vector2, long>> castlePosToLocationId = new Dictionary<string, Dictionary<Vector2, long>>
-        {
-            {"level_1.xml", new Dictionary<Vector2, long>
+            {"level_1.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(23.0f, -48.0f), 0 },
             { new Vector2(10.0f, -2.5f), 1 },
@@ -2317,7 +2237,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(34.5f, -47.5f), 1329 },
             { new Vector2(-19.5f, -24.5f), 1331 },
             }},
-            {"level_2.xml", new Dictionary<Vector2, long>
+            {"level_2.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-7.0f, -76.75f), 72 },
             //{ new Vector2(-29.0f, -23.75f), 73 },
@@ -2445,7 +2365,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(2.75f, -4.5f), 1367 },
             { new Vector2(2.5f, 11.5f), 1368 },
             }},
-            {"level_3.xml", new Dictionary<Vector2, long>
+            {"level_3.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(52.0f, -33.5f), 158 },
             { new Vector2(-33.5f, 8.0f), 159 },
@@ -2591,7 +2511,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-35.5f, -52.5f), 1635 },
             { new Vector2(41.5f, -34.75f), 1636 },
             }},
-            {"level_bonus_1.xml", new Dictionary<Vector2, long>
+            {"level_bonus_1.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-13.0f, 25.5f), 247 },
             { new Vector2(-12.0f, 25.5f), 248 },
@@ -2649,7 +2569,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(17f, 12.5f), 1630 },
             { new Vector2(5.5f, 33.5f), 1631 },
             }},
-            {"level_boss_1.xml", new Dictionary<Vector2, long>
+            {"level_boss_1.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-3.0f, -38.0f), 297 },
             { new Vector2(-6.0f, -18.0f), 298 },
@@ -2659,7 +2579,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-7.5f, -9.5f), 1407 },
             { new Vector2(1.5f, -9.5f), 1408 },
             }},
-            {"level_4.xml", new Dictionary<Vector2, long>
+            {"level_4.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(20.5f, -20.0f), 301 },
             { new Vector2(42.75f, 54.0f), 302 },
@@ -2766,7 +2686,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-27.25f, 36.5f), 1427 },
             { new Vector2(61.25f, 38.5f), 1428 },
             }},
-            {"level_5.xml", new Dictionary<Vector2, long>
+            {"level_5.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-40.0f, -58.5f), 374 },
             { new Vector2(-28.0f, -58.75f), 375 },
@@ -2887,7 +2807,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(36f, 27.5f), 1451 },
             { new Vector2(50.25f, 10.5f), 1452 },
             }},
-            {"level_bonus_2.xml", new Dictionary<Vector2, long>
+            {"level_bonus_2.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-2.5f, 23.0f), 456 },
             { new Vector2(-4.0f, 23.0f), 457 },
@@ -2980,7 +2900,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(22f, 32.5f), 1633 },
             { new Vector2(-6.5f, 4.5f), 1634 },
             }},
-            {"level_6.xml", new Dictionary<Vector2, long>
+            {"level_6.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-29.0f, -6.0f), 541 },
             { new Vector2(-26.5f, 24.0f), 542 },
@@ -3089,12 +3009,12 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-24.75f, 36.5f), 1469 },
             { new Vector2(-22.25f, 36.5f), 1470 },
             }},
-            {"level_boss_2.xml", new Dictionary<Vector2, long>
+            {"level_boss_2.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(1.0f, -42.5f), 609 },
             { new Vector2(1.0f, -26.25f), 1321 },
             }},
-            {"level_7.xml", new Dictionary<Vector2, long>
+            {"level_7.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-39.5f, -72.5f), 610 },
             { new Vector2(-76.5f, -57.0f), 611 },
@@ -3180,7 +3100,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-34f, -8.5f), 1481 },
             { new Vector2(63.5f, 5.5f), 1482 },
             }},
-            {"level_8.xml", new Dictionary<Vector2, long>
+            {"level_8.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(41.5f, -55.75f), 672 },
             { new Vector2(-15.25f, -41.5f), 673 },
@@ -3310,7 +3230,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(92f, -54.5f), 1510 },
             { new Vector2(-36.5f, 48.5f), 1637 },
             }},
-            {"level_9.xml", new Dictionary<Vector2, long>
+            {"level_9.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(62.0f, -31.0f), 755 },
             { new Vector2(49.0f, -26.0f), 756 },
@@ -3443,7 +3363,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(45.625f, 52.5f), 1548 },
             { new Vector2(-84.5f, 44.5f), 1638 },
             }},
-            {"level_bonus_3.xml", new Dictionary<Vector2, long>
+            {"level_bonus_3.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(0.25f, 21.0f), 819 },
             { new Vector2(5.0f, 4.5f), 820 },
@@ -3510,12 +3430,12 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-3.0f, -15.0f), 881 },
             { new Vector2(1.0f, -13.0f), 882 },
             }},
-            {"level_boss_3.xml", new Dictionary<Vector2, long>
+            {"level_boss_3.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(1.0f, -23.0f), 883 },
             { new Vector2(1.0f, 4f), 1322 },
             }},
-            {"level_10.xml", new Dictionary<Vector2, long>
+            {"level_10.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-8.0f, -56.0f), 884 },
             { new Vector2(-22.0f, -14.5f), 885 },
@@ -3567,7 +3487,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-19.625f, 41.5f), 1553 },
             { new Vector2(-47.5f, 40.25f), 1639 },
             }},
-            {"level_10_special.xml", new Dictionary<Vector2, long>
+            {"level_10_special.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-74.5f, 13.5f), 914 },
             { new Vector2(-79.0f, 9.0f), 915 },
@@ -3581,7 +3501,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-79f, -10f), 1558 },
             { new Vector2(-79f, -11.5f), 1559 },
             }},
-            {"level_11.xml", new Dictionary<Vector2, long>
+            {"level_11.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(48.0f, -109.5f), 918 },
             { new Vector2(-79.5f, -56.75f), 919 },
@@ -3779,7 +3699,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-30f, 44.5f), 1607 },
             { new Vector2(5f, 44.5f), 1608 },
             }},
-            {"level_bonus_4.xml", new Dictionary<Vector2, long>
+            {"level_bonus_4.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(4.5f, 8.75f), 1028 },
             { new Vector2(-15.5f, 10.75f), 1029 },
@@ -3848,7 +3768,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(8.5f, 9.625f), 1092 },
             { new Vector2(6.5f, 9.75f), 1093 },
             }},
-            {"level_12.xml", new Dictionary<Vector2, long>
+            {"level_12.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-24.5f, -55.0f), 1094 },
             { new Vector2(32.0f, -32.5f), 1095 },
@@ -3948,7 +3868,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-2.5f, 65.5f), 1627 },
             { new Vector2(-65.5f, 65.5f), 1640 },
             }},
-            {"level_boss_4.xml", new Dictionary<Vector2, long>
+            {"level_boss_4.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(1.375f, -17.5f), 1134 },
             { new Vector2(-8.5f, -9.25f), 1135 },
@@ -3996,20 +3916,20 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-5.25f, -15.25f), 1323 },
             { new Vector2(-4.75f, -14.75f), 1324 },
             }},
-            {"level_esc_1.xml", new Dictionary<Vector2, long>
+            {"level_esc_1.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(1.5f, 42.0f), 1177 },
             { new Vector2(3.5f, 42.0f), 1178 },
             { new Vector2(2.5f, 42.0f), 1179 },
             }},
-            {"level_esc_2.xml", new Dictionary<Vector2, long>
+            {"level_esc_2.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-39.5f, -72.5f), 1180 },
             { new Vector2(-76.5f, -57.0f), 1181 },
             { new Vector2(-63.0f, -34.75f), 1182 },
             { new Vector2(-50.75f, -35.75f), 1183 },
             }},
-            {"level_esc_3.xml", new Dictionary<Vector2, long>
+            {"level_esc_3.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-90.5f, -39.5f), 1184 },
             { new Vector2(-90.5f, -38.5f), 1185 },
@@ -4028,14 +3948,14 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-73.5f, -59.5f), 1198 },
             { new Vector2(-72.0f, 32.125f), 1199 },
             }},
-            {"level_esc_4.xml", new Dictionary<Vector2, long>
+            {"level_esc_4.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-74.375f, -36.5f), 1200 },
             }},
         };
-        public static readonly Dictionary<string, Dictionary<Vector2, long>> templePosToLocationId = new Dictionary<string, Dictionary<Vector2, long>>
+        private static readonly Dictionary<string, Dictionary<Vector2, int>> templePosToLocationId = new Dictionary<string, Dictionary<Vector2, int>>
         {
-            {"level_hub.xml", new Dictionary<Vector2, long>
+            {"level_hub.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(41.75f, -26.125f), 0 },
             { new Vector2(-34.25f, 0.25f), 1 },
@@ -4053,7 +3973,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-41.5f, -5.0f), 625 },
             { new Vector2(-38.5f, -5.0f), 626 },
             }},
-            {"level_cave_1.xml", new Dictionary<Vector2, long>
+            {"level_cave_1.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-102.0f, -19.875f), 10 },
             { new Vector2(-22.5f, -27.5f), 11 },
@@ -4122,7 +4042,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-101.0f, -9.0f), 633 },
             { new Vector2(-98.0f, -9.0f), 634 },
             }},
-            {"level_cave_2.xml", new Dictionary<Vector2, long>
+            {"level_cave_2.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-33.125f, 44.875f), 48 },
             { new Vector2(2.0f, -42.0f), 49 },
@@ -4244,7 +4164,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(21.0f, 15.0f), 644 },
             { new Vector2(24.0f, 15.0f), 645 },
             }},
-            {"level_cave_3.xml", new Dictionary<Vector2, long>
+            {"level_cave_3.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(58.5f, -54.5f), 98 },
             { new Vector2(90.0f, -9.0f), 99 },
@@ -4378,7 +4298,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(16.0f, 3.5f), 657 },
             { new Vector2(56.25f, -86.5f), 658 },
             }},
-            {"level_boss_1.xml", new Dictionary<Vector2, long>
+            {"level_boss_1.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-29.0f, 0.0f), 174 },
             { new Vector2(-17.25f, 26.25f), 175 },
@@ -4399,7 +4319,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(7, -6.125f), 590 },
             { new Vector2(-35.0f, -1.5f), 659 },
             }},
-            {"level_passage.xml", new Dictionary<Vector2, long>
+            {"level_passage.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(9.75f, 96.125f), 182 },
             { new Vector2(154.75f, 232.875f), 183 },
@@ -4440,12 +4360,12 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(10.5f, 92.5f), 596 },
             { new Vector2(-3f, -16f), 660 },
             }},
-            {"level_temple_entrance.xml", new Dictionary<Vector2, long>
+            {"level_temple_entrance.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-0.25f, -9.25f), 207 },
             { new Vector2(0.25f, -9.75f), 208 },
             }},
-            {"level_temple_1.xml", new Dictionary<Vector2, long>
+            {"level_temple_1.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-12.0f, 11.25f), 209 },
             { new Vector2(-55.75f, 71.5f), 210 },
@@ -4557,17 +4477,17 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(25.0f, 32.5f), 672 },
             { new Vector2(106.5f, -15.5f), 673 },
             }},
-            {"level_boss_2.xml", new Dictionary<Vector2, long>
+            {"level_boss_2.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-10.0f, -14.5f), 299 },
             { new Vector2(15.0f, 7.5f), 300 },
             }},
-            {"level_boss_2_special.xml", new Dictionary<Vector2, long>
+            {"level_boss_2_special.xml", new Dictionary<Vector2, int>
             {
                 { new Vector2(-10.0f, -14f), 299 },
                 { new Vector2(15.0f, 7.5f), 300 },
             }},
-            {"level_temple_2.xml", new Dictionary<Vector2, long>
+            {"level_temple_2.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-80.0f, -55.0f), 301 },
             { new Vector2(14.0f, -37.0f), 302 },
@@ -4721,7 +4641,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(8f, 19f), 723 },
             { new Vector2(-17, 7), 724 },
             }},
-            {"level_temple_3.xml", new Dictionary<Vector2, long>
+            {"level_temple_3.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(-19.75f, 4.25f), 399 },
             { new Vector2(31.5f, -18.5f), 400 },
@@ -4782,7 +4702,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-14.5f, 16.5f), 715 },
             { new Vector2(-3.5f, -16), 725 },
             }},
-            {"level_bonus_5.xml", new Dictionary<Vector2, long>
+            {"level_bonus_5.xml", new Dictionary<Vector2, int>
             {
             { new Vector2(7.0f, -86.0f), 432 },
             { new Vector2(6.0f, -86.0f), 433 },
@@ -4875,7 +4795,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-0.5f, 93.5f), 721 },
             { new Vector2(-79.5f, 8.5f), 722 },
             }},
-            {"level_boss_3.xml", new Dictionary<Vector2, long>{
+            {"level_boss_3.xml", new Dictionary<Vector2, int>{
             { new Vector2(-0.5f, -10.75f), 619 },
             { new Vector2(-0.5f, -9.75f), 619 },
             { new Vector2(8.0f, 1.0f), 620 },
@@ -4885,7 +4805,26 @@ namespace HammerwatchAP.Archipelago
             }},
         };
 
-        public static readonly Dictionary<string, Dictionary<Vector2, (string, Vector2)>> castleLinkedPositions = new Dictionary<string, Dictionary<Vector2, (string, Vector2)>>
+        public static int GetLocationIdFromPos(ArchipelagoData.MapType mapType, string levelName, Vector2 position)
+        {
+            Dictionary<string, Dictionary<Vector2, int>> idDict;
+            switch (mapType)
+            {
+                case ArchipelagoData.MapType.Castle:
+                    idDict = castlePosToLocationId;
+                    break;
+                case ArchipelagoData.MapType.Temple:
+                    idDict = templePosToLocationId;
+                    break;
+                default:
+                    return -1;
+            }
+            if (idDict.TryGetValue(levelName, out var levelDict) && levelDict.TryGetValue(position, out int locationId))
+                return locationId;
+            return -1;
+        }
+
+        private static readonly Dictionary<string, Dictionary<Vector2, (string, Vector2)>> castleLinkedPositions = new Dictionary<string, Dictionary<Vector2, (string, Vector2)>>
         {
             { "level_2.xml", new Dictionary<Vector2, (string, Vector2)>(){{new Vector2(-29.0f, -23.75f), (null, new Vector2(-34.0f, -23.5f))}}},
             { "level_4.xml", new Dictionary<Vector2, (string, Vector2)>(){{new Vector2(10f, -54f), (null, new Vector2(10f, -50f))}}},
@@ -4931,16 +4870,51 @@ namespace HammerwatchAP.Archipelago
                 {new Vector2(11f, 38.5f), (null, new Vector2(24f, 36f))},
             }},
         };
-        public static readonly Dictionary<string, Dictionary<Vector2, (string, Vector2)>> templeLinkedPositions = new Dictionary<string, Dictionary<Vector2, (string, Vector2)>>
+        private static readonly Dictionary<string, Dictionary<Vector2, (string, Vector2)>> templeLinkedPositions = new Dictionary<string, Dictionary<Vector2, (string, Vector2)>>
         {
-            //{ "level_boss_2_special.xml", new Dictionary<Vector2, (string, Vector2)>()
-            //{
-            //    {new Vector2(-10f, -14f), ("level_boss_2.xml", new Vector2(-10f, -14.5f))},
-            //    {new Vector2(15f, 7.5f), ("level_boss_2.xml", new Vector2(15f, 7.5f))},
-            //}},
         };
 
-        public static readonly Dictionary<string, Dictionary<string, int>> castleButtonEventToLocationId = new Dictionary<string, Dictionary<string, int>>()
+        public static bool IsPositionLinked(ArchipelagoData.MapType mapType, string levelFile, Vector2 pos)
+        {
+            Dictionary<string, Dictionary<Vector2, (string, Vector2)>> idDict;
+            switch (mapType)
+            {
+                case ArchipelagoData.MapType.Castle:
+                    idDict = castleLinkedPositions;
+                    break;
+                case ArchipelagoData.MapType.Temple:
+                    idDict = templeLinkedPositions;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return idDict.TryGetValue(levelFile, out var levelDict) && levelDict.ContainsKey(pos);
+        }
+        public static Vector2 GetLinkedPos(ArchipelagoData.MapType mapType, string levelFile, Vector2 pos, out string linkedLevel)
+        {
+            linkedLevel = levelFile;
+            Dictionary<string, Dictionary<Vector2, (string, Vector2)>> idDict;
+            switch (mapType)
+            {
+                case ArchipelagoData.MapType.Castle:
+                    idDict = castleLinkedPositions;
+                    break;
+                case ArchipelagoData.MapType.Temple:
+                    idDict = templeLinkedPositions;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            if (idDict.TryGetValue(levelFile, out var levelDict) && levelDict.TryGetValue(pos, out var linkedPosData))
+            {
+                linkedLevel = linkedPosData.Item1 ?? levelFile;
+                return linkedPosData.Item2;
+            }
+
+            return pos; //We return the original position if it isn't linked
+        }
+
+        private static readonly Dictionary<string, Dictionary<string, int>> castleButtonEventToLocationId = new Dictionary<string, Dictionary<string, int>>()
         {
             { "level_2.xml", new Dictionary<string, int>{
             { "p2_rune_sequence", 1358 },
@@ -4949,17 +4923,6 @@ namespace HammerwatchAP.Archipelago
             { "p3_rune_bonus", 1636 },
             { "p3_seq_bonus", 1641 },
             }},
-            //{ "level_bonus_1.xml", new Dictionary<string, int>{
-            //{ "n1_panel_n", 1628 },
-            //{ "n1_panel_e_1", 1629 },
-            //{ "n1_panel_e_2", 1630 },
-            //{ "n1_panel_s", 1631 },
-            //}},
-            //{ "level_bonus_2.xml", new Dictionary<string, int>{
-            //{ "n2_panel_n", 1632 },
-            //{ "n2_panel_se", 1633 },
-            //{ "n2_panel_ne", 1634 },
-            //}},
             { "level_6.xml", new Dictionary<string, int>{
             { "a3_seq_knife", 1642 },
             { "a3_seq_knife_2", 1643 },
@@ -4975,7 +4938,7 @@ namespace HammerwatchAP.Archipelago
             { "c3_rune", 1615 },
             }},
         };
-        public static readonly Dictionary<string, Dictionary<string, int>> templeButtonEventToLocationId = new Dictionary<string, Dictionary<string, int>>()
+        private static readonly Dictionary<string, Dictionary<string, int>> templeButtonEventToLocationId = new Dictionary<string, Dictionary<string, int>>()
         {
             { "level_temple_2.xml", new Dictionary<string, int>{
             { "t2_runes", 723 },
@@ -4985,7 +4948,28 @@ namespace HammerwatchAP.Archipelago
             { "t3_levers", 725 },
             }},
         };
-        private static Dictionary<string, int> puzzleCodeToItemId = new Dictionary<string, int>()
+        public static Dictionary<string, int> GetButtonEventDict(ArchipelagoData.MapType mapType, string levelFile)
+        {
+            Dictionary<string, Dictionary<string, int>> idDict;
+            switch (mapType)
+            {
+                case ArchipelagoData.MapType.Castle:
+                    idDict = castleButtonEventToLocationId;
+                    break;
+                case ArchipelagoData.MapType.Temple:
+                    idDict = templeButtonEventToLocationId;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            if (idDict.TryGetValue(levelFile, out var levelDict))
+            {
+                return levelDict;
+            }
+            return null;
+        }
+
+        private static readonly Dictionary<string, int> puzzleCodeToItemId = new Dictionary<string, int>()
         {
             {"Prison Return Puzzle 1", 8}, //"PrF1 Puzzle"
             {"Prison 2 Puzzle 1", 9}, //"PrF2 Puzzle"
@@ -5069,66 +5053,6 @@ namespace HammerwatchAP.Archipelago
         }
 
         //Generation data
-        public const int ENEMY_TIERS = 4;
-        public static readonly Dictionary<string, int> enemyTiers = new Dictionary<string, int>()
-        {
-            { "actors/bonus/archer_1.xml", 2 },
-            { "actors/bonus/skeleton_1.xml", 1 },
-
-            { "actors/boss_knight/archer_1.xml", 1 },
-            { "actors/boss_knight/knight_guard.xml", 3 },
-            { "actors/boss_knight/knight_guard_lich_1.xml", 3 },
-            { "actors/boss_knight/knight_guard_lich_2.xml", 3 },
-            { "actors/boss_knight/knight_guard_lich_3.xml", 3 },
-            { "actors/boss_knight/skeleton_1_small.xml", 1 },
-            { "actors/boss_knight/skeleton_1.xml", 2 },
-
-            { "actors/archer_1.xml", 2 },
-            { "actors/archer_2.xml", 2 },
-            { "actors/archer_3.xml", 2 },
-            { "actors/archer_1_elite.xml", 3 },
-            { "actors/bat_1.xml", 1 },
-            { "actors/bat_2.xml", 2 },
-            { "actors/bat_3.xml", 3 },
-            { "actors/eye_1_small.xml", 1 },
-            { "actors/eye_1.xml", 2 },
-            { "actors/guard_desert_1.xml", 2 },
-            { "actors/lich_1.xml", 3 },
-            { "actors/lich_1_elite.xml", 3 },
-            { "actors/lich_2.xml", 3 },
-            { "actors/lich_3.xml", 3 },
-            { "actors/lich_desert_1.xml", 3 },
-            { "actors/lich_desert_2.xml", 3 },
-            { "actors/lich_desert_3.xml", 3 },
-            { "actors/maggot_1_small.xml", 1 },
-            { "actors/maggot_1.xml", 2 },
-            { "actors/maggot_1_elite.xml", 3 },
-            { "actors/mummy_1_small.xml", 1 },
-            { "actors/mummy_1.xml", 2 },
-            { "actors/mummy_1_elite.xml", 3 },
-            { "actors/mummy_ranged_1.xml", 2 },
-            { "actors/mummy_ranged_2.xml", 3 },
-            { "actors/skeleton_1_small.xml", 1 },
-            { "actors/skeleton_1.xml", 2 },
-            { "actors/skeleton_1_elite.xml", 3 },
-            { "actors/skeleton_2_small.xml", 1 },
-            { "actors/skeleton_2.xml", 2 },
-            { "actors/skeleton_2_elite.xml", 3 },
-            { "actors/skeleton_3.xml", 2 },
-            { "actors/slime_1_host.xml", 1 },
-            { "actors/special_beheaded_kamikaze.xml", 3 },
-            { "actors/spider.xml", 3 },
-            { "actors/tick_1_small.xml", 1 },
-            { "actors/tick_1.xml", 2 },
-            { "actors/tick_1_elite.xml", 3 },
-            { "actors/tick_2_small.xml", 1 },
-            { "actors/tick_2.xml", 2 },
-            { "actors/wisp_1_small.xml", 1 },
-            { "actors/wisp_1.xml", 2 },
-            { "actors/wisp_2.xml", 3 },
-
-        };
-
         public static string[] excludedActors =
         {
             "actors/npc_guard_desert_1.xml",
@@ -5140,180 +5064,6 @@ namespace HammerwatchAP.Archipelago
             "actors/tower_static_frost_grounded.xml",
             "actors/boss_krilith/skeleton_1_mb.xml",
             "actors/spawners/doomspawn_1_razed.xml",
-        };
-
-        public static int GetEnemyTier(string enemyName, bool enemyShuffleKeepTier)
-        {
-            if (!enemyTiers.TryGetValue(enemyName, out int enemyTier) || !enemyShuffleKeepTier)
-            {
-                enemyTier = 0;
-            }
-            return enemyTier;
-        }
-
-        public static HashSet<string> treasureNames = new HashSet<string>()
-        {
-            "items/valuable_1.xml",
-            "items/valuable_2.xml",
-            "items/valuable_3.xml",
-            "items/valuable_4.xml",
-            "items/valuable_5.xml",
-            "items/valuable_6.xml",
-            "items/valuable_7.xml",
-            "items/valuable_8.xml",
-            "items/valuable_9.xml",
-            "items/breakable_barrel.xml",
-            "items/breakable_barrel_v2.xml",
-            "items/breakable_barrel_b.xml",
-            "items/breakable_barrel_b_v2.xml",
-            "items/breakable_crate.xml",
-            "items/breakable_crate_v2.xml",
-            "items/breakable_crate_b.xml",
-            "items/breakable_vase.xml",
-            "items/breakable_vase_v2.xml",
-            "items/breakable_vase_v3.xml",
-            "items/breakable_vase_v4.xml",
-            "items/vgt_plant.xml",
-        };
-
-        public static Dictionary<string, string> spawnerDoodads = new Dictionary<string, string>
-        {
-            { "actors/spawners/archer_1.xml", "doodads/special/marker_grave.xml" },
-            { "actors/spawners/archer_2.xml", "doodads/special/marker_grave.xml" },
-
-            { "actors/spawners/skeleton_1.xml", "doodads/special/marker_grave.xml" },
-            { "actors/spawners/skeleton_2.xml", "doodads/special/marker_grave.xml" },
-
-            { "actors/spawners/maggot_1.xml", "doodads/special/marker_maggot_1.xml" },
-        };
-        public static Dictionary<string, Dictionary<string, string>> spawnerDoodadPositionCorrections = new Dictionary<string, Dictionary<string, string>>()
-        {
-            { "level_12.xml", new Dictionary<string, string>{
-                { "25 -82.375", "25 -82.5" },
-            }
-            }
-        };
-        public static Dictionary<string, Dictionary<string, string>> floorSignExits = new Dictionary<string, Dictionary<string, string>>()
-        {
-            {"level_1.xml", new Dictionary<string, string>{
-            { "-47.5 -41.5", "esc_3|1"}, //Not an entrance yet
-            { "34.5 -52.5", "3|10"},
-            { "49.5 -45.5", "2|0"},
-            { "-37.5 -2", "3|1"},
-            { "11.5 -29.5", "2|2"},
-            { "16.5 -7.5", "2|1"},
-            }},
-            {"level_2.xml", new Dictionary<string, string>{
-            { "-16.5 -33.5", "3|0"},
-            { "49.5 -44.5", "1|1"},
-            { "8.5 -27.5", "1|3"},
-            { "16.5 -6.5", "1|2"},
-            }},
-            {"level_3.xml", new Dictionary<string, string>{
-            { "-12.5 -33.5", "2|3"},
-            { "-38.5 -1.5", "1|4"},
-            { "7.5 39.5", "boss_1|0"},
-            { "14.5 58.5", "1|10"},
-            }},
-            {"level_bonus_1.xml", new Dictionary<string, string>{
-            }},
-            {"level_boss_1.xml", new Dictionary<string, string>{
-            { "-1.5 -56.5", "4|0"},
-            { "-22.5 19.5", "3|100"},
-            }},
-            {"level_4.xml", new Dictionary<string, string>{
-            { "-94.5 -47.5", "esc_2|1"}, //Not an entrance
-            { "-81.75 -9.5", "esc_4|0"}, //Not an entrance
-            { "-62.5 24.5", "6|0"},
-            { "-50.5 17.5", "5|1"},
-            { "-30.5 29.5", "5|0"},
-            { "-38.5 17.5", "boss_2|0"},
-            { "-44.5 50.5", "boss_1|1"},
-            }},
-            {"level_5.xml", new Dictionary<string, string>{
-            { "-44.5 -67.5", "6|2"},
-            { "-53.5 17.5", "4|1"},
-            { "-30.5 29.5", "4|5"},
-            { "-12.5 8.5", "6|1"},
-            }},
-            {"level_bonus_2.xml", new Dictionary<string, string>{
-            }},
-            {"level_6.xml", new Dictionary<string, string>{
-            { "-47.5 -67.5", "5|3"},
-            { "-62.5 24.5", "4|6"},
-            { "-15.5 9.5", "5|2"},
-            }},
-            {"level_boss_2.xml", new Dictionary<string, string>{
-            { "2.5 -58.5", "7|0"},
-            { "-14.25 6.5", "4|100"},
-            }},
-            {"level_7.xml", new Dictionary<string, string>{
-            { "-42.25 -74.5", "esc_1|1"}, //Not an entrance
-            { "-79.25 -49.5", "esc_2|0"}, //Not an entrance
-            { "0.75 11.5", "boss_2|1"},
-            { "-0.5 36.5", "8|0"},
-            { "20.5 34.5", "8|1"},
-            }},
-            {"level_8.xml", new Dictionary<string, string>{
-            { "-17.5 0.5", "9|0"},
-            { "2.25 0.5", "7|1"},
-            { "22.5 -1.5", "7|2"},
-            { "90.5 -57.5", "9|250"},
-            }},
-            {"level_9.xml", new Dictionary<string, string>{
-            { "-36 -45.5", "boss_3|0"},
-            { "-10.5 9.5", "8|2"},
-            { "90.75 -57.5", "8|200"},
-            }},
-            {"level_bonus_3.xml", new Dictionary<string, string>{
-            }},
-            {"level_boss_3.xml", new Dictionary<string, string>{
-            { "2.5 -39.5", "10|0"},
-            { "-3.25 20.5", "9|100"},
-            }},
-            {"level_10.xml", new Dictionary<string, string>{
-            { "74 -13.5", "boss_3|1"},
-            { "-45.625 33.5", "10b|0"},
-            { "5.75 35.5", "11|0"},
-            { "27.75 42.5", "boss_4|1"},
-            { "53.75 50.5", "esc_3|0"}, //The doodad name is a 4 >:|
-            }},
-            {"level_10_special.xml", new Dictionary<string, string>{
-            }},
-            {"level_11.xml", new Dictionary<string, string>{
-            { "65 -105.5", "12|0"},
-            { "52.5 -105.5", "12|54"},
-            { "17.75 34.5", "10|100"},
-            }},
-            {"level_bonus_4.xml", new Dictionary<string, string>{
-            }},
-            {"level_12.xml", new Dictionary<string, string>{
-            { "43 -84.5", "11|105"},
-            { "55 -84.5", "11|45"},
-            }},
-            {"level_boss_4.xml", new Dictionary<string, string>{
-            { "31.5 -27.5", "esc_1|0"},
-            }},
-            {"level_esc_1.xml", new Dictionary<string, string>{
-            { "5.75 35.5", "11|0"},
-            { "27.75 42.5", "boss_4|1"},
-            { "53.75 50.5", "esc_3|0"}, //The doodad name is a 4 >:|
-            }},
-            {"level_esc_2.xml", new Dictionary<string, string>{
-            { "-42.25 -74.5", "esc_1|1"}, //Not an entrance
-            { "-79.25 -49.5", "esc_2|0"}, //Not an entrance
-            }},
-            {"level_esc_3.xml", new Dictionary<string, string>{
-            { "-94.5 -47.5", "esc_2|1"}, //Not an entrance
-            { "-81.75 -9.5", "esc_4|0"}, //Not an entrance
-            { "-62.5 24.5", "6|0"},
-            { "-50.5 17.5", "5|1"},
-            { "-38.5 17.5", "boss_2|0"},
-            }},
-            {"level_esc_4.xml", new Dictionary<string, string>{
-            { "-47.5 -41.5", "esc_3|1"}, //Not an entrance yet
-            { "-37.5 -2", "3|1"},
-            }},
         };
 
         //Shop data
@@ -5775,7 +5525,6 @@ namespace HammerwatchAP.Archipelago
 
         public static int GetLocIdFromUpgradeId(PlayerClass playerClass, string upgradeId)
         {
-            //int relativeId = shopLocationId - ArchipelagoManager.templeStartID - ArchipelagoManager.shopLocationIdOffset;
             if (!shopLocationVanillaUpgradeMapping[playerClass].TryGetValue(upgradeId, out int locId))
                 return -1;
             return locId + shopLocationIdOffset;
@@ -6340,16 +6089,6 @@ namespace HammerwatchAP.Archipelago
                 { "fshield5", 674 },
                 }},
         };
-        public static readonly Dictionary<string, PlayerClass> classFromString = new Dictionary<string, PlayerClass>()
-        {
-            { "knight.xml", PlayerClass.KNIGHT },
-            { "priest.xml", PlayerClass.PRIEST },
-            { "ranger.xml", PlayerClass.RANGER },
-            { "sorcerer.xml", PlayerClass.SORCERER },
-            { "thief.xml", PlayerClass.THIEF },
-            { "warlock.xml", PlayerClass.WARLOCK },
-            { "wizard.xml", PlayerClass.WIZARD },
-        };
         private static readonly Dictionary<int, ShopItemData> shopItemData = new Dictionary<int, ShopItemData>()
         {
             { 0, new ShopItemData("misc", new string[]{ "health-1", "health-2", "health-3", "health-4", "health-5", }) },
@@ -6502,7 +6241,7 @@ namespace HammerwatchAP.Archipelago
 
         //Button data
         //<level_name, <AreaTrigger id, <item effect id, List<button effect script nodes (to unhook)>, ButtonType, unhook node, position override>>>
-        public static Dictionary<string, Dictionary<string, ButtonData>> castleButtonNodes = new Dictionary<string, Dictionary<string, ButtonData>>()
+        public static readonly Dictionary<string, Dictionary<string, ButtonData>> castleButtonNodes = new Dictionary<string, Dictionary<string, ButtonData>>()
         {
             {"level_1.xml", new Dictionary<string, ButtonData>{
             { "2181", new ButtonData(15, new List<string>(){"2183"}, ButtonType.Floor, "2178")},
@@ -6781,7 +6520,7 @@ namespace HammerwatchAP.Archipelago
             //{"level_esc_4.xml", new Dictionary<string, ButtonData>{
             //}},
         };
-        public static Dictionary<string, Dictionary<string, ButtonData>> templeButtonNodes = new Dictionary<string, Dictionary<string, ButtonData>>()
+        public static readonly Dictionary<string, Dictionary<string, ButtonData>> templeButtonNodes = new Dictionary<string, Dictionary<string, ButtonData>>()
         {
             {"level_cave_1.xml", new Dictionary<string, ButtonData>{
             { "138828", new ButtonData(14, new List<string>(){"138823"}, ButtonType.Floor)},
@@ -6900,7 +6639,7 @@ namespace HammerwatchAP.Archipelago
         }
 
         //Breakable wall data
-        public static Dictionary<ArchipelagoData.MapType, Dictionary<string, List<string>>> breakableWallNodes = new Dictionary<ArchipelagoData.MapType, Dictionary<string, List<string>>>()
+        public static readonly Dictionary<ArchipelagoData.MapType, Dictionary<string, List<string>>> breakableWallNodes = new Dictionary<ArchipelagoData.MapType, Dictionary<string, List<string>>>()
         {
             {ArchipelagoData.MapType.Castle, new Dictionary<string, List<string>>
             {
@@ -6997,7 +6736,7 @@ namespace HammerwatchAP.Archipelago
         {
             return shopId % 10;
         }
-        private static Dictionary<int, string> shopTypeCodeToString = new Dictionary<int, string>()
+        private static readonly Dictionary<int, string> shopTypeCodeToString = new Dictionary<int, string>()
         {
             { 0, "misc" },
             { 1, "combo" },

@@ -51,15 +51,6 @@ namespace HammerwatchAP.Hooks
 					return null;
 				return wrapper.lootTable;
             }
-
-			static void Postfix(PassiveActorBehaviour __instance, WorldActor ___actor)
-			{
-				//APMod added
-				if (__instance.Health <= 0 && !Network.IsClient)
-				{
-					ArchipelagoManager.KilledEnemy(___actor);
-				}
-			}
         }
 	}
 }

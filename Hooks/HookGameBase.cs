@@ -116,7 +116,7 @@ namespace HammerwatchAP.Hooks
         {
             static void Postfix(int player, int delay)
             {
-                if(delay > 0)
+                if(ArchipelagoManager.playingArchipelagoSave && delay > 0)
                 {
                     ArchipelagoManager.PlayerDeath(GameBase.Instance.Players[player]);
                 }

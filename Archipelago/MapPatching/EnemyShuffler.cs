@@ -17,14 +17,93 @@ namespace HammerwatchAP.Archipelago
 
         public static Dictionary<string, string> groupSwapMapping;
 
-        private static Dictionary<string, List<string>> levelExcludedActors = new Dictionary<string, List<string>>()
+        private static readonly Dictionary<string, List<string>> levelExcludedActors = new Dictionary<string, List<string>>()
         {
             {"level_bonus_1.xml" , new List<string>(){ "17 20.5" } },
         };
 
-        private static void InitDictionaries()
+        public const int ENEMY_TIERS = 4;
+        public static readonly Dictionary<string, int> enemyTiers = new Dictionary<string, int>()
+        {
+            { "actors/bonus/archer_1.xml", 2 },
+            { "actors/bonus/skeleton_1.xml", 1 },
+
+            { "actors/boss_knight/archer_1.xml", 1 },
+            { "actors/boss_knight/knight_guard.xml", 3 },
+            { "actors/boss_knight/knight_guard_lich_1.xml", 3 },
+            { "actors/boss_knight/knight_guard_lich_2.xml", 3 },
+            { "actors/boss_knight/knight_guard_lich_3.xml", 3 },
+            { "actors/boss_knight/skeleton_1_small.xml", 1 },
+            { "actors/boss_knight/skeleton_1.xml", 2 },
+
+            { "actors/archer_1.xml", 2 },
+            { "actors/archer_2.xml", 2 },
+            { "actors/archer_3.xml", 2 },
+            { "actors/archer_1_elite.xml", 3 },
+            { "actors/bat_1.xml", 1 },
+            { "actors/bat_2.xml", 2 },
+            { "actors/bat_3.xml", 3 },
+            { "actors/eye_1_small.xml", 1 },
+            { "actors/eye_1.xml", 2 },
+            { "actors/guard_desert_1.xml", 2 },
+            { "actors/lich_1.xml", 3 },
+            { "actors/lich_1_elite.xml", 3 },
+            { "actors/lich_2.xml", 3 },
+            { "actors/lich_3.xml", 3 },
+            { "actors/lich_desert_1.xml", 3 },
+            { "actors/lich_desert_2.xml", 3 },
+            { "actors/lich_desert_3.xml", 3 },
+            { "actors/maggot_1_small.xml", 1 },
+            { "actors/maggot_1.xml", 2 },
+            { "actors/maggot_1_elite.xml", 3 },
+            { "actors/mummy_1_small.xml", 1 },
+            { "actors/mummy_1.xml", 2 },
+            { "actors/mummy_1_elite.xml", 3 },
+            { "actors/mummy_ranged_1.xml", 2 },
+            { "actors/mummy_ranged_2.xml", 3 },
+            { "actors/skeleton_1_small.xml", 1 },
+            { "actors/skeleton_1.xml", 2 },
+            { "actors/skeleton_1_elite.xml", 3 },
+            { "actors/skeleton_2_small.xml", 1 },
+            { "actors/skeleton_2.xml", 2 },
+            { "actors/skeleton_2_elite.xml", 3 },
+            { "actors/skeleton_3.xml", 2 },
+            { "actors/slime_1_host.xml", 1 },
+            { "actors/special_beheaded_kamikaze.xml", 3 },
+            { "actors/spider.xml", 3 },
+            { "actors/tick_1_small.xml", 1 },
+            { "actors/tick_1.xml", 2 },
+            { "actors/tick_1_elite.xml", 3 },
+            { "actors/tick_2_small.xml", 1 },
+            { "actors/tick_2.xml", 2 },
+            { "actors/wisp_1_small.xml", 1 },
+            { "actors/wisp_1.xml", 2 },
+            { "actors/wisp_2.xml", 3 },
+
+        };
+
+        public static int GetEnemyTier(string enemyName, bool enemyShuffleKeepTier)
+        {
+            if (!enemyTiers.TryGetValue(enemyName, out int enemyTier) || !enemyShuffleKeepTier)
+            {
+                enemyTier = 0;
+            }
+            return enemyTier;
+        }
+
+        public static void SetRandomSeed()
         {
             random = new Random();
+        }
+        public static void SetRandomSeed(int seed)
+        {
+            random = new Random(seed);
+        }
+
+        private static void InitDictionaries()
+        {
+            if (random == null)
+                SetRandomSeed();
 
             actorTypeActTierCounts = new Dictionary<ActorType, Dictionary<string, int>[,]>();
             enemyNodeData = new Dictionary<ActorType, List<EnemyNodeData>[,]>();
@@ -37,7 +116,7 @@ namespace HammerwatchAP.Archipelago
             {
                 int tiersInDict = 1;
                 if (actorType == ActorType.Enemy)
-                    tiersInDict = APData.ENEMY_TIERS;
+                    tiersInDict = ENEMY_TIERS;
                 actorTypeActTierCounts[actorType] = new Dictionary<string, int>[4, tiersInDict];
                 enemyNodeData[actorType] = new List<EnemyNodeData>[4, tiersInDict];
                 for (int a = 0; a < actorTypeActTierCounts[actorType].GetLength(0); a++)
@@ -81,7 +160,7 @@ namespace HammerwatchAP.Archipelago
                         actors[fullGroupName] = 0;
                     XElement[] groupElements = group.Elements().ToArray();
                     actors[fullGroupName] += groupElements.Count();
-                    int groupTier = APData.GetEnemyTier(fullGroupName, enemyShuffleKeepTier);
+                    int groupTier = GetEnemyTier(fullGroupName, enemyShuffleKeepTier);
                     foreach (XElement enemyPosNode in groupElements)
                         enemyNodeData[actorType][actIndex, groupTier].Add(new EnemyNodeData(enemyPosNode, false, fullGroupName, levelName, actIndex, groupTier));
                     group.Remove();
@@ -115,7 +194,7 @@ namespace HammerwatchAP.Archipelago
                     if (!actors.ContainsKey(fullGroupName))
                         actors[fullGroupName] = 0;
                     actors[fullGroupName] += 1;
-                    int groupTier = APData.GetEnemyTier(fullGroupName, enemyShuffleKeepTier);
+                    int groupTier = GetEnemyTier(fullGroupName, enemyShuffleKeepTier);
                     enemyNodeData[actorType][actIndex, groupTier].Add(new EnemyNodeData(node, true, fullGroupName, levelName, actIndex, groupTier));
                 }
                 //Go through actors and classify them
@@ -124,7 +203,7 @@ namespace HammerwatchAP.Archipelago
                     string fullGroupName = actorPairs.Key;
                     ActorType groupType = GetActorType(fullGroupName);
 
-                    int enemyTier = APData.GetEnemyTier(fullGroupName, enemyShuffleKeepTier);
+                    int enemyTier = GetEnemyTier(fullGroupName, enemyShuffleKeepTier);
                     if (!actorTypeActTierCounts[groupType][actIndex, enemyTier].ContainsKey(fullGroupName))
                         actorTypeActTierCounts[groupType][actIndex, enemyTier][fullGroupName] = 0;
                     actorTypeActTierCounts[groupType][actIndex, enemyTier][fullGroupName] += actorPairs.Value;

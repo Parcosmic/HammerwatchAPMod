@@ -28,13 +28,172 @@ namespace HammerwatchAP.Archipelago
         private static Dictionary<string, string> exitSwaps;
         private static Dictionary<string, char> exitCodeToActChar = new Dictionary<string, char>();
 
-        private static bool enemyShuffleKeepTier = true;
-
         private static List<int> globalScriptNodesToTriggerOnLoad;
         private static List<int> globalScriptNodesToTriggerOnceOnLoad;
 
-        private const int maxItemNameLengthToDisplay = 30;
-        private const float imperfectObfuscateChance = 0.5f;
+        private static readonly HashSet<string> treasureNames = new HashSet<string>()
+        {
+            "items/valuable_1.xml",
+            "items/valuable_2.xml",
+            "items/valuable_3.xml",
+            "items/valuable_4.xml",
+            "items/valuable_5.xml",
+            "items/valuable_6.xml",
+            "items/valuable_7.xml",
+            "items/valuable_8.xml",
+            "items/valuable_9.xml",
+            "items/breakable_barrel.xml",
+            "items/breakable_barrel_v2.xml",
+            "items/breakable_barrel_b.xml",
+            "items/breakable_barrel_b_v2.xml",
+            "items/breakable_crate.xml",
+            "items/breakable_crate_v2.xml",
+            "items/breakable_crate_b.xml",
+            "items/breakable_vase.xml",
+            "items/breakable_vase_v2.xml",
+            "items/breakable_vase_v3.xml",
+            "items/breakable_vase_v4.xml",
+            "items/vgt_plant.xml",
+        };
+        private static readonly Dictionary<string, string> spawnerDoodads = new Dictionary<string, string>
+        {
+            { "actors/spawners/archer_1.xml", "doodads/special/marker_grave.xml" },
+            { "actors/spawners/archer_2.xml", "doodads/special/marker_grave.xml" },
+
+            { "actors/spawners/skeleton_1.xml", "doodads/special/marker_grave.xml" },
+            { "actors/spawners/skeleton_2.xml", "doodads/special/marker_grave.xml" },
+
+            { "actors/spawners/maggot_1.xml", "doodads/special/marker_maggot_1.xml" },
+        };
+        private static readonly Dictionary<string, Dictionary<string, string>> spawnerDoodadPositionCorrections = new Dictionary<string, Dictionary<string, string>>()
+        {
+            { "level_12.xml", new Dictionary<string, string>{
+                { "25 -82.375", "25 -82.5" },
+            }
+            }
+        };
+        private static readonly Dictionary<string, Dictionary<string, string>> floorSignExits = new Dictionary<string, Dictionary<string, string>>()
+        {
+            {"level_1.xml", new Dictionary<string, string>{
+            { "-47.5 -41.5", "esc_3|1"}, //Not an entrance yet
+            { "34.5 -52.5", "3|10"},
+            { "49.5 -45.5", "2|0"},
+            { "-37.5 -2", "3|1"},
+            { "11.5 -29.5", "2|2"},
+            { "16.5 -7.5", "2|1"},
+            }},
+            {"level_2.xml", new Dictionary<string, string>{
+            { "-16.5 -33.5", "3|0"},
+            { "49.5 -44.5", "1|1"},
+            { "8.5 -27.5", "1|3"},
+            { "16.5 -6.5", "1|2"},
+            }},
+            {"level_3.xml", new Dictionary<string, string>{
+            { "-12.5 -33.5", "2|3"},
+            { "-38.5 -1.5", "1|4"},
+            { "7.5 39.5", "boss_1|0"},
+            { "14.5 58.5", "1|10"},
+            }},
+            {"level_bonus_1.xml", new Dictionary<string, string>{
+            }},
+            {"level_boss_1.xml", new Dictionary<string, string>{
+            { "-1.5 -56.5", "4|0"},
+            { "-22.5 19.5", "3|100"},
+            }},
+            {"level_4.xml", new Dictionary<string, string>{
+            { "-94.5 -47.5", "esc_2|1"}, //Not an entrance
+            { "-81.75 -9.5", "esc_4|0"}, //Not an entrance
+            { "-62.5 24.5", "6|0"},
+            { "-50.5 17.5", "5|1"},
+            { "-30.5 29.5", "5|0"},
+            { "-38.5 17.5", "boss_2|0"},
+            { "-44.5 50.5", "boss_1|1"},
+            }},
+            {"level_5.xml", new Dictionary<string, string>{
+            { "-44.5 -67.5", "6|2"},
+            { "-53.5 17.5", "4|1"},
+            { "-30.5 29.5", "4|5"},
+            { "-12.5 8.5", "6|1"},
+            }},
+            {"level_bonus_2.xml", new Dictionary<string, string>{
+            }},
+            {"level_6.xml", new Dictionary<string, string>{
+            { "-47.5 -67.5", "5|3"},
+            { "-62.5 24.5", "4|6"},
+            { "-15.5 9.5", "5|2"},
+            }},
+            {"level_boss_2.xml", new Dictionary<string, string>{
+            { "2.5 -58.5", "7|0"},
+            { "-14.25 6.5", "4|100"},
+            }},
+            {"level_7.xml", new Dictionary<string, string>{
+            { "-42.25 -74.5", "esc_1|1"}, //Not an entrance
+            { "-79.25 -49.5", "esc_2|0"}, //Not an entrance
+            { "0.75 11.5", "boss_2|1"},
+            { "-0.5 36.5", "8|0"},
+            { "20.5 34.5", "8|1"},
+            }},
+            {"level_8.xml", new Dictionary<string, string>{
+            { "-17.5 0.5", "9|0"},
+            { "2.25 0.5", "7|1"},
+            { "22.5 -1.5", "7|2"},
+            { "90.5 -57.5", "9|250"},
+            }},
+            {"level_9.xml", new Dictionary<string, string>{
+            { "-36 -45.5", "boss_3|0"},
+            { "-10.5 9.5", "8|2"},
+            { "90.75 -57.5", "8|200"},
+            }},
+            {"level_bonus_3.xml", new Dictionary<string, string>{
+            }},
+            {"level_boss_3.xml", new Dictionary<string, string>{
+            { "2.5 -39.5", "10|0"},
+            { "-3.25 20.5", "9|100"},
+            }},
+            {"level_10.xml", new Dictionary<string, string>{
+            { "74 -13.5", "boss_3|1"},
+            { "-45.625 33.5", "10b|0"},
+            { "5.75 35.5", "11|0"},
+            { "27.75 42.5", "boss_4|1"},
+            { "53.75 50.5", "esc_3|0"}, //The doodad name is a 4 >:|
+            }},
+            {"level_10_special.xml", new Dictionary<string, string>{
+            }},
+            {"level_11.xml", new Dictionary<string, string>{
+            { "65 -105.5", "12|0"},
+            { "52.5 -105.5", "12|54"},
+            { "17.75 34.5", "10|100"},
+            }},
+            {"level_bonus_4.xml", new Dictionary<string, string>{
+            }},
+            {"level_12.xml", new Dictionary<string, string>{
+            { "43 -84.5", "11|105"},
+            { "55 -84.5", "11|45"},
+            }},
+            {"level_boss_4.xml", new Dictionary<string, string>{
+            { "31.5 -27.5", "esc_1|0"},
+            }},
+            {"level_esc_1.xml", new Dictionary<string, string>{
+            { "5.75 35.5", "11|0"},
+            { "27.75 42.5", "boss_4|1"},
+            { "53.75 50.5", "esc_3|0"}, //The doodad name is a 4 >:|
+            }},
+            {"level_esc_2.xml", new Dictionary<string, string>{
+            { "-42.25 -74.5", "esc_1|1"}, //Not an entrance
+            { "-79.25 -49.5", "esc_2|0"}, //Not an entrance
+            }},
+            {"level_esc_3.xml", new Dictionary<string, string>{
+            { "-94.5 -47.5", "esc_2|1"}, //Not an entrance
+            { "-81.75 -9.5", "esc_4|0"}, //Not an entrance
+            { "-62.5 24.5", "6|0"},
+            { "-50.5 17.5", "5|1"},
+            { "-38.5 17.5", "boss_2|0"},
+            }},
+            {"level_esc_4.xml", new Dictionary<string, string>{
+            { "-47.5 -41.5", "esc_3|1"}, //Not an entrance yet
+            { "-37.5 -2", "3|1"},
+            }},
+        };
 
         public static string GetAPMapFileName(string seed, int slotId)
         {
@@ -127,7 +286,6 @@ namespace HammerwatchAP.Archipelago
             StreamReader infoReader = new StreamReader(infoFileName);
             string infoText = infoReader.ReadToEnd();
             infoReader.Close();
-            //File.Delete(infoFileName);
             string[] infoStrs = infoText.Split(new[] { "<lives>" }, StringSplitOptions.RemoveEmptyEntries);
             string newText = $"{infoStrs[0]}<lives>{archipelagoData.GetOption(SlotDataKeys.startingLifeCount)}{infoStrs[1].Substring(1)}";
             File.WriteAllText(infoFileName, newText);
@@ -142,7 +300,6 @@ namespace HammerwatchAP.Archipelago
                 string startCode = APData.exitIdToCode[archipelagoData.GetSlotInt("Start Exit")];
                 string[] startSplits = startCode.Split('|');
                 levelDoc.Root.SetAttributeValue("start", startSplits[0]);
-                //levelsReader.Close();
             }
             //Add the archipelago hub, I know it's not useful in the temple campaign but the BK zone is fun :)
             XElement hubLevelElement = new XElement("level");
@@ -159,7 +316,7 @@ namespace HammerwatchAP.Archipelago
             Logging.Log("Tweaking tweaks");
             string mapTweakDir = Path.Combine(mapFolder, "tweak");
             //Copy shared tweak info to each class and remove from file
-            string sharedPath = GetMapFileWithAssetDefault(assetsPath, mapFolder, Path.Combine("tweak", "shared.xml")); // Path.Combine(mapTweakDir, "shared.xml");
+            string sharedPath = GetMapFileWithAssetDefault(assetsPath, mapFolder, Path.Combine("tweak", "shared.xml"));
             XDocument sharedDoc = XDocument.Load(sharedPath);
             XElement sharedUpgradeRoot = sharedDoc.Root.Element("upgrades");
             XElement[] sharedUpgrades = sharedUpgradeRoot.Elements().ToArray();
@@ -167,7 +324,6 @@ namespace HammerwatchAP.Archipelago
             {
                 upgrade.Remove();
             }
-            //File.WriteAllText(Path.Combine(mapTweakDir, "shared.xml"), sharedDoc.ToString());
             Directory.CreateDirectory(mapTweakDir);
             sharedDoc.Save(Path.Combine(mapTweakDir, "shared.xml"));
             bool shopsanity = archipelagoData.IsShopSanityOn();
@@ -180,7 +336,6 @@ namespace HammerwatchAP.Archipelago
             exitRando = archipelagoData.GetOption(SlotDataKeys.exitRandomization) > 0;
             Newtonsoft.Json.Linq.JObject gateTypesObj = archipelagoData.GetSlotJObject("Gate Types");
             Newtonsoft.Json.Linq.JObject exitSwapsObj = archipelagoData.GetSlotJObject("Exit Swaps");
-            enemyShuffleKeepTier = archipelagoData.GetOption(SlotDataKeys.enemyShuffleKeepTier) > 0;
             Dictionary<string, long> optimizedGateTypes = gateTypesObj.ToObject<Dictionary<string, long>>();
             gateTypes = new Dictionary<string, string>(optimizedGateTypes.Count);
             foreach (var pair in optimizedGateTypes)
@@ -196,11 +351,11 @@ namespace HammerwatchAP.Archipelago
             //Create dictionary of exit code sign to act for the Castle campaign
             if (mapType == ArchipelagoData.MapType.Castle)
             {
-                foreach (string level in APData.floorSignExits.Keys)
+                foreach (string level in floorSignExits.Keys)
                 {
                     int act = APData.GetActFromLevelFileName(level, archipelagoData);
                     char actChar = (char)('a' + act - 1);
-                    foreach (string exitCode in APData.floorSignExits[level].Values)
+                    foreach (string exitCode in floorSignExits[level].Values)
                     {
                         exitCodeToActChar[exitCode] = actChar;
                     }
@@ -219,6 +374,10 @@ namespace HammerwatchAP.Archipelago
             }
             //Count enemies and items
             Logging.Log("Counting enemies and coins");
+            if (archipelagoData.raceMode.HasValue && archipelagoData.raceMode.Value)
+                EnemyShuffler.SetRandomSeed(random.Next());
+            else
+                EnemyShuffler.SetRandomSeed();
             EnemyShuffler.CountEnemies(docs, archipelagoData);
             int shuffleMode = archipelagoData.GetOption(SlotDataKeys.enemyShuffleMode);
             int actRange = archipelagoData.GetOption(SlotDataKeys.enemyShuffleActRange);
@@ -596,7 +755,7 @@ namespace HammerwatchAP.Archipelago
             if (archipelagoData.GetOption(SlotDataKeys.treasureShuffle) == 0)
                 return;
             treasureCounts = new Dictionary<string, int>();
-            foreach (string treasure in APData.treasureNames)
+            foreach (string treasure in treasureNames)
             {
                 treasureCounts[treasure] = 0;
             }
@@ -742,7 +901,6 @@ namespace HammerwatchAP.Archipelago
                             int goalEventTriggerNodeId = modNodeStartId++;
                             scriptNodesToAdd.Add(NodeHelper.CreateRectangleShapeNode(shapeNodeId, new Vector2(-73, -2), 2.5f, 2, 1));
                             scriptNodesToAdd.Add(NodeHelper.CreateAreaTriggerNode(areaTriggerNodeId, -1, new Vector2(-73, 0), 0, 1, new int[] { shapeNodeId }, new[] { goalEventTriggerNodeId }));
-                            //scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(checkGoalNodeId, new Vector2(-73, 2), "goal", new int[] { modNodeStartId }, new int[] { modNodeStartId + 1, modNodeStartId + 2 }, false));
                             scriptNodesToAdd.Add(NodeHelper.CreateGlobalEventTriggerNode(goalEventTriggerNodeId, -1, new Vector2(-73, 4), "ap_check_end_game", new int[] { modNodeStartId, modNodeStartId + 1 }, null, false));
                             scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(modNodeStartId++, new Vector2(-71, 2), -1, 1, new int[] { goalEventTriggerNodeId }));
                             scriptNodesToAdd.Add(NodeHelper.CreateSpeechBubbleNode(modNodeStartId++, new Vector2(-75, 2), -1, "menus/speech/normal_speech.xml", goalCheckText1, new int[] { 1648 }, new Vector2(0.1f, -1.2f), 100, 0, 4000));
@@ -895,7 +1053,6 @@ namespace HammerwatchAP.Archipelago
 
                             scriptNodesToAdd.AddRange(CreateRandomizedRunePuzzle(levelFile, doodadsNodeRoot, ref buttonEffectNodeIds, new Vector2(-40.5f, -36.5f), ref modNodeStartId, 26,
                                 new[] { 570, 569, 568, 567 }, 3354, 630, 300));
-                            //nodesToGuaranteeSpawn.AddRange(p2LevelStartNodeIds);
                             break;
                         case "level_3.xml": //Prison 3
                             int[] p3BronzeKey1 = { 381, 422, 783, 2606, 780 };
@@ -1056,16 +1213,6 @@ namespace HammerwatchAP.Archipelago
                             int rightAreaTriggerId = modNodeStartId++;
                             //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
                             NodeHelper.AddConnectionNodes(idToNode["200"], new[] { b1SetGlobalFlagNodeId, bossKillStatusId }, new[] { 0, bossDefeatMessageDelay });
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
-                            //    string nodeId = node.Element("int").Value;
-                            //    XElement[] strNodes = node.Elements("string").ToArray();
-                            //    if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_1")
-                            //    {
-                            //        NodeHelper.AddConnectionNodes(node, new[] { b1SetGlobalFlagNodeId, bossKillStatusId }, new[] { 0, bossDefeatMessageDelay });
-                            //    }
-                            //}
                             if (buttonsanity > 0)
                             {
                                 //Button AreaTrigger
@@ -1078,9 +1225,6 @@ namespace HammerwatchAP.Archipelago
 
                                 //Set connections to ChangeDoodadState node and our custom stuff
                                 NodeHelper.SetConnectionNodes(idToNode["498"], new[] { 499, checkFlagNodeId, leftButtonItemId, rightButtonItemId });
-                                //XElement[] connectionNodes = node.Elements("int-arr").ToArray();
-                                //connectionNodes[0].Value = $"499 {checkFlagNodeId} {leftButtonItemId} {rightButtonItemId}";
-                                //connectionNodes[1].Value = "0 0 0 0";
 
                                 scriptNodesToAdd.Add(NodeHelper.CreateAreaTriggerNode(rightAreaTriggerId, -1, new Vector2(1.5f, -12), 1, 0, new int[] { 722 }, new int[] { checkFlagNodeId }));
                                 string enableItemName = ArchipelagoManager.GetItemName(56 + APData.castleButtonItemStartID);
@@ -1095,13 +1239,6 @@ namespace HammerwatchAP.Archipelago
                                 idToNode["501"].Element("dictionary").Element("dictionary").Element("int-arr").Value += $" {rightAreaTriggerId}";
                                 idToNode["718"].Element("dictionary").Element("dictionary").Element("int-arr").Value += $" {rightAreaTriggerId}";
                             }
-
-                            //scriptNodesToAdd.AddRange(CreateBossKillStatusNodes(bossKillStatusId, new Vector2(15, -45)));
-
-                            //doodadsToAdd.AddRange(CreateBossEndTeleporters(10020, new Vector2(-3f, -55.5f), 742, out List<XElement> b1TpNodes, out List<int> b1LevelLoadedIds));
-                            //doodadsToAdd.AddRange(CreateTeleporterWithSign(10020, new Vector2(-5f, -55.5f), -1, "ap_hub", 0, -1, false, true, sign_hub_text, out List<XElement> b1TpNodes));
-                            //scriptNodesToAdd.AddRange(b1TpNodes);
-                            //nodesToGuaranteeSpawn.AddRange(b1LevelLoadedIds);
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId++, new Vector2(-3, -55.5f), 1)); //Offset +0,+2 from RectangleShape
 
@@ -1118,13 +1255,12 @@ namespace HammerwatchAP.Archipelago
                             break;
                         case "level_4.xml": //Armory 4
                             nodesToNuke = new List<int> { 3451 }; //Strange plank trigger
-                            //doodadsToNuke = new List<int> { 6288 }; //Entrance fence
 
                             scriptNodesToAdd.AddRange(CreateDoorwayTransition(ref modNodeStartId, new Vector2(-46, 49.5f), "boss_1", 1)); //Offset +1,+0 from fence
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId++, new Vector2(-40, 18.5f), 100)); //Offset +0,+2 from RectangleShape
 
-                            doodadsToNuke.Add("6288");
+                            doodadsToNuke.Add("6288"); //Entrance fence
 
                             if (buttonsanity > 0)
                             {
@@ -1141,7 +1277,6 @@ namespace HammerwatchAP.Archipelago
 
                             scriptNodesToAdd.AddRange(CreateRandomizedRunePuzzle(levelFile, doodadsNodeRoot, ref buttonEffectNodeIds, new Vector2(67.25f, 27f), ref modNodeStartId, 63,
                                 new[] { 5772, 5773, 5774, 5775 }, 7245, 5850, 1000));
-                            //nodesToGuaranteeSpawn.AddRange(a1LevelStartNodeIds);
 
                             //Hub portal
                             int a2TriggerShapeNodeId = modNodeStartId++;
@@ -1178,7 +1313,6 @@ namespace HammerwatchAP.Archipelago
 
                             scriptNodesToAdd.AddRange(CreateRandomizedRunePuzzle(levelFile, doodadsNodeRoot, ref buttonEffectNodeIds, new Vector2(64f, -68f), ref modNodeStartId, 78,
                                 new[] { 1776, 1775, 1774, 1773 }, 1865, 1508, 300));
-                            //nodesToGuaranteeSpawn.AddRange(a2LevelStartNodeIds);
 
                             globalScriptNodesToTriggerOnLoad.Add(3123); //PlayMusic node
 
@@ -1221,35 +1355,12 @@ namespace HammerwatchAP.Archipelago
                                 panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
                                 scriptNodesToAdd.Add(panelDeleteNode);
                             }
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    string nodeId = node.Element("int").Value;
-                            //    if (b2DeleteNodePanelDoodads.TryGetValue(nodeId, out List<string> deleteDoodads))
-                            //    {
-                            //        XElement deleteDoodadsNode = node.Element("dictionary").Element("int-arr");
-                            //        deleteDoodadsNode.Value = string.Join(" ", deleteDoodadsNode.Value.Split(' ').Where(str => !deleteDoodads.Contains(str)));
-                            //    }
-                            //    else if (b2AreaTriggerDestroyNodes.TryGetValue(nodeId, out string deleteNodeId))
-                            //    {
-                            //        XElement[] connectionNodes = node.Elements("int-arr").ToArray();
-                            //        connectionNodes[0].Value += $" {modNodeStartId}";
-                            //        connectionNodes[1].Value += $" 0";
 
-                            //        List<string> panelDoodads = b2DeleteNodePanelDoodads[deleteNodeId];
-                            //        XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.PosFromString(node.Element("vec2").Value) + new Vector2(0, 5f), 1, new int[0]);
-                            //        panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
-                            //        scriptNodesToAdd.Add(panelDeleteNode);
-                            //    }
-                            //}
-
-                            XElement[] n2TpDoodads = CreateTeleporter(ref modNodeStartId, new Vector2(-26.5f, 18.5f), -1, "5", 88, -1, false, out List<XElement> n2TpScriptNodes);//, out List<int> n2NodesToRun);
-                            //nodesToGuaranteeSpawn.AddRange(n2NodesToRun);
+                            XElement[] n2TpDoodads = CreateTeleporter(ref modNodeStartId, new Vector2(-26.5f, 18.5f), -1, "5", 88, -1, false, out List<XElement> n2TpScriptNodes);
                             doodadsToAdd.AddRange(n2TpDoodads);
                             scriptNodesToAdd.AddRange(n2TpScriptNodes);
                             break;
                         case "level_6.xml": //Armory 6
-                            //nodesToNuke = new List<int> { 1591, 1590 }; //Plank GlobalFlag node, Strange plank announce node
-
                             //Rewire the plank area trigger node
                             XElement[] intArrNodes = idToNode["3443"].Elements("int-arr").ToArray();
                             intArrNodes[0].Value = "1592";
@@ -1298,12 +1409,6 @@ namespace HammerwatchAP.Archipelago
 
                                 NodeHelper.AddConnectionNodes(idToNode["1587"], new[] { enableNodeId, destroyWallNodeId }, new[] { 1, 0 });
                                 NodeHelper.AddConnectionNodes(idToNode["1080"], new[] { enableNodeId, destroyWallNodeId }, new[] { 1, 0 });
-                                //XElement[] knifeRoomDeleteNodeConnections = idToNode["1587"].Elements("int-arr").ToArray();
-                                //knifeRoomDeleteNodeConnections[0].Value += $" {enableNodeId} {destroyWallNodeId}";
-                                //knifeRoomDeleteNodeConnections[1].Value += " 1 0";
-                                //XElement[] knifeRoom2DeleteNodeConnections = idToNode["1080"].Elements("int-arr").ToArray();
-                                //knifeRoom2DeleteNodeConnections[0].Value = $"{enableNodeId} {destroyWallNodeId}";
-                                //knifeRoom2DeleteNodeConnections[1].Value = "1 0";
 
                                 scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(enableNodeId, new Vector2(-21.5f, -48.5f), 1, 0, new int[] { destroyWallNodeId }));
 
@@ -1343,15 +1448,6 @@ namespace HammerwatchAP.Archipelago
 
                             //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
                             NodeHelper.AddConnectionNodes(idToNode["229"], new[] { b2SetGlobalFlagNodeId });
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
-                            //    XElement[] strNodes = node.Elements("string").ToArray();
-                            //    if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_2")
-                            //    {
-                            //        NodeHelper.AddConnectionNodes(node, new[] { b2SetGlobalFlagNodeId });
-                            //    }
-                            //}
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId + 14, new Vector2(1, -57.5f), 1)); //Offset +0,+2 from RectangleShape
 
@@ -1371,7 +1467,6 @@ namespace HammerwatchAP.Archipelago
                             Vector2 r1ExitPos = new Vector2(-1, 10.5f);
                             XElement[] r1DoorTransitionNodes = CreateDoorwayTransition(ref modNodeStartId, r1ExitPos, "boss_2", 1); //Offset +1,+0 from fence
                             scriptNodesToAdd.AddRange(r1DoorTransitionNodes);
-                            //nodesToGuaranteeSpawn.Add(r1DoorwayId + 7);
 
                             doodadsToNuke.Add("4307");
 
@@ -1552,7 +1647,6 @@ namespace HammerwatchAP.Archipelago
                                 globalScriptNodesToTriggerOnLoad.Add(simonActivateCheckFlagId);
                                 buttonEffectNodeIds.Add(simonActivateCheckFlagId);
 
-
                                 //Simon says complete node
                                 NodeHelper.SetConnectionNodes(idToNode["13245"], new int[] { modNodeStartId, 13229 });
                                 NodeHelper.AddConnectionNodes(idToNode["13245"], simonItemSpawnIds);
@@ -1583,7 +1677,6 @@ namespace HammerwatchAP.Archipelago
 
                             scriptNodesToAdd.AddRange(CreateRandomizedRunePuzzle(levelFile, doodadsNodeRoot, ref buttonEffectNodeIds, new Vector2(83.5f, -29.5f), ref modNodeStartId, 134,
                                 new[] { 4146, 4147, 8211, 8212 }, 13060, 8253, 1000));
-                            //nodesToGuaranteeSpawn.AddRange(r3LevelStartNodeIds);
                             break;
                         case "level_bonus_3.xml": //Bonus 3
                             nodesToNuke = new List<int> { 3 }; //SetGlobalFlag
@@ -1616,15 +1709,6 @@ namespace HammerwatchAP.Archipelago
 
                             //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
                             NodeHelper.AddConnectionNodes(idToNode["201"], new[] { b3SetGlobalFlagNodeId });
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
-                            //    XElement[] strNodes = node.Elements("string").ToArray();
-                            //    if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_3")
-                            //    {
-                            //        NodeHelper.AddConnectionNodes(node, new[] { b3SetGlobalFlagNodeId });
-                            //    }
-                            //}
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId++, new Vector2(1, -38.5f), 1)); //Offset +0,+2 from RectangleShape
 
@@ -1656,7 +1740,6 @@ namespace HammerwatchAP.Archipelago
                             scriptNodesToAdd.AddRange(c1TpScriptNodes);
                             break;
                         case "level_10_special.xml":
-
                             nodesToNuke = new List<int> { 291, 570, 571, 572 }; //Rune puzzle RectangleShapes
 
                             scriptNodesToAdd.AddRange(CreateRandomizedRunePuzzle(levelFile, doodadsNodeRoot, ref buttonEffectNodeIds, new Vector2(-79f, -9.25f), ref modNodeStartId, 152,
@@ -1665,12 +1748,11 @@ namespace HammerwatchAP.Archipelago
                         case "level_bonus_4.xml": //Bonus 4
                             nodesToNuke = new List<int> { 746 }; //Strange plank trigger
 
-                            XElement[] n4TpDoodads = CreateTeleporter(ref modNodeStartId, new Vector2(-7.5f, 14.5f), -1, "11", 88, -1, false, out List<XElement> n4TpScriptNodes);//, out List<int> n4NodesToRun);
+                            XElement[] n4TpDoodads = CreateTeleporter(ref modNodeStartId, new Vector2(-7.5f, 14.5f), -1, "11", 88, -1, false, out List<XElement> n4TpScriptNodes);
                             doodadsToAdd.AddRange(n4TpDoodads);
                             scriptNodesToAdd.AddRange(n4TpScriptNodes);
                             break;
                         case "level_11.xml": //Chambers 11
-
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId++, new Vector2(-1, 1.5f), 1)); //Offset +0,+2 from RectangleShape
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId++, new Vector2(-36, -73f), 88)); //Bonus return
 
@@ -1847,15 +1929,6 @@ namespace HammerwatchAP.Archipelago
                             scriptNodesToAdd.Add(NodeHelper.CreateSetGlobalFlagNode(b4SetGlobalFlagNodeId, new Vector2(-11, -35), -1, "killed_boss_4", true));
                             //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
                             NodeHelper.AddConnectionNodes(idToNode["23"], new[] { b4SetGlobalFlagNodeId });
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    //Unhook music node from the GlobalEventTrigger and replace with our CheckGlobalFlag node
-                            //    XElement[] strNodes = node.Elements("string").ToArray();
-                            //    if (strNodes[0].Value == "GlobalEventTrigger" && strNodes[1].Value == "killed_boss_4")
-                            //    {
-                            //        NodeHelper.AddConnectionNodes(node, new[] { b4SetGlobalFlagNodeId });
-                            //    }
-                            //}
 
                             string[] plankNodeIds = new string[] { "784", "786", "802", "801", "800", "799", "798", "797", "839", "1244", "1243", "1242" };
 
@@ -1922,98 +1995,6 @@ namespace HammerwatchAP.Archipelago
                                 scriptNodesToAdd.Add(plankFlagNode);
                                 scriptNodesToAdd.Add(scriptLinkNode);
                             }
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    string nodeId = node.Element("int").Value;
-                            //    switch (nodeId)
-                            //    {
-                            //        case "1136": //If you have at least 1 plank and not playing the escape goal prevent the escape sequence from opening
-                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                            //            {
-                            //                //Deactivate the node
-                            //                node.Element("bool").Value = "False";
-                            //            }
-                            //            else //Else ensure the passage will open even if we don't have any planks
-                            //            {
-                            //                globalScriptNodesToTriggerOnceOnLoad.Add(1136);
-                            //            }
-                            //            break;
-                            //        case "37": //CameraShake node
-                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                            //            {
-                            //                //Deactivate the node
-                            //                node.Element("bool").Value = "False";
-                            //            }
-                            //            break;
-                            //        case "2": //Countdown announce node
-                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                            //            {
-                            //                //Edit text
-                            //                XElement dict = node.Element("dictionary");
-                            //                XElement[] parameters = dict.Elements().ToArray();
-                            //                parameters[0].Value = "Or is it?";
-                            //                parameters[1].Value = "6000"; //Duration
-                            //                //parameters[2].Value = "0"; //Title
-                            //                XElement[] connections = node.Elements("int-arr").ToArray();
-                            //                connections[0].Value = "6"; //Remove sound node connection
-                            //                connections[1].Value = "2000";
-                            //            }
-                            //            break;
-                            //        case "6":
-                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                            //            {
-                            //                XElement dict = node.Element("dictionary");
-                            //                XElement[] parameters = dict.Elements().ToArray();
-                            //                parameters[0].Value = "The castle is NOT falling apart!";
-                            //                parameters[1].Value = "6000"; //Duration
-                            //                parameters[2].Value = "0"; //Title
-                            //                XElement[] connections = node.Elements("int-arr").ToArray();
-                            //                connections[0].Value = "7"; //Remove sound node connection
-                            //                connections[1].Value = "2000";
-                            //            }
-                            //            break;
-                            //        case "7":
-                            //            if (archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
-                            //            {
-                            //                XElement dict = node.Element("dictionary");
-                            //                XElement[] parameters = dict.Elements().ToArray();
-                            //                parameters[0].Value = "Go do whatever you want I guess";
-                            //                parameters[1].Value = "4000"; //Duration
-                            //                XElement[] connections = node.Elements("int-arr").ToArray();
-                            //                connections[0].Remove();
-                            //                connections[1].Remove();
-                            //            }
-                            //            break;
-                            //    }
-                            //    //Plank nodes
-                            //    int plankNodeIndex = plankNodeIds.IndexOf(nodeId);
-                            //    if (plankNodeIndex != -1)
-                            //    {
-                            //        XElement[] connectionNodes = node.Elements("int-arr").ToArray();
-                            //        node.Element("bool").Value = "True"; //Make sure the node is enabled!
-                            //        XElement triggerTimesNode = node.Elements("int").ToArray()[1];
-                            //        string posString = node.Element("vec2").Value;
-
-                            //        string connectionNodeValues = connectionNodes[0].Value;
-                            //        int globalFlagNodeId = plankNodeIdCounter++;
-                            //        int scriptNodeId = plankNodeIdCounter++;
-                            //        connectionNodes[0].Value = globalFlagNodeId.ToString();
-                            //        connectionNodes[1].Value = "0";
-                            //        triggerTimesNode.Value = "-1";
-                            //        Vector2 globalFlagNodePos = NodeHelper.PosFromString(posString) + new Vector2(1, 3);
-                            //        string[] connectionNodeValuesSplits = connectionNodeValues.Split(' ');
-                            //        int[] connectionNodeIds = new int[connectionNodeValuesSplits.Length];
-                            //        for (int c = 0; c < connectionNodeIds.Length; c++)
-                            //        {
-                            //            connectionNodeIds[c] = int.Parse(connectionNodeValuesSplits[c]);
-                            //        }
-                            //        XElement plankFlagNode = NodeHelper.CreateCheckGlobalFlagNode(globalFlagNodeId, globalFlagNodePos, $"l{plankNodeIndex + 1}_plank", false, new int[] { scriptNodeId }, false, null);
-                            //        XElement scriptLinkNode = NodeHelper.CreateScriptNodeBase(scriptNodeId, "ScriptLink", true, 1, globalFlagNodePos + new Vector2(2, 0));
-                            //        NodeHelper.AddConnectionNodes(scriptLinkNode, connectionNodeIds);
-                            //        scriptNodesToAdd.Add(plankFlagNode);
-                            //        scriptNodesToAdd.Add(scriptLinkNode);
-                            //    }
-                            //}
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(plankNodeIdCounter, new Vector2(30, -26.5f), 1)); //Offset +0,+2 from RectangleShape
                             break;
@@ -2027,7 +2008,6 @@ namespace HammerwatchAP.Archipelago
                             //75 is the stop sound id for the rumble
                             NodeHelper.SetConnectionNodes(idToNode["274"], new int[] { e4CheckHammerFlagNodeId, 86 });
                             scriptNodesToAdd.Add(NodeHelper.CreateCameraShakeNode(e4StopCameraShakeNodeId, true, -1, e4TauntBasePos + new Vector2(6, 2), 1, 0.25f, 0.25f, 25));
-                            //scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(e4StopCameraShakeNodeId, e4TauntBasePos + new Vector2(6, 2), -1, 1, new int[] { 589 }));
                             scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(e4HammerTauntNodeBaseId, e4TauntBasePos + new Vector2(2, 2), "Hey wait a minute...", 5000, 1, true, -1));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
                             scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(0, 4), "Where's your hammer??", 11000, 0, true, -1));
@@ -2088,7 +2068,7 @@ namespace HammerwatchAP.Archipelago
                                 "Congratulations on completing your goal! Talk to me again to end the game.", new int[] { npcDoodadId }, new Vector2(0, -1.15f), 90, 100, 0));
                             scriptNodesToAdd.Add(NodeHelper.CreateScriptLinkNode(modNodeStartId++, true, -1, npcPos + new Vector2(2, -2), new[] { modNodeStartId }, new[] { 5000 }));
                             scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(modNodeStartId++, npcPos + new Vector2(4, -2), -1, 0, new[] { modNodeStartId }));
-                            XElement endGameNode = NodeHelper.CreateGlobalEventTriggerNode(modNodeStartId++, -1, npcPos + new Vector2(2, -4), "ap_check_end_game");//, new[] { modNodeStartId });
+                            XElement endGameNode = NodeHelper.CreateGlobalEventTriggerNode(modNodeStartId++, -1, npcPos + new Vector2(2, -4), "ap_check_end_game");
                             endGameNode.Element("bool").Value = "False";
 
                             scriptNodesToAdd.Add(endGameNode);
@@ -2371,18 +2351,6 @@ namespace HammerwatchAP.Archipelago
                                 idToNode["141426"].Element("vec2").Value = "-3 33.5";
                                 //Remove disabling the main exit node
                                 idToNode["156394"].Element("dictionary").Element("dictionary").Element("int-arr").Value = "156380 156381";
-                                //foreach (XElement node in scriptNodes)
-                                //{
-                                //    string nodeId = node.Element("int").Value;
-                                //    if (nodeId == "141426") //Move Krilith boss return node up so you don't spawn in the wall
-                                //    {
-                                //        node.Element("vec2").Value = "-3 33.5";
-                                //    }
-                                //    if (nodeId == "156394") //Remove disabling the main exit node
-                                //    {
-                                //        node.Element("dictionary").Element("dictionary").Element("int-arr").Value = "156380 156381";
-                                //    }
-                                //}
                             }
 
                             //Add delay to executing the portal event trigger node
@@ -2541,7 +2509,6 @@ namespace HammerwatchAP.Archipelago
                                 globalScriptNodesToTriggerOnceOnLoad.Add(129835);
                             int[] t1PuzzleNodes = { 134196, 134210 }; //Deactivate right, left
                             int t1PuzzleNode = t1PuzzleNodes[archipelagoData.GetRandomLocation("Temple 1 Puzzle Spawn")];
-                            //globalScriptNodesToTriggerOnceOnLoad.Add(t1PuzzleNode);
 
                             //Add delay to the deactivation node, as there's funky stuff with timing and activating
                             idToNode[t1PuzzleNode.ToString()].Elements("int-arr").ToArray()[1].Value = "1 1";
@@ -2560,7 +2527,7 @@ namespace HammerwatchAP.Archipelago
                             nodesToNuke.AddRange(new[] { 132224 }); //Gold keys: ice turret key
 
                             //Removes the DangerArea that has the stairs buff at the beginning of the level, useless unless you're a wizard :P
-                            //nodesToNuke.Add(141465);
+                            nodesToNuke.Add(141465);
 
                             if (archipelagoData.GetOption(SlotDataKeys.noSunbeamDamage) > 0)
                                 nodesToNuke.AddRange(new[] { 132507, 132505, 132514, 132517, 4279, 127124, 127127, 134527, 132520, 132526, 132523 }); //Beam shape nodes
@@ -2853,35 +2820,12 @@ namespace HammerwatchAP.Archipelago
                                 scriptNodesToAdd.Add(panelDeleteNode);
                             }
 
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    string nodeId = node.Element("int").Value;
-                            //    if (exitNodeIds.Contains(nodeId))
-                            //    {
-                            //        NodeHelper.AddConnectionNodes(node, new[] { pofCompleteFlagNode });
-                            //    }
-                            //    else if (bonusDeleteNodePanelDoodads.TryGetValue(nodeId, out List<string> deleteDoodads))
-                            //    {
-                            //        XElement deleteDoodadsNode = node.Element("dictionary").Element("int-arr");
-                            //        deleteDoodadsNode.Value = string.Join(" ", deleteDoodadsNode.Value.Split(' ').Where(str => !deleteDoodads.Contains(str)));
-                            //    }
-                            //    else if (areaTriggerDestroyNodes.TryGetValue(nodeId, out string deleteNodeId))
-                            //    {
-                            //        NodeHelper.AddConnectionNodes(node, new[] { modNodeStartId });
-
-                            //        List<string> panelDoodads = bonusDeleteNodePanelDoodads[deleteNodeId];
-                            //        XElement panelDeleteNode = NodeHelper.CreateDestroyObjectNode(modNodeStartId++, NodeHelper.PosFromString(node.Element("vec2").Value) + new Vector2(0, 5f), 1, new int[0]);
-                            //        panelDeleteNode.Element("dictionary").Element("int-arr").Value = string.Join(" ", panelDoodads);
-                            //        scriptNodesToAdd.Add(panelDeleteNode);
-                            //    }
-                            //}
-
                             List<string> intermediateExitNodeIds = new List<string>() { "87662", "87660", "86426", "86429", "86327", "86323" };
                             //Top area (left, middle, exit), middle area (exit, top left, top right, bottom right)
                             List<string> intraLevelExitIds = new List<string>() { "87980", "87978" };
                             //Top exit, middle exit
 
-                            XElement[] n5TpDoodads = CreateTeleporter(ref modNodeStartId, new Vector2(23.5f, 6.5f), -1, "hub", 111, -1, false, out List<XElement> n5TpScriptNodes);//, out List<int> n5NodesToRun);
+                            XElement[] n5TpDoodads = CreateTeleporter(ref modNodeStartId, new Vector2(23.5f, 6.5f), -1, "hub", 111, -1, false, out List<XElement> n5TpScriptNodes);
                             doodadsToAdd.AddRange(n5TpDoodads);
                             scriptNodesToAdd.AddRange(n5TpScriptNodes);
                             break;
@@ -2892,14 +2836,6 @@ namespace HammerwatchAP.Archipelago
 
                             //Connect the killed boss SetGlobalFlag node to run after the event is triggered. Also trigger the nodes to fix the bridges to the other platforms in case the player kills the boss too fast
                             NodeHelper.AddConnectionNodes(idToNode["158133"], new int[] { b3FlagId, 154469, 154743, 156550 });
-                            //foreach (XElement node in scriptNodes)
-                            //{
-                            //    string nodeId = node.Element("int").Value;
-                            //    if (nodeId == "158133") //ObjectEventNode that triggers the killed_boss_3 flag
-                            //    {
-                            //        NodeHelper.AddConnectionNodes(node, new int[] { b3FlagId, 154469, 154743, 156550 });
-                            //    }
-                            //}
                             break;
                     }
                     break;
@@ -3049,7 +2985,7 @@ namespace HammerwatchAP.Archipelago
                         itemsDict[itemGroupXmlName].Add(item);
                         continue;
                     }
-                    if (archipelagoData.IsPositionLinked(levelFile, pos) && holoNodeId == -1)
+                    if (APData.IsPositionLinked(archipelagoData.mapType, levelFile, pos) && holoNodeId == -1)
                     {
                         nonHololinkedItemIds.Add(itemId);
                     }
@@ -3098,7 +3034,7 @@ namespace HammerwatchAP.Archipelago
 
             if (archipelagoData.GetOption(SlotDataKeys.treasureShuffle) > 0)
             {
-                foreach (string xmlName in APData.treasureNames)
+                foreach (string xmlName in treasureNames)
                 {
                     if (itemsDict.ContainsKey(xmlName)) continue;
                     itemsDict[xmlName] = new List<XElement>();
@@ -3106,7 +3042,7 @@ namespace HammerwatchAP.Archipelago
                 foreach (XElement itemGroup in itemsNodes)
                 {
                     string itemGroupXmlName = itemGroup.Attribute("name").Value;
-                    if (!APData.treasureNames.Contains(itemGroupXmlName))
+                    if (!treasureNames.Contains(itemGroupXmlName))
                         continue;
                     foreach (XElement treasure in itemGroup.Elements())
                     {
@@ -3254,7 +3190,6 @@ namespace HammerwatchAP.Archipelago
                 int puzzleItemCounter = 800000;
                 foreach (XElement prefabGroup in prefabsNode.Elements().ToArray())
                 {
-                    //XAttribute groupName = prefabGroup.Attribute("name");
                     string prefabGroupXmlName = prefabGroup.Attribute("name").Value;
                     switch (prefabGroupXmlName)
                     {
@@ -3472,7 +3407,7 @@ namespace HammerwatchAP.Archipelago
                 string actorName = actorGroup.Attribute("name").Value;
                 if (!actorName.Contains("tower") && !actorName.Contains("boss_worm")) continue; //We get items from minibosses and bosses during the game now
 
-                bool doubleLocations = (actorName.EndsWith("mb.xml"));// && !actorName.EndsWith("mummy_1_mb.xml")); // || actorName.StartsWith("actors/boss_worm");
+                bool doubleLocations = actorName.EndsWith("mb.xml");
                 bool bumpLocation = actorName.StartsWith("actors/tower_tracking") || actorName.StartsWith("actors/tower_nova") || actorName.StartsWith("actors/boss_");
                 foreach (XElement actor in actorGroup.Elements())
                 {
@@ -3534,7 +3469,7 @@ namespace HammerwatchAP.Archipelago
                     {
                         foreach (XElement spawner in actorGroup.Elements())
                         {
-                            if (!APData.spawnerDoodads.TryGetValue(fullGroupName, out string value))
+                            if (!spawnerDoodads.TryGetValue(fullGroupName, out string value))
                                 continue;
                             if (value == "doodads/special/marker_grave.xml" && archipelagoData.mapType == ArchipelagoData.MapType.Temple)
                                 value = "doodads/special/marker_grave_g.xml";
@@ -3550,7 +3485,7 @@ namespace HammerwatchAP.Archipelago
                     string name = doodad.Element("string").Value;
                     if (!name.StartsWith("doodads/special/marker_grave") && name != "doodads/special/marker_maggot_1.xml") continue;
                     string pos = doodad.Element("vec2").Value;
-                    if (APData.spawnerDoodadPositionCorrections.TryGetValue(levelFile, out Dictionary<string, string> corrections) &&
+                    if (spawnerDoodadPositionCorrections.TryGetValue(levelFile, out Dictionary<string, string> corrections) &&
                         corrections.TryGetValue(pos, out string correctedPos))
                         pos = correctedPos;
                     if (!spawnerDoodadPositions.TryGetValue(pos, out string doodadType))
@@ -3578,7 +3513,7 @@ namespace HammerwatchAP.Archipelago
                     string name = doodad.Element("string").Value;
                     if (!name.Contains("floorsign") || (!name.EndsWith("up.xml") && !name.EndsWith("dn.xml"))) continue;
                     string pos = doodad.Element("vec2").Value;
-                    string exitCode = APData.floorSignExits[levelFile][pos];
+                    string exitCode = floorSignExits[levelFile][pos];
                     if (!exitSwaps.TryGetValue(exitCode, out string newCode))
                     {
                         continue;
@@ -3910,10 +3845,7 @@ namespace HammerwatchAP.Archipelago
                         buttonEffectOffset = APData.templeButtonItemStartID;
                         break;
                     default:
-                        buttonNodeDict = APData.castleButtonNodes;
-                        buttonEffectOffset = APData.castleButtonItemStartID;
-                        break;
-
+                        throw new NotImplementedException();
                 }
 
                 int buttonsanityCounter = 600000;
@@ -4081,7 +4013,6 @@ namespace HammerwatchAP.Archipelago
             //If this is someone else's item create nodes as a holo effect
             if (xmlName.StartsWith(APData.apHoloPrefix))
             {
-                //if(!isScriptItem)
                 holoEffectNodeId = extraNodeCounter++;
                 if (!isScriptItem)
                     globalScriptNodesToTriggerOnceOnLoad.Add(holoEffectNodeId);
@@ -4208,7 +4139,6 @@ namespace HammerwatchAP.Archipelago
                     if (buttonsanity > 0 && buttonsanity != 3)
                     {
                         Vector2 spawnPos = puzzlePos;
-                        //scriptNodes.AddRange(CreateSpawnItemScriptNodes(levelFile, buttonSpawnId, ref idCounter, spawnPos, true));
                         XElement[] completeSpawnNodes = CreateSpawnItemScriptNodes(levelFile, buttonSpawnId, ref idCounter, spawnPos, true);
                         NodeHelper.AddConnectionNodes(completeSpawnNodes[completeSpawnNodes.Length - 1], new[] { idCounter, idCounter + 1 });
                         scriptNodes.AddRange(completeSpawnNodes);
@@ -4679,7 +4609,6 @@ namespace HammerwatchAP.Archipelago
 
             if (exitRando && archipelagoData.mapType == ArchipelagoData.MapType.Temple && destLevel == "boss_2") //Special Krilith arena stuff
             {
-                //XElement shapeDict = exitParamsNode;
                 Vector2 nodePos = NodeHelper.PosFromString(scriptNodes[1].Element("vec2").Value);
                 int bossTestNodeId = id++;
                 int bossDiableId = id++;
@@ -4743,11 +4672,9 @@ namespace HammerwatchAP.Archipelago
                     switch (archipelagoData.mapType)
                     {
                         case ArchipelagoData.MapType.Castle:
-                            //goal += "the dragon at the top of the castle.";
                             goal += "all four bosses.";
                             break;
                         case ArchipelagoData.MapType.Temple:
-                            //goal += "the Sun Guardian Sha'Rand.";
                             goal += "all three bosses.";
                             break;
                     }

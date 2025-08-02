@@ -19,6 +19,17 @@ namespace HammerwatchAP.Archipelago
         const int MAX_ITEM_NAME_LENGTH_TO_DISPLAY = 30;
         const float IMPERFECT_OBFUSCATE_CHANCE = 0.5f;
 
+        private static readonly Dictionary<string, PlayerClass> classFromString = new Dictionary<string, PlayerClass>()
+        {
+            { "knight.xml", PlayerClass.KNIGHT },
+            { "priest.xml", PlayerClass.PRIEST },
+            { "ranger.xml", PlayerClass.RANGER },
+            { "sorcerer.xml", PlayerClass.SORCERER },
+            { "thief.xml", PlayerClass.THIEF },
+            { "warlock.xml", PlayerClass.WARLOCK },
+            { "wizard.xml", PlayerClass.WIZARD },
+        };
+
         public static void EditTweaks(string assetsPath, string mapTweakDir, XElement[] sharedUpgrades, bool shopsanity, int upgradeShuffleMode, float minCostMod, float maxCostMod, ArchipelagoData generateArchipelagoData, Random generateRandom)
         {
             random = generateRandom;
@@ -139,7 +150,7 @@ namespace HammerwatchAP.Archipelago
         }
         private static void SetTweaksShopsanity(string fileName, XElement upgradeRootNode, int obfuscationMode)
         {
-            if (!APData.classFromString.TryGetValue(fileName, out PlayerClass playerClass))
+            if (!classFromString.TryGetValue(fileName, out PlayerClass playerClass))
                 return;
             Dictionary<string, XElement> upgradeIdToNode = new Dictionary<string, XElement>();
             foreach (XElement upgrade in upgradeRootNode.Elements())
@@ -273,7 +284,7 @@ namespace HammerwatchAP.Archipelago
             }
             return fakeItem;
         }
-        private static List<ItemFlags> itemFlags = new List<ItemFlags>() { ItemFlags.None, ItemFlags.NeverExclude, ItemFlags.Advancement };
+        private static readonly List<ItemFlags> itemFlags = new List<ItemFlags>() { ItemFlags.None, ItemFlags.NeverExclude, ItemFlags.Advancement };
 
         public static string ModifyShopItemName(string name, int obfuscationMode)
         {

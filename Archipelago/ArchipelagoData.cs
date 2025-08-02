@@ -3,8 +3,6 @@ using Archipelago.MultiClient.Net.Models;
 using ARPGGame;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OpenTK;
 using HammerwatchAP.Game;
 using HammerwatchAP.Util;
@@ -14,6 +12,7 @@ namespace HammerwatchAP.Archipelago
     public class ArchipelagoData
     {
         public string seed;
+        public bool? raceMode = null;
         public int itemIndexCounter;
         public int itemsReceived;
         public Dictionary<string, object> slotData;
@@ -81,7 +80,7 @@ namespace HammerwatchAP.Archipelago
         public void CheckLocation(Vector2 pos, bool showPickupMessage = false)
         {
             if (!ArchipelagoManager.playingArchipelagoSave) return;
-            long locId = GetLocationIdFromPos(pos, currentLevelName);
+            int locId = GetLocationIdFromPos(pos, currentLevelName);
             CheckLocation(locId, showPickupMessage);
         }
         public void CheckLocation(long locationID, bool showPickupMessage)
@@ -92,7 +91,7 @@ namespace HammerwatchAP.Archipelago
             {
                 Console.WriteLine($"Found check: {locationID}");
                 checkedLocations.Add(locationID);
-                if (ArchipelagoManager.connectionInfo.ConnectionActive)
+                if (ArchipelagoManager.ConnectedToAP())
                 {
                     ArchipelagoManager.connectionInfo.session.Locations.CompleteLocationChecksAsync(new long[] { locationID });
                 }
@@ -159,7 +158,7 @@ namespace HammerwatchAP.Archipelago
                     if (++planks <= 12)
                         GameInterface.SetGlobalFlag($"l{planks}_plank", true);
                     if (!receive)
-                        ArchipelagoManager.AddTranslatedMessageToQueue("ig.secret-plank");
+                        ArchipelagoMessageManager.AddTranslatedMessageToQueue("ig.secret-plank");
                     if (goalType == GoalType.PlankHunt && planks >= plankHuntRequirement)
                     {
                         GameInterface.SetGlobalFlag("goal");
@@ -186,7 +185,6 @@ namespace HammerwatchAP.Archipelago
                     keyType = 3;
                 if (xmlName.Contains("big"))
                     keyCount = 3;
-                //Logging.GameLog("Key item. keyAct: " + keyAct + " | keyType: " + keyType + " | keyCount: " + keyCount);
                 if (keyAct != -1 && actKeys[0, keyType] != -1)
                 {
                     actKeys[keyAct, keyType] += keyCount;
@@ -217,29 +215,27 @@ namespace HammerwatchAP.Archipelago
                 GameInterface.SetGlobalFlag("quest_rocks_solved", true);
                 GameInterface.SetGlobalFlag("quest_pickaxe_icon_updated", true);
 
-                ArchipelagoManager.AddTranslatedMessageToQueue("d.quest.pickaxe");
+                ArchipelagoMessageManager.AddTranslatedMessageToQueue("d.quest.pickaxe");
             }
             if (hasFryingPan)
             {
                 GameInterface.SetGlobalFlag("quest_cookingmama_solved", true);
                 GameInterface.SetGlobalFlag("quest_pan_icon_updated", true);
-                //SetGlobalFlag.GlobalFlags["quest_pan_text_updated"] = true;
 
-                ArchipelagoManager.AddTranslatedMessageToQueue("d.quest.pan");
+                ArchipelagoMessageManager.AddTranslatedMessageToQueue("d.quest.pan");
             }
             if (hasPumpsLever)
             {
                 GameInterface.SetGlobalFlag("quest_pumps_solved", true);
                 GameInterface.SetGlobalFlag("quest_lever_icon_updated", true);
-                //SetGlobalFlag.GlobalFlags["quest_lever_text_updated"] = true;
 
-                ArchipelagoManager.AddTranslatedMessageToQueue("d.quest.lever");
+                ArchipelagoMessageManager.AddTranslatedMessageToQueue("d.quest.lever");
             }
             if (hasHammer)
             {
                 GameInterface.SetGlobalFlag("has_hammer", true);
 
-                ArchipelagoManager.AddTranslatedMessageToQueue("Found a sturdy hammer...");
+                ArchipelagoMessageManager.AddMessageToQueue("Found a sturdy hammer...");
             }
         }
         public MapType GetMapType(int goal)
@@ -381,75 +377,17 @@ namespace HammerwatchAP.Archipelago
         {
             return APData.exitIdToCode[GetSlotInt("Start Exit")];
         }
-        public bool IsPositionLinked(string levelFile, Vector2 pos)
+        public int GetLocationIdFromPos(Vector2 pos, string levelId)
         {
-            switch (mapType)
-            {
-                case MapType.Castle:
-                    if (APData.castleLinkedPositions.ContainsKey(levelFile) && APData.castleLinkedPositions[levelFile].ContainsKey(pos))
-                    {
-                        return true;
-                    }
-                    break;
-                case MapType.Temple:
-                    if (APData.templeLinkedPositions.ContainsKey(levelFile) && APData.templeLinkedPositions[levelFile].ContainsKey(pos))
-                    {
-                        return true;
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            return false;
-        }
-        public Vector2 GetLinkedPos(string levelFile, Vector2 pos, out string linkedLevel)
-        {
-            linkedLevel = levelFile;
-            switch (mapType)
-            {
-                case MapType.Castle:
-                    if (APData.castleLinkedPositions.ContainsKey(levelFile) && APData.castleLinkedPositions[levelFile].ContainsKey(pos))
-                    {
-                        linkedLevel = APData.castleLinkedPositions[levelFile][pos].Item1 ?? levelFile;
-                        return APData.castleLinkedPositions[levelFile][pos].Item2;
-                    }
-                    break;
-                case MapType.Temple:
-                    return pos; //Yes we have a linked positions list, it's not needed
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            return pos; //We return the original position if it isn't linked
-        }
-        public long GetLocationIdFromPos(Vector2 pos, string levelId)
-        {
-            long locId = -1;
-            switch (mapType)
-            {
-                case MapType.Castle:
-                    if (APData.castlePosToLocationId.ContainsKey(levelId) && APData.castlePosToLocationId[levelId].ContainsKey(pos))
-                    {
-                        locId = APData.castlePosToLocationId[levelId][pos];
-                    }
-                    break;
-                case MapType.Temple:
-                    if (APData.templePosToLocationId.ContainsKey(levelId) && APData.templePosToLocationId[levelId].ContainsKey(pos))
-                    {
-                        locId = APData.templePosToLocationId[levelId][pos];
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            locId = APData.GetAdjustedLocationId((int)locId, this);
+            int locId = APData.GetLocationIdFromPos(mapType, levelId, pos);
+            locId = APData.GetAdjustedLocationId(locId, this);
             if (locId == -1)
                 return -1;
             return locId;
         }
-        public long GetGenLocationIdFromPos(Vector2 pos, string levelFile)
+        public int GetGenLocationIdFromPos(Vector2 pos, string levelFile)
         {
-            pos = GetLinkedPos(levelFile, pos, out string linkedLevel); //Returns pos if position is not linked
+            pos = APData.GetLinkedPos(mapType, levelFile, pos, out string linkedLevel); //Returns pos if position is not linked
             return GetLocationIdFromPos(pos, linkedLevel);
         }
         public NetworkItem GetItemFromLoc(long locId)
@@ -460,7 +398,7 @@ namespace HammerwatchAP.Archipelago
         }
         public NetworkItem GetItemFromPos(Vector2 pos, string levelId)
         {
-            long locId = GetLocationIdFromPos(pos, levelId);
+            int locId = GetLocationIdFromPos(pos, levelId);
             return GetItemFromLoc(locId);
         }
         public NetworkItem GetGenItemFromPos(Vector2 pos, string levelId)

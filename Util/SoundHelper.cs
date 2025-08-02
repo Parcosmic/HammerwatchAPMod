@@ -13,11 +13,15 @@ namespace HammerwatchAP.Util
         private const string exploreSpeedSndName = "sound/misc.xml:info_note_tutorial"; //sound/misc.xml:missing
         private const string mailSendSndName = "sound/misc.xml:info_mission";
         private const string aaaSndName = "sound/misc.xml:special_serious_aaaaaaaaaa";
+        private const string keySndName = "sound/misc.xml:take_key";
+        private const string bonusKeySndName = "sound/bonus.xml:bonus_key";
         private static TiltedEngine.Audio.Sound countdownSnd;
         private static TiltedEngine.Audio.Sound countdownFinishSnd;
         private static TiltedEngine.Audio.Sound exploreSpeedSnd;
         private static TiltedEngine.Audio.Sound mailSendSnd;
         private static TiltedEngine.Audio.Sound aaaSnd;
+        private static TiltedEngine.Audio.Sound keySnd;
+        private static TiltedEngine.Audio.Sound bonusKeySnd;
         private static TiltedEngine.Audio.SoundInstance aaaSoundInstance;
 
         public static void LoadSounds()
@@ -27,6 +31,8 @@ namespace HammerwatchAP.Util
             exploreSpeedSnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(exploreSpeedSndName);
             mailSendSnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(mailSendSndName);
             aaaSnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(aaaSndName);
+            keySnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(keySndName);
+            bonusKeySnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(bonusKeySndName);
         }
 
         public static void PlayCountdownSound()
@@ -58,6 +64,14 @@ namespace HammerwatchAP.Util
             if (aaaSoundInstance == null) return;
             aaaSoundInstance.Stop();
             aaaSoundInstance.Dispose();
+        }
+        public static void PlayKeySound()
+        {
+            keySnd.Play2D(false);
+        }
+        public static void PlayBonusKeySound()
+        {
+            bonusKeySnd.Play2D(false);
         }
     }
 }

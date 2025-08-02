@@ -100,6 +100,16 @@ namespace HammerwatchAP.Archipelago
             }
         }
 
+        public static void AddTranslatedMessageToQueue(string translationKey)
+        {
+            string message = GetLanguageString(translationKey, new string[0]);
+            announceMessageQueue.Add(message);
+        }
+        public static void AddMessageToQueue(string message)
+        {
+            announceMessageQueue.Add(message);
+        }
+
         public static Color GetPlayerColor(string slotName)
         {
             Random random = new Random(slotName.GetHashCode());
@@ -286,7 +296,6 @@ namespace HammerwatchAP.Archipelago
                                 flagValue = arg != "false";
                             }
                             GameInterface.SetGlobalFlag(parts[1], flagValue);
-                            //SetGlobalFlag.GlobalFlags[parts[1]] = flagValue;
                             EventSystem.Instance.FireEvent(ArchipelagoManager.BUTTON_EVENT_NAME);
                             SendHWMessage($"Flag \"{parts[1]}\" set to {flagValue}");
                             return true;

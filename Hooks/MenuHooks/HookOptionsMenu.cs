@@ -444,7 +444,7 @@ namespace HammerwatchAP.Hooks
 				return codes;
 			}
 
-			unsafe static bool APBindUpdate(OptionsMenu __instance, bool updateControls)
+			static bool APBindUpdate(OptionsMenu __instance, bool updateControls)
 			{
 				string optionsState = _fi_OptionsMenu_oState.GetValue(__instance).ToString();
 				if (ArchipelagoManager.inArchipelagoMenu && updateControls && optionsState == "Bind")

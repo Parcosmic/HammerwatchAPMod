@@ -12,13 +12,8 @@ using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 using HammerwatchAP.Util;
-using HammerwatchAP.Game;
-using HammerwatchAP.Menus;
-using HammerwatchAP.Archipelago;
 using Archipelago.MultiClient.Net.BounceFeatures.DeathLink;
-using SDL2;
 using static HammerwatchAP.Archipelago.ArchipelagoData;
-using HammerwatchAP.Hooks;
 
 namespace HammerwatchAP.Archipelago
 {
@@ -188,8 +183,6 @@ namespace HammerwatchAP.Archipelago
                         var playerColor = ArchipelagoMessageManager.GetPlayerColor(chatMessage.Player.Name);
                         ArchipelagoMessageManager.SendHWMessage(wholeMessage, playerColor);
                         break;
-                    //case Archipelago.MultiClient.Net.MessageLog.Messages.:
-                    //    break;
                     case CommandResultLogMessage commandMessage:
                         if (!ArchipelagoMessageManager.sentCommand)
                         {
@@ -197,7 +190,6 @@ namespace HammerwatchAP.Archipelago
                         }
                         break;
                     case HintItemSendLogMessage hintMessage:
-                        //if (hintMessage.Receiver.Slot == playerId || hintMessage.Sender.Slot == playerId)
                         if (hintMessage.IsRelatedToActivePlayer)
                         {
                             ArchipelagoMessageManager.SendHWMessage(wholeMessage);
@@ -205,10 +197,6 @@ namespace HammerwatchAP.Archipelago
                         break;
                     case ItemSendLogMessage itemSendLogMessage:
                         //Ignore all item send/receive messages
-                        //if (itemSendLogMessage.IsRelatedToActivePlayer)
-                        //{
-                        //    SendHWMessage(wholeMessage);
-                        //}
                         break;
                     case CountdownLogMessage countdownMessage:
                         if (GameBase.Instance.Players == null) break;
@@ -255,7 +243,6 @@ namespace HammerwatchAP.Archipelago
                                 //The client version is greater than the server!
                                 Logging.Log("  WARNING: The server is outdated, some features may not work properly!");
                             }
-                            //////TODO: Probably move to ArchipelagoManager
                             //Sanitize datapackage checksum data
                             foreach (var checksumKey in rPacket.DataPackageChecksums)
                             {
@@ -388,6 +375,9 @@ namespace HammerwatchAP.Archipelago
                             {
                                 session.Socket.SendPacketAsync(new LocationScoutsPacket() { CreateAsHint = 0, Locations = archipelagoData.allLocalLocations.ToArray() });
                             }
+                            Task<bool> raceModeTask = session.DataStorage.GetRaceModeAsync();
+                            raceModeTask.ContinueWith((Task<bool> task) => { archipelagoData.raceMode = task.Result; });
+                            raceModeTask.Start();
 
                             connectionState = ConnectionState.ConnectionResult;
                             break;
@@ -536,7 +526,7 @@ namespace HammerwatchAP.Archipelago
             ArchipelagoManager.SetDeathlink(ArchipelagoManager.archipelagoData.GetOption(SlotDataKeys.deathLink) > 0);
             deathLinkService.OnDeathLinkReceived += (deathLinkObject) =>
             {
-                if (ArchipelagoManager.gameReady)
+                if (ArchipelagoManager.InGame)
                     ArchipelagoManager.ReceivedDeathlink(deathLinkObject);
             };
             session.Socket.SocketClosed += reason =>
@@ -605,25 +595,6 @@ namespace HammerwatchAP.Archipelago
                     ArchipelagoManager.CompletedGeneration();
                     break;
             }
-            //if(ArchipelagoManager.gameState == ArchipelagoManager.GameState.Generating && (GameBase.Instance.menus.GetTopMenu() as MessageMenu) == null)
-            //{
-            //    GameBase.Instance.SetMenu(MenuType.MESSAGE, "Generation In Progress", "Generating map file...");
-            //}
-            //if(ArchipelagoManager.playingArchipelagoSave && ArchipelagoManager.gameState == ArchipelagoManager.GameState.InGame)
-            //{
-            //    if(GameBase.Instance.Players != null && !connectedToAP && reconnectTimer > 0)
-            //    {
-            //        if(reconnectTimer == lastReconnectWaitTime)
-            //        {
-            //            Logging.GameLog($"Reconnecting to server in {lastReconnectWaitTime / 1000} seconds...");
-            //        }
-            //        reconnectTimer -= ms;
-            //        if(reconnectTimer <= 0)
-            //        {
-            //            StartConnection(ArchipelagoManager.archipelagoData, false, true, false);
-            //        }
-            //    }
-            //}
         }
 
         public string GetPlayerName(int slot)
@@ -641,7 +612,6 @@ namespace HammerwatchAP.Archipelago
         public void SetDataStorageValue(string key, string value)
         {
             if (!ConnectionActive) return;
-            //session.DataStorage[key] = value;
             session.Socket.SendPacketAsync(new SetPacket() { Key = key, WantReply = false, Operations = new OperationSpecification[] { new OperationSpecification() { OperationType = OperationType.Replace, Value = value} } });
         }
         public void SetMapTrackingKey(string key)
@@ -694,7 +664,6 @@ namespace HammerwatchAP.Archipelago
         public void SendTrapLink(NetworkItem item)
         {
             string itemName = ArchipelagoManager.GetItemName(item);
-            //Logging.GameLog("Sending TrapLink of item " + itemName);
             Dictionary<string, Newtonsoft.Json.Linq.JToken> data = new Dictionary<string, Newtonsoft.Json.Linq.JToken>()
             {
                 { "source", GetPlayerName(playerId) },
