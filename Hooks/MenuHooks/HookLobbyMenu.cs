@@ -61,45 +61,49 @@ namespace HammerwatchAP.Hooks
                 if (!ArchipelagoManager.playingArchipelagoSave)
                     return;
                 __instance.SetDifficulty(ArchipelagoManager.archipelagoData.GetDifficulty());
-                bool shopsanityPlayerSet = false;
-                for (int p = 3; p >= 0; p--)
+                //Lock shopsanity players if this is a new save
+                if(ArchipelagoManager.saveFileName == null)
                 {
-                    if (ArchipelagoManager.archipelagoData.shopsanityClasses[p].HasValue)
+                    bool shopsanityPlayerSet = false;
+                    for (int p = 3; p >= 0; p--)
                     {
-                        shopsanityPlayerSet = true;
-                        if (__instance.slots[p] == null)
+                        if (ArchipelagoManager.archipelagoData.shopsanityClasses[p].HasValue)
+                        {
+                            shopsanityPlayerSet = true;
+                            if (__instance.slots[p] == null)
+                            {
+                                __instance.slots[p] = new PlayerSlot
+                                {
+                                    Name = "Player " + (p + 1),
+                                    PlayerClass = ArchipelagoManager.archipelagoData.shopsanityClasses[p].Value
+                                };
+                                __instance.AssignClassVariation(p, false);
+                                __instance.slots[p].Ready = true;
+                                __instance.RefreshSlots();
+                            }
+                            else
+                            {
+                                __instance.ChangeClass(p, ArchipelagoManager.archipelagoData.shopsanityClasses[p].Value);
+                            }
+                        }
+                        else if (shopsanityPlayerSet)
                         {
                             __instance.slots[p] = new PlayerSlot
                             {
                                 Name = "Player " + (p + 1),
-                                PlayerClass = ArchipelagoManager.archipelagoData.shopsanityClasses[p].Value
+                                PlayerClass = PlayerClass.KNIGHT
                             };
                             __instance.AssignClassVariation(p, false);
                             __instance.slots[p].Ready = true;
                             __instance.RefreshSlots();
                         }
-                        else
-                        {
-                            __instance.ChangeClass(p, ArchipelagoManager.archipelagoData.shopsanityClasses[p].Value);
-                        }
-                    }
-                    else if (shopsanityPlayerSet)
-                    {
-                        __instance.slots[p] = new PlayerSlot
-                        {
-                            Name = "Player " + (p + 1),
-                            PlayerClass = PlayerClass.KNIGHT
-                        };
-                        __instance.AssignClassVariation(p, false);
-                        __instance.slots[p].Ready = true;
-                        __instance.RefreshSlots();
                     }
                 }
                 __instance.UpdateModifiers(null);
                 //We just set the game to a blank save while we wait for Archipelago to load the right one
                 if (ArchipelagoManager.saveFileName == null)
                 {
-                    if (ArchipelagoManager.mapFinishedGenerating)
+                    if (ArchipelagoManager.MapFinishedGenerating)
                     {
                         ArchipelagoManager.SetArchipelagoLevel(__instance, ArchipelagoManager.archipelagoData.mapFileName);
                     }
@@ -108,11 +112,6 @@ namespace HammerwatchAP.Hooks
                 {
                     __instance.SetLevel("", "");
                 }
-                //ArchipelagoManager.OutputAbsorbedMessages();
-                //if (!ArchipelagoManager.mapFinishedGenerating)
-                //{
-                //    ArchipelagoManager.gameState = ArchipelagoManager.GameState.Generating;
-                //}
                 HooksHelper.SetWidgetVisible(loadButton, host);
             }
         }
