@@ -157,6 +157,7 @@ namespace HammerwatchAP.Archipelago
         {
             //{ "144p Trap", "" },
             { "Aaa Trap", "Hey! Trap" },
+            //{ "Animal Trap", "" },
             { "Animal Bonus Trap", "ap_beetle_tp_trap" },
             { "Army Trap", "Chaser Trap" },
             { "Bald Trap", "Mana Drain Trap" },
@@ -250,8 +251,11 @@ namespace HammerwatchAP.Archipelago
             { "Posession Trap", "Poison Trap" },
             //{ "PowerPoint Trap", "" },
             //{ "Push Trap", "" },
+            //{ "Rail Trap", "" },
+            { "Resistance Trap", "Chaser Trap" },
             { "Reversal Trap", "Confuse Trap" },
             { "Reverse Trap", "Confuse Trap" },
+            { "Rockfall Trap", "Bomb Trap" },
             { "Screen Flip Trap", "Confuse Trap" },
             //{ "Slip Trap", "" },
             { "Slow Trap", "Frost Trap" },
@@ -262,7 +266,7 @@ namespace HammerwatchAP.Archipelago
             //{ "Spring Trap", "" },
             { "Squash Trap", "Bomb Trap" },
             { "Sticky Floor Trap", "Frost Trap" },
-            { "SvC Trap", "Banner Trap" },
+            { "SvC Effect", "Banner Trap" },
             //{ "Swap Trap", "" },
             { "Thwimp Trap", "Chaser Trap" },
             //{ "Time Limit", "" },
@@ -277,7 +281,19 @@ namespace HammerwatchAP.Archipelago
             //{ "W I D E Trap", "" },
             //{ "Whoops! Trap", "" },
             //{ "Zoom Trap", "" },
+            { "Fishin' Boo Trap", "Chaser Trap" },
+            //{ "Sticky Hands Trap", "" },
+            //{ "Pixelate Trap", "" },
+            //{ "Spotlight Trap", "" },
+            { "Bullet Time Trap", "Frost Trap" },
+            //{ "Invisibility Trap", "" },
+            { "Empty Item Box Trap", "Mana Drain Trap" },
         };
+
+        public static bool IsItemTrap(string itemName)
+        {
+            return trapNameToXML.ContainsKey(itemName);
+        }
 
         public static readonly Dictionary<string, string> itemNameToXML = new Dictionary<string, string>()
         {

@@ -54,6 +54,7 @@ namespace HammerwatchAP.Hooks
                     XElement chatMirroringOption = apOptions.Element("APChatMirroring");
                     XElement shopItemHintingOption = apOptions.Element("ShopItemHinting");
                     XElement apDebugModeOption = apOptions.Element("APDebugMode");
+                    XElement trapLinkOption = apOptions.Element("TrapLink");
                     XElement lastConnectedIPOption = apOptions.Element("LastConnectedIP");
                     XElement lastConnectedSlotNameOption = apOptions.Element("LastConnectedSlotName");
                     if (deathlinkOption != null)
@@ -68,6 +69,8 @@ namespace HammerwatchAP.Hooks
                         ArchipelagoManager.APChatMirroring = bool.Parse(chatMirroringOption.Value);
                     if (shopItemHintingOption != null)
                         ArchipelagoManager.ShopItemHinting = bool.Parse(shopItemHintingOption.Value);
+                    if (trapLinkOption != null)
+                        ArchipelagoManager.TrapLink = bool.Parse(trapLinkOption.Value);
                     if (apDebugModeOption != null)
                         ArchipelagoManager.DEBUG_MODE = bool.Parse(apDebugModeOption.Value);
                     if (lastConnectedIPOption != null)

@@ -446,6 +446,12 @@ namespace HammerwatchAP.Archipelago
                 if (itemsToGetCounter-- <= 0)
                     break;
                 NetworkItem itemToReceive = itemsToReceive[itemsReceived++];
+                //If this is a trap item and TrapLink is on send out a Bounce packet
+                string itemName = ArchipelagoManager.GetReceiveItemName(itemToReceive);
+                if (ArchipelagoManager.TrapLink && APData.IsItemTrap(itemName))
+                {
+                    ArchipelagoManager.connectionInfo.SendTrapLink(itemName);
+                }
                 ArchipelagoMessageManager.announceMessageQueue.Add(ArchipelagoManager.GetReceiveItemMessage(itemToReceive));
                 ArchipelagoManager.CreateItemInWorld(itemToReceive, true);
             }

@@ -375,9 +375,6 @@ namespace HammerwatchAP.Archipelago
                             {
                                 session.Socket.SendPacketAsync(new LocationScoutsPacket() { CreateAsHint = 0, Locations = archipelagoData.allLocalLocations.ToArray() });
                             }
-                            Task<bool> raceModeTask = session.DataStorage.GetRaceModeAsync();
-                            raceModeTask.ContinueWith((Task<bool> task) => { archipelagoData.raceMode = task.Result; });
-                            raceModeTask.Start();
 
                             connectionState = ConnectionState.ConnectionResult;
                             break;
@@ -521,6 +518,8 @@ namespace HammerwatchAP.Archipelago
 
             ArchipelagoManager.playingArchipelagoSave = true;
 
+            //ArchipelagoManager.archipelagoData.raceMode = session.DataStorage["_read_race_mode"];
+
             //Setup death link
             deathLinkService = session.CreateDeathLinkService();
             ArchipelagoManager.SetDeathlink(ArchipelagoManager.archipelagoData.GetOption(SlotDataKeys.deathLink) > 0);
@@ -663,7 +662,11 @@ namespace HammerwatchAP.Archipelago
         }
         public void SendTrapLink(NetworkItem item)
         {
-            string itemName = ArchipelagoManager.GetItemName(item);
+            string itemName = ArchipelagoManager.GetReceiveItemName(item);
+            SendTrapLink(itemName);
+        }
+        public void SendTrapLink(string itemName)
+        {
             Dictionary<string, Newtonsoft.Json.Linq.JToken> data = new Dictionary<string, Newtonsoft.Json.Linq.JToken>()
             {
                 { "source", GetPlayerName(playerId) },
