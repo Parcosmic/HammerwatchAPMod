@@ -177,14 +177,13 @@ namespace HammerwatchAP.Archipelago
                 return null;
             if (archipelagoData.GetOption(SlotDataKeys.shopsanityBalanceCosts) > 0)
             {
-                switch (item.Flags)
+                if(item.Flags == ItemFlags.None)
                 {
-                    case ItemFlags.NeverExclude:
-                        vanillaCost = (int)(vanillaCost * 0.5f);
-                        break;
-                    case ItemFlags.None:
-                        vanillaCost = (int)(vanillaCost * 0.1f);
-                        break;
+                    vanillaCost = (int)(vanillaCost * 0.1f);
+                }
+                else if(!item.Flags.HasFlag(ItemFlags.Advancement))
+                {
+                    vanillaCost = (int)(vanillaCost * 0.5f);
                 }
             }
             if (item.Flags.HasFlag(ItemFlags.Trap) && obfuscationMode > 0)
