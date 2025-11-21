@@ -372,17 +372,18 @@ namespace HammerwatchAP.Archipelago
                 if (levelPath.EndsWith("ap_hub.xml")) continue;
                 docs[levelPath] = XDocument.Parse(File.ReadAllText(levelPath));
             }
-            //Count enemies and items
-            Logging.Log("Counting enemies and coins");
+            //Count enemies and treasure
+            Logging.Log("Counting enemies and treasure");
             if (archipelagoData.raceMode.HasValue && archipelagoData.raceMode.Value)
                 EnemyShuffler.SetRandomSeed(random.Next());
             else
                 EnemyShuffler.SetRandomSeed();
             EnemyShuffler.CountEnemies(docs, archipelagoData);
+            CountTreasure(docs);
+            Logging.Log("Shuffling enemies");
             int shuffleMode = archipelagoData.GetOption(SlotDataKeys.enemyShuffleMode);
             int actRange = archipelagoData.GetOption(SlotDataKeys.enemyShuffleActRange);
             EnemyShuffler.ShuffleEnemies(actRange, shuffleMode, archipelagoData);
-            CountTreasure(docs);
             Logging.Log("Modifying level xml files");
             foreach (string levelPath in docs.Keys)
             {
@@ -3422,7 +3423,15 @@ namespace HammerwatchAP.Archipelago
                     }
                     else if (bumpLocation)
                     {
-                        positions.Add(basePos + new Vector2(0, 1));
+                        Vector2 bumpPosition = basePos + new Vector2(0, 1);
+                        if (archipelagoData.mapType == ArchipelagoData.MapType.Temple && APData.templeTowerBumpInvertLocations.TryGetValue(levelFile, out Vector2[] invertLocations))
+                        {
+                            if(invertLocations.Contains(basePos))
+                            {
+                                bumpPosition = basePos + new Vector2(0, -1);
+                            }
+                        }
+                        positions.Add(bumpPosition);
                     }
                     else
                     {

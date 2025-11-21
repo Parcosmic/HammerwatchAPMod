@@ -267,7 +267,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /R "C:\Archipelago Stuff\Archipelago Modding Stuff\HammerwatchAPMod\bin\Release\HammerwatchAP.dll" "C:\Program Files (x86)\Steam\steamapps\common\Hammerwatch\HammerwatchAP.dll"
-xcopy /Y /R "C:\Archipelago Stuff\Archipelago Modding Stuff\HammerwatchAPMod\bin\Release\HammerwatchAP.pdb" "C:\Program Files (x86)\Steam\steamapps\common\Hammerwatch\HammerwatchAP.pdb"</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y "C:\Archipelago Stuff\Archipelago Modding Stuff\HammerwatchAPMod\bin\Release\HammerwatchAP.dll" "C:\Program Files (x86)\Steam\steamapps\common\Hammerwatch\"
+
+xcopy /Y "C:\Archipelago Stuff\Archipelago Modding Stuff\HammerwatchAPMod\bin\Release\HammerwatchAP.pdb" "C:\Program Files (x86)\Steam\steamapps\common\Hammerwatch\"</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -4184,6 +4184,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(-7.5f, -47.5f), 538 },
             { new Vector2(18.25f, -32.125f), 539 },
             { new Vector2(18.25f, -31.125f), 539 },
+            { new Vector2(18.25f, -33.125f), 539 }, //Alternate enemy loot drop position (for if this is randomized as a tracking tower, in vanilla this is a small plant tower with a ledge under it)
             { new Vector2(15.75f, -38.25f), 540 },
             { new Vector2(15.75f, -37.25f), 540 },
             { new Vector2(-35.625f, -29.375f), 541 },
@@ -4201,7 +4202,8 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(21.375f, -26.5f), 547 },
             { new Vector2(21.375f, -25.5f), 547 },
             { new Vector2(15.75f, -21.75f), 548 },
-            { new Vector2(15.75f, -20.75f), 548 },
+            { new Vector2(15.75f, -20.75f), 548 }, 
+            { new Vector2(15.75f, -22.75f), 548 }, //Alternate enemy loot drop position (for if this is randomized as a tracking tower, in vanilla this is a small plant tower with a ledge under it)
             { new Vector2(10.25f, -24.625f), 549 },
             { new Vector2(10.25f, -23.625f), 549 },
             { new Vector2(-23.25f, 2.75f), 550 },
@@ -4218,6 +4220,7 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(52.5f, 24.75f), 555 },
             { new Vector2(21.75f, 37.0f), 556 },
             { new Vector2(21.75f, 38.0f), 556 },
+            { new Vector2(21.75f, 36.0f), 556 }, //Alternate enemy loot drop position (for if this is randomized as a tracking tower, in vanilla this is a small plant tower with a ledge under it)
             { new Vector2(41.125f, 34.125f), 557 },
             { new Vector2(41.125f, 35.125f), 557 },
             { new Vector2(48.0f, -44.0f), 635 },
@@ -5132,6 +5135,16 @@ namespace HammerwatchAP.Archipelago
             "actors/tower_static_frost_grounded.xml",
             "actors/boss_krilith/skeleton_1_mb.xml",
             "actors/spawners/doomspawn_1_razed.xml",
+        };
+        //This is for certain small flower towers (only on cave level 2) that are right above a wall requiring the item spawn offset to be above it rather than below
+        //This makes them inconsistent with other towers but it prevents the item from going out of bounds or moving the tower
+        public static Dictionary<string, Vector2[]> templeTowerBumpInvertLocations = new Dictionary<string, Vector2[]>
+        {
+            {"level_cave_2.xml", new Vector2[]{
+                new Vector2(18.25f, -32.125f), //539
+                new Vector2(15.75f, -21.75f), //548
+                new Vector2(21.75f, 37f), //556
+            } },
         };
 
         //Shop data
