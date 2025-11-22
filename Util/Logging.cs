@@ -41,7 +41,7 @@ namespace HammerwatchAP.Util
         {
             string domain = info.Split(':')[0];
             string[] noncustomDomains = new string[]{
-                    "archipelago",
+                    "archipelago.gg",
                     "localhost",
                     "127.0.0.1",
                     "127.0.1.1",

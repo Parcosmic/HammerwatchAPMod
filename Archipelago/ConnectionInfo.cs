@@ -89,6 +89,12 @@ namespace HammerwatchAP.Archipelago
             hintedLocationIds = new List<int>();
         }
 
+        public void SetConnectionState(ConnectionState state)
+        {
+            Logging.Debug("ConnectionState set to " + state.ToString());
+            connectionState = state;
+        }
+
         public void StartConnection(ArchipelagoData loadedData, bool resetVars = false, bool inGame = false, bool wait = true)
         {
             connectTask = new Task(() => ConnectThread(loadedData, resetVars, inGame));
@@ -132,7 +138,7 @@ namespace HammerwatchAP.Archipelago
         private bool ConnectToArchipelago(string ip, string slotName, string password, ArchipelagoData loadedArchipelagoData, bool resetVars)
         {
             ArchipelagoManager.gameState = ArchipelagoManager.GameState.Connecting;
-            connectionState = ConnectionState.SetupSession;
+            SetConnectionState(ConnectionState.SetupSession);
 
             Logging.LogConnectionInfo(ip);
 
@@ -143,7 +149,7 @@ namespace HammerwatchAP.Archipelago
                 return false;
             }
 
-            connectionState = ConnectionState.ServerAuth;
+            SetConnectionState(ConnectionState.ServerAuth);
 
             ArchipelagoData archipelagoData = new ArchipelagoData();
             if (resetVars)
@@ -227,11 +233,14 @@ namespace HammerwatchAP.Archipelago
                     {
                         case ArchipelagoPacketType.DataPackage:
                             DataPackagePacket dataPackagePacket = (DataPackagePacket)packet;
+                            Logging.Debug("DatapackagePacket with " + dataPackagePacket.DataPackage.Games.Count);
                             foreach (string game in dataPackagePacket.DataPackage.Games.Keys)
                             {
                                 ArchipelagoManager.gameData[game] = dataPackagePacket.DataPackage.Games[game];
                             }
                             ArchipelagoManager.datapackageUpToDate = true;
+                            //if(connectionState == ConnectionState.WaitForDatapackage)
+                            //    SetConnectionState(ConnectionState.ConnectionResult);
                             break;
                         case ArchipelagoPacketType.RoomInfo:
                             RoomInfoPacket rPacket = (RoomInfoPacket)packet;
@@ -258,12 +267,31 @@ namespace HammerwatchAP.Archipelago
                             string localFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                             string apDatapackageCacheFolder = Path.Combine(localFolder, "Archipelago", "Cache", "datapackage");
                             if (!Directory.Exists(apDatapackageCacheFolder)) return;
+                            List<string> neededGameDatapackages = new List<string>();
                             foreach (string game in ArchipelagoManager.gameChecksums.Keys)
                             {
                                 string gameFolder = Path.Combine(apDatapackageCacheFolder, game);
-                                if (!Directory.Exists(gameFolder)) return;
-                                string[] checkSums = Directory.GetFiles(gameFolder).Select(Path.GetFileName).ToArray();
-                                if (!checkSums.Contains($"{ArchipelagoManager.gameChecksums[game]}.json")) return;
+                                if (Directory.Exists(gameFolder))
+                                {
+                                    string[] checkSums = Directory.GetFiles(gameFolder).Select(Path.GetFileName).ToArray();
+                                    if (checkSums.Contains($"{ArchipelagoManager.gameChecksums[game]}.json"))
+                                    {
+                                        continue;
+                                    }
+                                }
+                                Logging.Debug($"Local datapackage for game {game} does not exist!!");
+                                neededGameDatapackages.Add(game);
+                            }
+                            if(neededGameDatapackages.Count > 0)
+                            {
+                                string gameNames = "";
+                                foreach(string name in neededGameDatapackages)
+                                {
+                                    gameNames += name + ", ";
+                                }
+                                Logging.Debug(gameNames);
+                                //session.Socket.SendPacket(new GetDataPackagePacket(){ Games = neededGameDatapackages.ToArray() });
+                                return;
                             }
                             ArchipelagoManager.datapackageUpToDate = true;
                             break;
@@ -281,6 +309,7 @@ namespace HammerwatchAP.Archipelago
                         case ArchipelagoPacketType.Connected:
                             ConnectedPacket cPacket = ((ConnectedPacket)packet);
 
+                            Logging.Debug("ConnectedPacket");
                             //Check version
                             string clientVersion = (string)cPacket.SlotData["Hammerwatch Mod Version"];
                             switch (MiscHelper.CheckVersion(ArchipelagoManager.MOD_VERSION, clientVersion))
@@ -288,13 +317,13 @@ namespace HammerwatchAP.Archipelago
                                 case MiscHelper.VersionMisMatch.Major:
                                 case MiscHelper.VersionMisMatch.Minor:
                                     ArchipelagoManager.DisconnectFromArchipelago($"Server requires higher mod version ({clientVersion}) than is currently installed. Update your mod!");
-                                    connectionState = ConnectionState.ConnectionFailure;
+                                    SetConnectionState(ConnectionState.ConnectionFailure);
                                     return;
                                 case MiscHelper.VersionMisMatch.Build:
                                     if (!connectIgnoringWarnings)
                                     {
                                         ArchipelagoManager.DisconnectFromArchipelago("There is a newer version of the mod, it is recommended to update before you start playing!");
-                                        connectionState = ConnectionState.ConnectionFailure;
+                                        SetConnectionState(ConnectionState.ConnectionFailure);
                                     }
                                     connectIgnoringWarnings = true;
                                     break;
@@ -314,7 +343,7 @@ namespace HammerwatchAP.Archipelago
                                 Logging.Log("  WARNING: APWorld is outdated!");
                                 ArchipelagoManager.DisconnectFromArchipelago("Mod version mismatch between mod and server!");
                                 failedConnectMsg = "The Hammerwatch APWorld used to generate the multiworld is out of date, please update it and re-generate!";
-                                connectionState = ConnectionState.ConnectionFailure;
+                                SetConnectionState(ConnectionState.ConnectionFailure);
                                 return;
                             }
 
@@ -353,14 +382,14 @@ namespace HammerwatchAP.Archipelago
                                 {
                                     //Uh oh the server is hosting the wrong seed!
                                     ArchipelagoManager.DisconnectFromArchipelago("Seed mismatch between save and server");
-                                    connectionState = ConnectionState.ConnectionFailure;
+                                    SetConnectionState(ConnectionState.ConnectionFailure);
                                     return;
                                 }
                                 if (loadedArchipelagoData.mapType != archipelagoData.mapType)
                                 {
                                     //Big problem the server has a different map than us!
                                     ArchipelagoManager.DisconnectFromArchipelago("Map mismatch between save and server");
-                                    connectionState = ConnectionState.ConnectionFailure;
+                                    SetConnectionState(ConnectionState.ConnectionFailure);
                                     return;
                                 }
                                 archipelagoData.Update(loadedArchipelagoData);
@@ -376,7 +405,7 @@ namespace HammerwatchAP.Archipelago
                                 session.Socket.SendPacketAsync(new LocationScoutsPacket() { CreateAsHint = 0, Locations = archipelagoData.allLocalLocations.ToArray() });
                             }
 
-                            connectionState = ConnectionState.ConnectionResult;
+                            SetConnectionState(ConnectionState.ConnectionResult);
                             break;
                         case ArchipelagoPacketType.ConnectionRefused:
                             ConnectionRefusedPacket cRPacket = ((ConnectionRefusedPacket)packet);
@@ -402,7 +431,7 @@ namespace HammerwatchAP.Archipelago
                                 ResourceContext.Log(errorMessage);
                                 failedConnectMsg = errorMessage;
                             }
-                            connectionState = ConnectionState.ConnectionFailure;
+                            SetConnectionState(ConnectionState.ConnectionFailure);
                             break;
                         case ArchipelagoPacketType.ReceivedItems:
                             ReceivedItemsPacket rIPacket = (ReceivedItemsPacket)packet;
@@ -486,7 +515,7 @@ namespace HammerwatchAP.Archipelago
             if(loginResult is LoginFailure loginFailure)
             {
                 failedConnectMsg = loginFailure.ToString();
-                connectionState = ConnectionState.ConnectionFailure;
+                SetConnectionState(ConnectionState.ConnectionFailure);
             }
 
             return failedConnectMsg == null;
@@ -538,7 +567,7 @@ namespace HammerwatchAP.Archipelago
                 failedConnectMsg = null;
             };
 
-            connectionState = ConnectionState.Connected;
+            SetConnectionState(ConnectionState.Connected);
             GameBase.Instance.SetMenu(MenuType.MAIN);
             return true;
         }
@@ -551,7 +580,7 @@ namespace HammerwatchAP.Archipelago
             GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connection Error", errorMessage);
             if (session.Socket.Connected)
                 session.Socket.DisconnectAsync();
-            connectionState = ConnectionState.Disconnected;
+            SetConnectionState(ConnectionState.Disconnected);
         }
         private void DisconnectedFromArchipelago()
         {
@@ -565,7 +594,12 @@ namespace HammerwatchAP.Archipelago
 
         public void GameUpdate(int ms)
         {
-            if((connectionState == ConnectionState.ConnectionResult && ArchipelagoManager.datapackageUpToDate) || connectionState == ConnectionState.ConnectionFailure)
+            //if(connectionState == ConnectionState.WaitForDatapackage)
+            //{
+            //    session.Socket.SendPacket(new GetDataPackagePacket() { Games = neededGameDatapackages.ToArray()});
+            //    return;
+            //}
+            if(connectionState == ConnectionState.ConnectionResult || connectionState == ConnectionState.ConnectionFailure)
             {
                 ConnectionResponse();
             }
@@ -704,6 +738,7 @@ namespace HammerwatchAP.Archipelago
             Disconnected,
             SetupSession,
             ServerAuth,
+            WaitForDatapackage,
             ConnectionResult,
             ConnectionFailure,
             Connected,
