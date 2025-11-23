@@ -270,7 +270,8 @@ namespace HammerwatchAP.Archipelago
                             List<string> neededGameDatapackages = new List<string>();
                             foreach (string game in ArchipelagoManager.gameChecksums.Keys)
                             {
-                                string gameFolder = Path.Combine(apDatapackageCacheFolder, game);
+                                string gameFileName = game.Replace(":", "");
+                                string gameFolder = Path.Combine(apDatapackageCacheFolder, gameFileName);
                                 if (Directory.Exists(gameFolder))
                                 {
                                     string[] checkSums = Directory.GetFiles(gameFolder).Select(Path.GetFileName).ToArray();
