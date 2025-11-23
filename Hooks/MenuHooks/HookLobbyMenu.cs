@@ -49,6 +49,8 @@ namespace HammerwatchAP.Hooks
         {
             static void Postfix(LobbyMenu __instance)
             {
+                if (!ArchipelagoManager.playingArchipelagoSave)
+                    return;
                 __instance.SetDifficulty(ArchipelagoManager.archipelagoData.GetDifficulty());
             }
         }
@@ -148,6 +150,9 @@ namespace HammerwatchAP.Hooks
             static XDocument PatchLobbyMenuDoc(ResourceContext context)
             {
                 XDocument doc = context.LoadXML("menus/gui/lobby.xml", new ErrorLogger());
+
+                if (!ArchipelagoManager.playingArchipelagoSave || ArchipelagoManager.InGame)
+                    return doc;
 
                 //Hacking in a button for our Archipelago menu
                 XElement button = new XElement("textbutton");
@@ -271,7 +276,9 @@ namespace HammerwatchAP.Hooks
         {
             static bool Prefix(LobbyMenu __instance, string name, ref Action<Widget> __result)
             {
-                switch(name)
+                if (!ArchipelagoManager.playingArchipelagoSave)
+                    return true;
+                switch (name)
                 {
                     case "levels":
                         return false;
