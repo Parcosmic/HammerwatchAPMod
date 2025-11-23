@@ -23,7 +23,7 @@ namespace HammerwatchAP.Hooks
 			static void Postfix()
 			{
 				SDL.SDL_ShowSimpleMessageBox(SDL.SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR, "Crash! :(", ArchipelagoManager.ERROR_MESSAGE, IntPtr.Zero);
-				//throw new Exception(ArchipelagoManager.ERROR_MESSAGE);
+				throw new Exception(ArchipelagoManager.ERROR_MESSAGE);
 			}
         }
 	}
