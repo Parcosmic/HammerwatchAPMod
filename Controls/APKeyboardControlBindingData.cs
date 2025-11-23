@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using ARPGGame;
 using HammerwatchAP.Archipelago;
+using HammerwatchAP.Util;
 
 namespace HammerwatchAP.Controls
 {
@@ -14,8 +15,8 @@ namespace HammerwatchAP.Controls
         static readonly Type _t_KeyboardState = HammerwatchAP.hammerwatchAssembly.GetType("ARPGGame.KeyboardState");
         static readonly FieldInfo _fi_KeyboardState_KeyNames = _t_KeyboardState.GetField("KeyNames", BindingFlags.Public | BindingFlags.Static);
 
-        static readonly Type _t_PlayerKeyboardControlBinding = HammerwatchAP.hammerwatchAssembly.GetType("ARPGGame.PlayerKeyboardControlBinding");
-        static readonly FieldInfo _fi_PlayerKeyboardControlBinding_keyboard = _t_PlayerKeyboardControlBinding.GetField("keyboard", BindingFlags.NonPublic | BindingFlags.Instance);
+        static readonly Type _t_PlayerKeyboardControls = HammerwatchAP.hammerwatchAssembly.GetType("ARPGGame.PlayerKeyboardControls");
+        static readonly FieldInfo _fi_PlayerKeyboardControls_keyboard = _t_PlayerKeyboardControls.GetField("keyboard", BindingFlags.NonPublic | BindingFlags.Instance);
 
         static readonly FieldInfo _fi_KeyboardState_Button = _t_KeyboardState.GetField("Button", BindingFlags.Public | BindingFlags.Instance);
         static readonly FieldInfo _fi_KeyboardState_IsController = _t_KeyboardState.GetField("IsController", BindingFlags.Public | BindingFlags.Instance);
@@ -32,8 +33,10 @@ namespace HammerwatchAP.Controls
 
         public bool GetKeyPress(Keys key)
         {
-            if (controller.Controller == null) return false;
-            object keyboard = _fi_PlayerKeyboardControlBinding_keyboard.GetValue(controller.Controller);
+            if (controller == null || controller.Controller == null) return false;
+            object keyboard = _fi_PlayerKeyboardControls_keyboard.GetValue(controller.Controller);
+            if (keyboard == null)
+                return false;
             return (bool)_pi_KeyboardState.GetValue(keyboard, new object[] { key });
         }
 
@@ -54,7 +57,7 @@ namespace HammerwatchAP.Controls
 
         public override bool RebindAction(ControlManager.APControllerAction action)
         {
-            object keyboard = _fi_PlayerKeyboardControlBinding_keyboard.GetValue(controller.Controller);
+            object keyboard = _fi_PlayerKeyboardControls_keyboard.GetValue(controller.Controller);
             if (keyboard == null)
             {
                 return false;

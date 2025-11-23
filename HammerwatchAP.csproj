@@ -117,6 +117,7 @@
     <Compile Include="Controls\APJoystickControlBindingData.cs" />
     <Compile Include="Controls\APKeyboardControlBindingData.cs" />
     <Compile Include="Controls\APControlBindingData.cs" />
+    <Compile Include="Controls\APNullControlBindingData.cs" />
     <Compile Include="Controls\ControlManager.cs" />
     <Compile Include="Game\BuffInstaKill.cs" />
     <Compile Include="Game\BuffExploreSpeed.cs" />

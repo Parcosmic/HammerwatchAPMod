@@ -19,6 +19,7 @@ namespace HammerwatchAP.Hooks
         public static FieldInfo _fi_ARPGGAME_Instance = _t_ARPGGAME.GetField("Instance", BindingFlags.Public | BindingFlags.Static);
         public static FieldInfo _fi_ARPGGAME_ControlBindings = _t_ARPGGAME.GetField("ControlBindings", BindingFlags.Public | BindingFlags.Instance);
         public static FieldInfo _fi_ARPGGAME_options = _t_ARPGGAME.GetField("options", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static FieldInfo _fi_ARPGGAME_controls = _t_ARPGGAME.GetField("controls", BindingFlags.NonPublic | BindingFlags.Instance);
         public static MethodInfo _mi_ARPGGAME_RefreshControls = _t_ARPGGAME.GetMethod("RefreshControls", BindingFlags.Public | BindingFlags.Instance);
 
         public static IPlayerControlBinding[] GetARPGGameControlBindings()
@@ -110,20 +111,28 @@ namespace HammerwatchAP.Hooks
 
             static void LoadAPControls(XElement options)
             {
+                Logging.Debug("Loading Archipelago controls");
                 XElement apControls = options.Element("ArchipelagoControls");
+                IPlayerControlBinding[] controlBindings = GetARPGGameControlBindings();
+                APControlBindingData[] apBindingDatas = new APControlBindingData[controlBindings.Length];
                 if (apControls != null)
                 {
-                    IPlayerControlBinding[] controlBindings = GetARPGGameControlBindings();
-                    APControlBindingData[] apBindingDatas = new APControlBindingData[4];
                     for(int p = 0; p < apBindingDatas.Length; p++)
                     {
                         apBindingDatas[p] = LoadAPControl(apControls.Element($"Player{p+1}"), controlBindings[p]);
                     }
-                    ControlManager.apControlBindings = new Dictionary<IPlayerControlBinding, APControlBindingData>();
-                    for (int c = 0; c < controlBindings.Length; c++)
+                }
+                else
+                {
+                    for (int p = 0; p < apBindingDatas.Length; p++)
                     {
-                        ControlManager.SetAPControlBinding(controlBindings[c], apBindingDatas[c]);
+                        apBindingDatas[p] = new APNullControlBindingData(controlBindings[p]);
                     }
+                }
+                ControlManager.apControlBindings = new Dictionary<IPlayerControlBinding, APControlBindingData>();
+                for (int c = 0; c < controlBindings.Length; c++)
+                {
+                    ControlManager.SetAPControlBinding(controlBindings[c], apBindingDatas[c]);
                 }
             }
         }
@@ -133,8 +142,13 @@ namespace HammerwatchAP.Hooks
         {
             static void Postfix(object __instance)
             {
-                if (GameBase.Instance == null || GameBase.Instance.Controls == null || GameBase.Instance.Controls.PlayerControls == null) return;
-                IPlayerControlBinding[] controlBindings = GetARPGGameControlBindings();
+                GameControls controls = (GameControls)_fi_ARPGGAME_controls.GetValue(__instance);
+                IPlayerControls[] playerControls = controls.PlayerControls;
+                IPlayerControlBinding[] controlBindings = new IPlayerControlBinding[playerControls.Length];
+                for(int p = 0; p < playerControls.Length; p++)
+                {
+                    controlBindings[p] = playerControls[p].Binding;
+                }
                 Dictionary<IPlayerControlBinding, APControlBindingData> newAPControlBindings = new Dictionary<IPlayerControlBinding, APControlBindingData>();
                 for(int p = 0; p < controlBindings.Length; p++)
                 {
@@ -147,7 +161,7 @@ namespace HammerwatchAP.Hooks
                     {
                         if (controlBindings[p] is PlayerNullControlBinding)
                         {
-                            newAPControlBindings[controlBindings[p]] = null;
+                            newAPControlBindings[controlBindings[p]] = new APNullControlBindingData(controlBindings[p]);
                         }
                         else if (controlBindings[p] is PlayerJoystickControlBinding)
                         {
@@ -189,7 +203,8 @@ namespace HammerwatchAP.Hooks
                 }
                 return apJoystickBinding;
             }
-            return null;
+            APNullControlBindingData apNullBinding = new APNullControlBindingData(controlBinding);
+            return apNullBinding;
         }
     }
 }

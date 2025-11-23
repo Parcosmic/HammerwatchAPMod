@@ -48,7 +48,7 @@ namespace HammerwatchAP.Controls
         }
 
         public override void Update(int ms)
-        {
+		{
 			ExploreSpeed = IsActionActive(ControlManager.APControllerAction.ExploreSpeed);
 			ExploreSpeedPress = ExploreSpeed && !exploreSpeedLastFrame;
 			exploreSpeedLastFrame = ExploreSpeed;
