@@ -233,7 +233,7 @@ namespace HammerwatchAP.Archipelago
                     {
                         case ArchipelagoPacketType.DataPackage:
                             DataPackagePacket dataPackagePacket = (DataPackagePacket)packet;
-                            Logging.Debug("DatapackagePacket with " + dataPackagePacket.DataPackage.Games.Count);
+                            Logging.Debug("Got DatapackagePacket with " + dataPackagePacket.DataPackage.Games.Count);
                             foreach (string game in dataPackagePacket.DataPackage.Games.Keys)
                             {
                                 ArchipelagoManager.gameData[game] = dataPackagePacket.DataPackage.Games[game];
@@ -285,12 +285,12 @@ namespace HammerwatchAP.Archipelago
                             }
                             if(neededGameDatapackages.Count > 0)
                             {
-                                string gameNames = "";
-                                foreach(string name in neededGameDatapackages)
-                                {
-                                    gameNames += name + ", ";
-                                }
-                                Logging.Debug(gameNames);
+                                //string gameNames = "";
+                                //foreach(string name in neededGameDatapackages)
+                                //{
+                                //    gameNames += name + ", ";
+                                //}
+                                //Logging.Debug(gameNames);
                                 //session.Socket.SendPacket(new GetDataPackagePacket(){ Games = neededGameDatapackages.ToArray() });
                                 return;
                             }
@@ -309,8 +309,6 @@ namespace HammerwatchAP.Archipelago
                             break;
                         case ArchipelagoPacketType.Connected:
                             ConnectedPacket cPacket = ((ConnectedPacket)packet);
-
-                            Logging.Debug("ConnectedPacket");
                             //Check version
                             string clientVersion = (string)cPacket.SlotData["Hammerwatch Mod Version"];
                             switch (MiscHelper.CheckVersion(ArchipelagoManager.MOD_VERSION, clientVersion))
@@ -510,6 +508,15 @@ namespace HammerwatchAP.Archipelago
                     ArchipelagoManager.OutputError(e);
                 }
             };
+            session.Socket.SocketClosed += reason =>
+            {
+                if (failedConnectMsg == null)
+                    Logging.Log($"Disconnected from AP socket: {reason}");
+                else
+                    Logging.Log(failedConnectMsg);
+                DisconnectedFromArchipelago();
+                failedConnectMsg = null;
+            };
             ArchipelagoManager.datapackageUpToDate = false;
             loginResult = session.TryConnectAndLogin("Hammerwatch", slotName, ItemsHandlingFlags.IncludeStartingInventory, ArchipelagoManager.AP_VERSION, null, null, password);
 
@@ -558,37 +565,40 @@ namespace HammerwatchAP.Archipelago
                 if (ArchipelagoManager.InGame)
                     ArchipelagoManager.ReceivedDeathlink(deathLinkObject);
             };
-            session.Socket.SocketClosed += reason =>
-            {
-                if (failedConnectMsg == null)
-                    ResourceContext.Log($"Disconnected from AP socket: {reason}");
-                else
-                    ResourceContext.Log(failedConnectMsg);
-                DisconnectedFromArchipelago();
-                failedConnectMsg = null;
-            };
 
             SetConnectionState(ConnectionState.Connected);
             GameBase.Instance.SetMenu(MenuType.MAIN);
             return true;
         }
-        public void Disconnect()
-        {
-            session?.Socket.DisconnectAsync();
-        }
         public void ConnectionError(string errorMessage)
         {
             GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connection Error", errorMessage);
             if (session.Socket.Connected)
-                session.Socket.DisconnectAsync();
-            SetConnectionState(ConnectionState.Disconnected);
+            {
+                DisconnectFromArchipelago(errorMessage);
+            }
+            else
+            {
+                SetConnectionState(ConnectionState.Disconnected);
+            }
+        }
+        public void DisconnectFromArchipelago(string reason = null)
+        {
+            SetConnectionState(ConnectionState.Disconnecting);
+            failedConnectMsg = "Disconnected from Archipelago server";
+            if (reason != null)
+                failedConnectMsg = reason;
+            connectedToAP = false;
+            session?.Socket.DisconnectAsync();
         }
         private void DisconnectedFromArchipelago()
         {
             connectedToAP = false;
             session = null;
             deathLinkService = null;
+            SetConnectionState(ConnectionState.Disconnected);
             ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
+            ArchipelagoManager.DisconnectedFromArchipelago(failedConnectMsg);
             reconnectTimer = Math.Max(lastReconnectWaitTime * 2, RECONNECT_TIMER_START);
             lastReconnectWaitTime = reconnectTimer;
         }
@@ -600,9 +610,19 @@ namespace HammerwatchAP.Archipelago
             //    session.Socket.SendPacket(new GetDataPackagePacket() { Games = neededGameDatapackages.ToArray()});
             //    return;
             //}
-            if(connectionState == ConnectionState.ConnectionResult || connectionState == ConnectionState.ConnectionFailure)
+            switch(connectionState)
             {
-                ConnectionResponse();
+                case ConnectionState.ConnectionResult:
+                case ConnectionState.ConnectionFailure:
+                    ConnectionResponse();
+                    break;
+                case ConnectionState.Connected:
+                    if (session != null && session.Socket != null && !session.Socket.Connected)
+                    {
+                        Logging.Debug("The Socket Disconnected!!");
+                        DisconnectFromArchipelago();
+                    }
+                    break;
             }
             switch(ArchipelagoManager.gameState)
             {
@@ -743,6 +763,7 @@ namespace HammerwatchAP.Archipelago
             ConnectionResult,
             ConnectionFailure,
             Connected,
+            Disconnecting,
 
         }
     }
