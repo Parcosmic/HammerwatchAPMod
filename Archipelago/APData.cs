@@ -515,6 +515,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Bow", "doodads/generic/deco_corpse_weapon_bow.xml" },
                 new string[]{ "bow", "doodads/generic/deco_corpse_weapon_bow.xml" }, //To catch items such as Shortbow or Longbow
                 new string[]{ "Ballista", "doodads/generic/deco_corpse_weapon_bow.xml" },
+                new string[]{ "Archery", "doodads/generic/deco_corpse_weapon_bow.xml" },
 
                 //ALttP/OoT
                 new string[]{ "Rupees (300)", "items/valuable_diamond_red.xml" },
@@ -605,6 +606,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Message", "doodads/generic/deco_bookstand_ground_paper_v3.xml" },
                 new string[]{ "Tablet", "doodads/generic/deco_bookstand_ground_paper_v3.xml" },
                 new string[]{ "Scroll", "doodads/generic/deco_bookstand_ground_paper_v3.xml" },
+                new string[]{ "Ticket", "doodads/generic/deco_bookstand_ground_paper_v3.xml" },
 
                 new string[]{ "Contract", "doodads/generic/deco_bookstand_ground_paper_v3.xml" }, //Cuphead
 
@@ -613,6 +615,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Lore", "doodads/generic/deco_bookstand_ground_book.xml" },
                 new string[]{ "Guide", "doodads/generic/deco_bookstand_ground_book.xml" },
                 new string[]{ "Tome", "doodads/generic/deco_bookstand_ground_book.xml" },
+                new string[]{ "Knowledge", "doodads/generic/deco_bookstand_ground_book.xml" },
 
                 new string[]{ "Bin", "doodads/generic/deco_vendor_cart.xml" }, //SDV
                 new string[]{ "Cart", "doodads/generic/deco_vendor_cart.xml" },
@@ -668,6 +671,9 @@ namespace HammerwatchAP.Archipelago
 
                 //Adjectives
                 new string[]{ "Repair", "items/tool_hammer.xml" },
+                new string[]{ "Construction", "items/tool_hammer.xml" },
+                new string[]{ "Building", "items/tool_hammer.xml" },
+                new string[]{ "Craft", "items/tool_hammer.xml" },
                 new string[]{ "Solar", "doodads/generic/exit_teleport_boss_desert_activated.xml" },
                 new string[]{ "Shine", "doodads/generic/exit_teleport_boss_desert_activated.xml" },
                 new string[]{ "Bronze", "items/valuable_3.xml" },
@@ -678,6 +684,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Stone", "doodads/theme_g/g_deco_ground_stone_v2.xml" },
                 new string[]{ "stone", "doodads/theme_g/g_deco_ground_stone_v2.xml" }, //For words such as Grindstone, Whetstone, etc.
                 new string[]{ "Rock", "doodads/theme_g/g_deco_ground_stone_v2.xml" },
+                new string[]{ "Power", "items/upgrade_damage.xml" },
 
                 new string[]{ "Nothing", "" },
             }},
