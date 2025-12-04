@@ -669,6 +669,7 @@ namespace HammerwatchAP.Archipelago
                 //Adjectives
                 new string[]{ "Repair", "items/tool_hammer.xml" },
                 new string[]{ "Solar", "doodads/generic/exit_teleport_boss_desert_activated.xml" },
+                new string[]{ "Shine", "doodads/generic/exit_teleport_boss_desert_activated.xml" },
                 new string[]{ "Bronze", "items/valuable_3.xml" },
                 new string[]{ "Silver", "items/valuable_6.xml" },
                 new string[]{ "Gold", "items/valuable_9.xml" },
@@ -5068,7 +5069,7 @@ namespace HammerwatchAP.Archipelago
         {
             if (!puzzleCodeToItemId.TryGetValue(code, out int relItemId))
             {
-                ResourceContext.Log("Could not find puzzle item for code: " + code);
+                Logging.Log("Could not find puzzle item for code: " + code);
                 return null;
             }
             int baseId = 0;
@@ -5081,7 +5082,7 @@ namespace HammerwatchAP.Archipelago
                     baseId = templeButtonItemStartID;
                     break;
                 default:
-                    ResourceContext.Log("Unknown campaign: " + archipelagoData.mapType);
+                    Logging.Log("Unknown campaign: " + archipelagoData.mapType);
                     return null;
             }
             return ArchipelagoManager.GetItemName(baseId + relItemId);

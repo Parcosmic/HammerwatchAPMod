@@ -427,7 +427,7 @@ namespace HammerwatchAP.Archipelago
                                     case ConnectionRefusedError.SlotAlreadyTaken:
                                         break;
                                 }
-                                ResourceContext.Log(errorMessage);
+                                Logging.Log(errorMessage);
                                 failedConnectMsg = errorMessage;
                             }
                             SetConnectionState(ConnectionState.ConnectionFailure);

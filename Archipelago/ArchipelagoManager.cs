@@ -113,7 +113,7 @@ namespace HammerwatchAP.Archipelago
 
         public static void LoadMod()
         {
-            ResourceContext.Log($"Load Hammerwatch {GetModVersionString()}");
+            Logging.Log($"Load Hammerwatch {GetModVersionString()}");
 
             SoundHelper.LoadSounds();
 
@@ -126,7 +126,7 @@ namespace HammerwatchAP.Archipelago
                 alwaysOverride = true;
             if (File.Exists(fuzzyDictFilePath) && !alwaysOverride)
             {
-                ResourceContext.Log("Reading ap_item_matching list");
+                Logging.Log("Reading ap_item_matching list");
                 string readFuzzyDict = File.ReadAllText(fuzzyDictFilePath);
                 try
                 {
@@ -135,17 +135,17 @@ namespace HammerwatchAP.Archipelago
                 }
                 catch (Exception)
                 {
-                    ResourceContext.Log("Error while reading ap_item_matching list, falling back to the default list");
+                    Logging.Log("Error while reading ap_item_matching list, falling back to the default list");
                     activeGameFuzzyItemNameToXMLDict = APData.gameFuzzyItemNameToXML;
                     GameBase.Instance.SetMenu(MenuType.MESSAGE, "Mod Load Error", "Failed to load the ap_item_matching.txt file, falling back to the default list");
                 }
             }
             else
             {
-                ResourceContext.Log("ap_item_matching list does not exist, falling back to the default list");
+                Logging.Log("ap_item_matching list does not exist, falling back to the default list");
                 activeGameFuzzyItemNameToXMLDict = APData.gameFuzzyItemNameToXML;
 
-                ResourceContext.Log("Creating ap_item_matching list file");
+                Logging.Log("Creating ap_item_matching list file");
                 string fuzzyDictString = JsonConvert.SerializeObject(APData.gameFuzzyItemNameToXML, Formatting.Indented);
                 fuzzyDictString = fuzzyDictString.Replace("\",\r\n      ", "\", ");
                 fuzzyDictString = fuzzyDictString.Replace("[\r\n      ", "[ ");
@@ -161,7 +161,7 @@ namespace HammerwatchAP.Archipelago
             string trapLinkDictFilePath = Path.Combine(Directory.GetCurrentDirectory(), APMapPatcher.AP_ASSETS_FOLDER, TRAP_LINK_MATCH_FILE);
             if (File.Exists(trapLinkDictFilePath) && !alwaysOverride)
             {
-                ResourceContext.Log("Reading trap_link_matching list");
+                Logging.Log("Reading trap_link_matching list");
                 string readTrapLinkDictString = File.ReadAllText(trapLinkDictFilePath);
                 try
                 {
@@ -169,17 +169,17 @@ namespace HammerwatchAP.Archipelago
                 }
                 catch (Exception)
                 {
-                    ResourceContext.Log("Error while reading trap_link_matching list, falling back to the default list");
+                    Logging.Log("Error while reading trap_link_matching list, falling back to the default list");
                     activeTrapLinkDict = APData.trapLinkInterpretNames;
                     GameBase.Instance.SetMenu(MenuType.MESSAGE, "Mod Load Error", "Failed to load the trap_link_matching.txt file, falling back to the default list");
                 }
             }
             else
             {
-                ResourceContext.Log("trap_link_matching list does not exist, falling back to the default list");
+                Logging.Log("trap_link_matching list does not exist, falling back to the default list");
                 activeTrapLinkDict = APData.trapLinkInterpretNames;
 
-                ResourceContext.Log("Creating trap_link_matching list file");
+                Logging.Log("Creating trap_link_matching list file");
                 string trapLinkDictString = JsonConvert.SerializeObject(APData.trapLinkInterpretNames, Formatting.Indented);
                 File.WriteAllText(trapLinkDictFilePath, trapLinkDictString);
             }
@@ -426,7 +426,7 @@ namespace HammerwatchAP.Archipelago
         {
             if (playingArchipelagoSave)
             {
-                ResourceContext.Log("Changed level to id: " + levelId);
+                Logging.Log("Changed level to id: " + levelId);
                 if (!InGame)
                 {
                     APStartGameSetup();
@@ -443,7 +443,7 @@ namespace HammerwatchAP.Archipelago
                     case 1: //Act keys
                         if (archipelagoData.currentAct != newAct && archipelagoData.currentAct != 0)
                         {
-                            ResourceContext.Log($"Swapping keys for new act {newAct}");
+                            Logging.Log($"Swapping keys for new act {newAct}");
                             int[] akeys = new int[] { 0, 1, 2, 10 };
                             for (int k = 0; k < akeys.Length; k++)
                             {
@@ -1011,7 +1011,7 @@ namespace HammerwatchAP.Archipelago
         }
         public static void CompleteGoal(ArchipelagoData.GoalType winType)
         {
-            ResourceContext.Log($"Completed goal type: {winType}");
+            Logging.Log($"Completed goal type: {winType}");
             if (winType == archipelagoData.goalType)
             {
                 CompleteGoal();
@@ -1189,7 +1189,7 @@ namespace HammerwatchAP.Archipelago
                 }
                 if (xmlName == null)
                 {
-                    ResourceContext.Log($"xmlName was null for item {itemName}!");
+                    Logging.Log($"xmlName was null for item {itemName}!");
                 }
                 return xmlName;
             }
@@ -1332,7 +1332,7 @@ namespace HammerwatchAP.Archipelago
                 ARPGScriptNodeTypeCollection scriptCollection = new ARPGScriptNodeTypeCollection(null, GameBase.Instance.resources);
                 PrefabProducer pref = GameBase.Instance.resources.GetResource<PrefabProducer>("prefabs/bomb_roof_trap.xml");
                 if (pref == null)
-                    ResourceContext.Log("ERROR: failed to get bomb trap resource!!!");
+                    Logging.Log("ERROR: failed to get bomb trap resource!!!");
                 pref.ProduceInGame(spawnPos, GameBase.Instance.resources, GameBase.Instance.world, scriptCollection);
                 QoL.ResetExploreSpeed(defaultPlayer);
             }
@@ -1366,7 +1366,7 @@ namespace HammerwatchAP.Archipelago
                 type = GameBase.Instance.resources.GetResource<ItemType>(APData.itemNameToXML[itemName]);
                 if (type == null)
                 {
-                    ResourceContext.Log($"ERROR: failed to get item resource for item {itemName}!!!");
+                    Logging.Log($"ERROR: failed to get item resource for item {itemName}!!!");
                     return;
                 }
                 WorldObject worldItem = type.Produce(spawnPos);
