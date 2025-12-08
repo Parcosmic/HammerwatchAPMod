@@ -48,6 +48,7 @@ namespace HammerwatchAP.Archipelago
         public static ArchipelagoData archipelagoData = new ArchipelagoData();
         public static GenerateInfo generateInfo = new GenerateInfo();
         public static string saveFileName;
+        public static bool autoloadSave = false;
 
         public static bool inArchipelagoMenu;
         public static bool playingArchipelagoSave;
@@ -282,6 +283,15 @@ namespace HammerwatchAP.Archipelago
             LobbyMenu apMenu = GameBase.Instance.GetMenu<LobbyMenu>();
             if(apMenu != null)
                 SetArchipelagoLevel(apMenu, archipelagoData.mapFileName);
+        }
+        public static void FinishConnectingToAP()
+        {
+            if (GameState != APGameState.InGame)
+                GameBase.Instance.SetMenu(MenuType.MAIN);
+            if(autoloadSave)
+            {
+                APSaveManager.LoadGame(saveFileName);
+            }
         }
         public static void SetArchipelagoLevel(LobbyMenu apMenu, string mapName)
         {

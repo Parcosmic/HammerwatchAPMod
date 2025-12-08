@@ -78,6 +78,7 @@ namespace HammerwatchAP.Hooks
                         List<CodeInstruction> apValidateInstructions = new List<CodeInstruction>()
                         {
                             new CodeInstruction(OpCodes.Ldloc_0),
+                            new CodeInstruction(OpCodes.Ldarg_1),
                             new CodeInstruction(OpCodes.Call, _mi_ValidateAPLoad),
                             new CodeInstruction(OpCodes.Brfalse, codes[c].labels[0]),
                         };
@@ -102,20 +103,39 @@ namespace HammerwatchAP.Hooks
                 return codes;
             }
 
-            static bool ValidateAPLoad(SObject save)
+            static bool ValidateAPLoad(SObject save, string saveName)
             {
-                if (ArchipelagoManager.ConnectedToAP())
+                if (save.Get("ap").Type != SValueType.Null && save.Get("ap").GetBoolean())
                 {
-                    string exitMessage = null;
-                    string loadedSlotName = save.Get("ap-slot-name").GetString();
-                    if (ArchipelagoManager.connectionInfo.slotName != null && ArchipelagoManager.connectionInfo.slotName != loadedSlotName)
-                        exitMessage = "Slot name in save does not match server";
-                    string loadedSeed = save.Get("ap-seed").GetString();
-                    if (ArchipelagoManager.archipelagoData.seed != null && ArchipelagoManager.archipelagoData.seed != loadedSeed)
-                        exitMessage = "Seed in save does not match server";
-                    if (exitMessage != null)
+                    if (ArchipelagoManager.ConnectedToAP())
                     {
-                        GameBase.Instance.SetMenu(MenuType.MESSAGE, new object[] { "Cannot Load Save", exitMessage });
+                        ArchipelagoManager.autoloadSave = false;
+                        string exitMessage = null;
+                        string loadedSlotName = save.Get("ap-slot-name").GetString();
+                        if (ArchipelagoManager.connectionInfo.slotName != null && ArchipelagoManager.connectionInfo.slotName != loadedSlotName)
+                            exitMessage = "Slot name in save does not match server";
+                        string loadedSeed = save.Get("ap-seed").GetString();
+                        if (ArchipelagoManager.archipelagoData.seed != null && ArchipelagoManager.archipelagoData.seed != loadedSeed)
+                            exitMessage = "Seed in save does not match server";
+                        if (exitMessage != null)
+                        {
+                            GameBase.Instance.SetMenu(MenuType.MESSAGE, new object[] { "Cannot Load Save", exitMessage });
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!ArchipelagoManager.connectionInfo.ConnectionActive)
+                        {
+                            Logging.Log("Attempted to load Archipelago save without connecting, halting loading to connect first");
+                            ArchipelagoManager.autoloadSave = true;
+                            ArchipelagoManager.saveFileName = saveName;
+                            Logging.Debug("Autoload save file " + ArchipelagoManager.saveFileName);
+                            string loadedIp = save.Get("ap-ip").GetString();
+                            string loadedSlotName = save.Get("ap-slot-name").GetString();
+                            string password = save.Get("ap-password").GetString();
+                            ArchipelagoManager.StartConnection(loadedIp, loadedSlotName, password);
+                        }
                         return false;
                     }
                 }

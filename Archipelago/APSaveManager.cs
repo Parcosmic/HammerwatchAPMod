@@ -374,7 +374,7 @@ namespace HammerwatchAP.Archipelago
                                 continue;
                             }
                         }
-                        saveName = Path.GetFileName(saveFile);
+                        saveName = Path.GetFileNameWithoutExtension(saveFile);
                     }
                     catch (Exception e)
                     {

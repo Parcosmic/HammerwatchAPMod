@@ -385,7 +385,7 @@ namespace HammerwatchAP.Archipelago
                             }
 
                             //If we don't have a save with the seed name, then we have to scout all the locations to generate a map
-                            if (Directory.Exists("saves"))
+                            if (Directory.Exists("saves") && !ArchipelagoManager.autoloadSave)
                             {
                                 ArchipelagoManager.saveFileName = APSaveManager.GetLatestSaveNameWithConnectionInfo(ip, archipelagoData.seed, slotName);
                             }
@@ -562,8 +562,7 @@ namespace HammerwatchAP.Archipelago
             };
 
             SetConnectionState(ConnectionState.Connected);
-            if(ArchipelagoManager.GameState != ArchipelagoManager.APGameState.InGame)
-                GameBase.Instance.SetMenu(MenuType.MAIN);
+            ArchipelagoManager.FinishConnectingToAP();
             return true;
         }
         public void ConnectionError(string errorMessage)

@@ -134,7 +134,6 @@ namespace HammerwatchAP.Hooks
 			Widget mainGrp = (Widget)_fi_MainMenu_mainGrp.GetValue(mainMenu);
 			Widget multiplayerGrp = (Widget)_fi_MainMenu_multiplayerGrp.GetValue(mainMenu);
 			TextWidget firstTextButton = (TextWidget)mainGrp.Children[3].Children[0].Children[0];
-			//TextWidget secondTextButton = (ButtonWidget)mainGrp.GetWidget("multiplayer");
 			TextWidget thirdTextButton = (TextWidget)mainGrp.Children[5].Children[0].Children[0];
 			TextWidget multiplayerLocalButton = (TextWidget)multiplayerGrp.Children[0].Children[0].Children[0];
 			TextWidget multiplayerHostButton = (TextWidget)multiplayerGrp.Children[1].Children[0].Children[0];
@@ -152,8 +151,6 @@ namespace HammerwatchAP.Hooks
 			{
 				firstTextButton.SetText("Single");
 				thirdTextButton.SetText("Archipelago");
-				//multiplayerLocalButton.SetText((string)_mi_LanguageManager_Get.Invoke(null, new object[] { "m.localg", new string[0] }));
-				//multiplayerHostButton.SetText((string)_mi_LanguageManager_Get.Invoke(null, new object[] { "m.hostg", new string[0] }));
 				multiplayerLocalButton.SetText(ArchipelagoMessageManager.GetLanguageString( "m.localg", new string[0] ));
 				multiplayerHostButton.SetText(ArchipelagoMessageManager.GetLanguageString("m.hostg", new string[0] ));
 			}
@@ -173,8 +170,7 @@ namespace HammerwatchAP.Hooks
 							{
 								if (ArchipelagoManager.saveFileName != null)
 								{
-									//GameSaver.LoadGame(GameBase.Instance, Path.GetFileNameWithoutExtension(ArchipelagoManager.saveFileName));
-									APSaveManager.LoadGame(Path.GetFileNameWithoutExtension(ArchipelagoManager.saveFileName));
+									APSaveManager.LoadGame(ArchipelagoManager.saveFileName);
 									return;
 								}
 								GameBase.Instance.SetMenu(MenuType.LOBBY, new object[]
@@ -194,7 +190,7 @@ namespace HammerwatchAP.Hooks
 							{
 								if (ArchipelagoManager.saveFileName != null)
 								{
-									APSaveManager.LoadGame(Path.GetFileNameWithoutExtension(ArchipelagoManager.saveFileName));
+									APSaveManager.LoadGame(ArchipelagoManager.saveFileName);
 									return;
 								}
 								GameBase.Instance.SetMenu(MenuType.LOBBY, new object[]
@@ -214,8 +210,7 @@ namespace HammerwatchAP.Hooks
 							{
 								if (ArchipelagoManager.saveFileName != null)
 								{
-									//GameSaver.LoadGame(GameBase.Instance, Path.GetFileNameWithoutExtension(ArchipelagoManager.saveFileName));
-									APSaveManager.LoadGame(Path.GetFileNameWithoutExtension(ArchipelagoManager.saveFileName));
+									APSaveManager.LoadGame(ArchipelagoManager.saveFileName);
 									return;
 								}
 								GameBase.Instance.SetMenu(MenuType.LOBBY, new object[]
