@@ -58,19 +58,23 @@ namespace HammerwatchAP.Archipelago
 
         public static Dictionary<string, Dictionary<long, string>> remoteItemToXmlNameCache = new Dictionary<string, Dictionary<long, string>>();
 
-        public static GameState gameState;
+        public static APGameState GameState
+        {
+            get;
+            private set;
+        }
         public static bool InGame
         {
             get
             {
-                return gameState == GameState.InGame;
+                return GameState == APGameState.InGame;
             }
         }
         public static bool MapFinishedGenerating
         {
             get
             {
-                return gameState > GameState.Generating;
+                return GameState > APGameState.Generating;
             }
         }
 
@@ -209,6 +213,7 @@ namespace HammerwatchAP.Archipelago
 
         public static void InitializeAPVariables(ArchipelagoData archipelagoData)
         {
+            archipelagoData.seed = null;
             gameChecksums = new Dictionary<string, string>();
 
             ArchipelagoManager.archipelagoData = archipelagoData;
@@ -248,7 +253,7 @@ namespace HammerwatchAP.Archipelago
             connectionInfo = new ConnectionInfo(slotName, ip, password);
             //Start connecting
             GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connecting", "Connecting to Archipelago server...");
-            SetGameState(GameState.StartConnect);
+            SetGameState(APGameState.MainMenuStartConnect);
         }
         public static void DisconnectFromArchipelago(string reason=null)
         {
@@ -267,7 +272,7 @@ namespace HammerwatchAP.Archipelago
         }
         public static void CompletedGeneration()
         {
-            SetGameState(GameState.Generated);
+            SetGameState(APGameState.Generated);
             GameBase.Instance.CloseMenu(MenuType.MESSAGE);
 
             MainMenu mainMenu = GameBase.Instance.GetMenu<MainMenu>();
@@ -301,9 +306,10 @@ namespace HammerwatchAP.Archipelago
             }
         }
 
-        public static void SetGameState(GameState newState)
+        public static void SetGameState(APGameState newState)
         {
-            gameState = newState;
+            Logging.Debug($"GameState set to {newState}");
+            GameState = newState;
         }
 
         public static void GameUpdate(int ms)
@@ -312,16 +318,16 @@ namespace HammerwatchAP.Archipelago
             {
                 connectionInfo.GameUpdate(ms);
             }
-            if(gameState == GameState.StartConnect)
+            if(GameState == APGameState.MainMenuStartConnect)
             {
-                SetGameState(GameState.Connecting);
+                SetGameState(APGameState.MainMenuConnecting);
                 connectionInfo.StartConnection(null, true, false);
             }
             if (playingArchipelagoSave)
             {
-                switch(gameState)
+                switch(GameState)
                 {
-                    case GameState.Generating:
+                    case APGameState.Generating:
                         if(GameBase.Instance.GetMenu<MessageMenu>() == null)
                         {
                             GameBase.Instance.SetMenu(MenuType.MESSAGE, "Generation In Progress", "Generating map file...");
@@ -346,7 +352,7 @@ namespace HammerwatchAP.Archipelago
                             }
                         }
                         break;
-                    case GameState.InGame:
+                    case APGameState.InGame:
                         if (GameBase.Instance.Players[0] != null && GameBase.Instance.Players[0].Actor != null)
                         {
                             if (archipelagoData != null)
@@ -406,7 +412,7 @@ namespace HammerwatchAP.Archipelago
         {
             Logging.Log($"Doing AP game start setup as {(IsHostPlayer() ? "host" : "remote")} with {GameBase.Instance.Players.Count} player(s)");
             random = new Random();
-            SetGameState(GameState.InGame);
+            SetGameState(APGameState.InGame);
 
             //Refresh killedBosses array if we resume a game
             for (int b = 0; b < archipelagoData.killedBosses.Length; b++)
@@ -1606,7 +1612,7 @@ namespace HammerwatchAP.Archipelago
             }
             public void Reset()
             {
-                SetGameState(GameState.MainMenu);
+                SetGameState(APGameState.MainMenu);
                 gameReady = false;
                 saveIsLoaded = false;
             }
@@ -1618,11 +1624,11 @@ namespace HammerwatchAP.Archipelago
             }
         }
 
-        public enum GameState
+        public enum APGameState
         {
             MainMenu,
-            StartConnect,
-            Connecting,
+            MainMenuStartConnect,
+            MainMenuConnecting,
             StartGenerate,
             Generating,
             FailedGenerate,

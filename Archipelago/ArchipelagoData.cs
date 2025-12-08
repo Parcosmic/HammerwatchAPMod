@@ -11,7 +11,7 @@ namespace HammerwatchAP.Archipelago
 {
     public class ArchipelagoData
     {
-        public string seed;
+        public string seed = null;
         public bool? raceMode = null;
         public int itemIndexCounter;
         public int itemsReceived;
@@ -77,11 +77,12 @@ namespace HammerwatchAP.Archipelago
             FullCompletion,
             Alternate,
         }
-        public void CheckLocation(Vector2 pos, bool showPickupMessage = false)
+        public int CheckLocation(Vector2 pos, bool showPickupMessage = false)
         {
-            if (!ArchipelagoManager.playingArchipelagoSave) return;
+            if (!ArchipelagoManager.playingArchipelagoSave) return -1;
             int locId = GetLocationIdFromPos(pos, currentLevelName);
             CheckLocation(locId, showPickupMessage);
+            return locId;
         }
         public void CheckLocation(long locationID, bool showPickupMessage)
         {
@@ -89,7 +90,7 @@ namespace HammerwatchAP.Archipelago
             if (allLocalLocations != null && !allLocalLocations.Contains(locationID)) return; //This item is a randomized location, but it isn't active this game
             if (!checkedLocations.Contains(locationID))
             {
-                Console.WriteLine($"Found check: {locationID}");
+                Logging.Debug($"Found check: {locationID}");
                 checkedLocations.Add(locationID);
                 if (ArchipelagoManager.ConnectedToAP())
                 {
@@ -109,10 +110,6 @@ namespace HammerwatchAP.Archipelago
             }
         }
 
-        public void Update(ArchipelagoData otherData)
-        {
-            throw new NotImplementedException();
-        }
         public void PickupItemEffectsXml(string xmlName, bool receive) //For item effects based on the xml name of the item
         {
             bool hasPickaxe = false;
@@ -250,10 +247,6 @@ namespace HammerwatchAP.Archipelago
                     return MapType.Castle;
             }
         }
-        public void SetMapType()
-        {
-            mapType = GetMapType(GetOption(SlotDataKeys.goal));
-        }
         public void SetGoalType()
         {
             switch (GetOption(SlotDataKeys.goal) % 10)
@@ -276,7 +269,7 @@ namespace HammerwatchAP.Archipelago
         {
             slotData = newSlotData;
 
-            SetMapType();
+            mapType = GetMapType(GetOption(SlotDataKeys.goal));
             SetGoalType();
 
             plankHuntRequirement = GetOption(SlotDataKeys.planksRequiredCount);

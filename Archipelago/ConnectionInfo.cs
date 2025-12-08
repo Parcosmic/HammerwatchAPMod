@@ -39,7 +39,7 @@ namespace HammerwatchAP.Archipelago
 
         private int reconnectTimer = 0;
         private int lastReconnectWaitTime = 0;
-        private const int RECONNECT_TIMER_START = 15000;
+        private const int RECONNECT_TIMER_START = 5000;
 
         public ArchipelagoSession session;
         private DeathLinkService deathLinkService;
@@ -114,11 +114,6 @@ namespace HammerwatchAP.Archipelago
                     reconnectTimer = 0;
                     lastReconnectWaitTime = 0;
                 }
-                else
-                {
-                    reconnectTimer = Math.Max(lastReconnectWaitTime * 2, RECONNECT_TIMER_START);
-                    lastReconnectWaitTime = reconnectTimer;
-                }
             }
             catch (Exception e)
             {
@@ -137,7 +132,6 @@ namespace HammerwatchAP.Archipelago
         }
         private bool ConnectToArchipelago(string ip, string slotName, string password, ArchipelagoData loadedArchipelagoData, bool resetVars)
         {
-            ArchipelagoManager.gameState = ArchipelagoManager.GameState.Connecting;
             SetConnectionState(ConnectionState.SetupSession);
 
             Logging.LogConnectionInfo(ip);
@@ -151,13 +145,12 @@ namespace HammerwatchAP.Archipelago
 
             SetConnectionState(ConnectionState.ServerAuth);
 
-            ArchipelagoData archipelagoData = new ArchipelagoData();
+            ArchipelagoData archipelagoData = loadedArchipelagoData ?? new ArchipelagoData();
             if (resetVars)
             {
-                archipelagoData.seed = null;
                 ArchipelagoManager.InitializeAPVariables(archipelagoData);
             }
-            archipelagoData.itemIndexCounter = 0; //This ALWAYS needs to be reset, regardless of reconnecting. The server will always send all of our items again to us upon a new connection
+            archipelagoData.itemIndexCounter = 0; //This ALWAYS needs to be reset, regardless of reconnecting. This represents which index from the server we've processed up to
 
             this.ip = ip;
             this.slotName = slotName;
@@ -220,6 +213,11 @@ namespace HammerwatchAP.Archipelago
                         }
                         break;
                     default:
+                        if(wholeMessage.Contains("Warning: your client does not support compressed websocket connections! It may stop working in the future. If you are a player, please report this to the client's developer."))
+                        {
+                            //Block the compressed websocket message, it's a lib problem anyways
+                            break;
+                        }
                         ArchipelagoMessageManager.SendHWMessage(wholeMessage);
                         break;
                 }
@@ -285,13 +283,6 @@ namespace HammerwatchAP.Archipelago
                             }
                             if(neededGameDatapackages.Count > 0)
                             {
-                                //string gameNames = "";
-                                //foreach(string name in neededGameDatapackages)
-                                //{
-                                //    gameNames += name + ", ";
-                                //}
-                                //Logging.Debug(gameNames);
-                                //session.Socket.SendPacket(new GetDataPackagePacket(){ Games = neededGameDatapackages.ToArray() });
                                 return;
                             }
                             ArchipelagoManager.datapackageUpToDate = true;
@@ -391,7 +382,6 @@ namespace HammerwatchAP.Archipelago
                                     SetConnectionState(ConnectionState.ConnectionFailure);
                                     return;
                                 }
-                                archipelagoData.Update(loadedArchipelagoData);
                             }
 
                             //If we don't have a save with the seed name, then we have to scout all the locations to generate a map
@@ -438,10 +428,12 @@ namespace HammerwatchAP.Archipelago
                             //If the server's received items index is less than ours, reset ours to the server so we can at least receive new items
                             if (rIPacket.Index == 0 && rIPacket.Items.Length < archipelagoData.itemsReceived)
                             {
+                                Logging.Log("Server has less received items than we do! This means item history will likely be divergent between the server and this save!!");
                                 archipelagoData.itemsReceived = rIPacket.Items.Length;
                             }
 
                             NetworkItem[] items = rIPacket.Items;
+                            List<NetworkItem> itemsToReceive = new List<NetworkItem>(rIPacket.Items.Length);
                             foreach (NetworkItem item in items)
                             {
                                 string itemName = ArchipelagoManager.GetReceiveItemName(item);
@@ -458,12 +450,15 @@ namespace HammerwatchAP.Archipelago
                                     }
                                     continue;
                                 }
-                                Logging.Debug($"Received {itemName}");
+                                Logging.Debug($"Queued to receive: {itemName}");
+                                itemsToReceive.Add(item);
                             }
-                            ArchipelagoManager.archipelagoData.itemsToReceive.AddRange(items);
+
+                            ArchipelagoManager.archipelagoData.itemsToReceive.AddRange(itemsToReceive);
                             break;
                         case ArchipelagoPacketType.LocationInfo:
-                            if (archipelagoData.locationToItem.Count > 0) return;
+                            if (archipelagoData.locationToItem.Count > 0) return; //We can receive more LocationInfo packets after broadcasting hints, ignore those
+                            //Save initial location scouts data and proceed with generation
                             LocationInfoPacket locPacket = (LocationInfoPacket)packet;
                             Dictionary<long, NetworkItem> locationToItem = new Dictionary<long, NetworkItem>(locPacket.Locations.Length);
                             foreach (NetworkItem item in locPacket.Locations)
@@ -474,7 +469,7 @@ namespace HammerwatchAP.Archipelago
 
                             if (ArchipelagoManager.archipelagoData.saveFileName == null)
                             {
-                                ArchipelagoManager.gameState = ArchipelagoManager.GameState.StartGenerate;
+                                ArchipelagoManager.SetGameState(ArchipelagoManager.APGameState.StartGenerate);
                             }
                             else
                             {
@@ -513,7 +508,7 @@ namespace HammerwatchAP.Archipelago
                 if (failedConnectMsg == null)
                     Logging.Log($"Disconnected from AP socket: {reason}");
                 else
-                    Logging.Log(failedConnectMsg);
+                    Logging.Log($"Disconnected from AP socket: {failedConnectMsg}");
                 DisconnectedFromArchipelago();
                 failedConnectMsg = null;
             };
@@ -567,18 +562,25 @@ namespace HammerwatchAP.Archipelago
             };
 
             SetConnectionState(ConnectionState.Connected);
-            GameBase.Instance.SetMenu(MenuType.MAIN);
+            if(ArchipelagoManager.GameState != ArchipelagoManager.APGameState.InGame)
+                GameBase.Instance.SetMenu(MenuType.MAIN);
             return true;
         }
         public void ConnectionError(string errorMessage)
         {
-            GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connection Error", errorMessage);
+            if(ArchipelagoManager.GameState != ArchipelagoManager.APGameState.InGame)
+                GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connection Error", errorMessage);
+            else
+            {
+                ArchipelagoMessageManager.SendHWErrorMessage(errorMessage);
+            }
             if (session.Socket.Connected)
             {
                 DisconnectFromArchipelago(errorMessage);
             }
             else
             {
+                RefreshReconnectTimer();
                 SetConnectionState(ConnectionState.Disconnected);
             }
         }
@@ -594,13 +596,17 @@ namespace HammerwatchAP.Archipelago
         private void DisconnectedFromArchipelago()
         {
             connectedToAP = false;
-            session = null;
             deathLinkService = null;
             SetConnectionState(ConnectionState.Disconnected);
-            ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
             ArchipelagoManager.DisconnectedFromArchipelago(failedConnectMsg);
+            RefreshReconnectTimer();
+        }
+        private void RefreshReconnectTimer()
+        {
             reconnectTimer = Math.Max(lastReconnectWaitTime * 2, RECONNECT_TIMER_START);
             lastReconnectWaitTime = reconnectTimer;
+            ArchipelagoMessageManager.SendHWErrorMessage($"Reconnecting in {reconnectTimer / 1000} seconds...");
+            Logging.Debug($"Refreshed reconnect timer, now waiting {reconnectTimer} ms to reconnect");
         }
 
         public void GameUpdate(int ms)
@@ -619,14 +625,26 @@ namespace HammerwatchAP.Archipelago
                 case ConnectionState.Connected:
                     if (session != null && session.Socket != null && !session.Socket.Connected)
                     {
-                        Logging.Debug("The Socket Disconnected!!");
-                        DisconnectFromArchipelago();
+                        Logging.Debug("The Socket Disconnected!");
+                        DisconnectFromArchipelago("Lost connection to Archipelago server");
+                    }
+                    break;
+                case ConnectionState.Disconnected:
+                    //Reconnect if the reconnect timer is done ticking
+                    if(reconnectTimer > 0)
+                    {
+                        reconnectTimer -= ms;
+                        if(reconnectTimer <= 0)
+                        {
+                            ArchipelagoMessageManager.SendHWErrorMessage("Reconnecting to Archipelago server...");
+                            StartConnection(ArchipelagoManager.archipelagoData, false, true, false);
+                        }
                     }
                     break;
             }
-            switch(ArchipelagoManager.gameState)
+            switch(ArchipelagoManager.GameState)
             {
-                case ArchipelagoManager.GameState.StartGenerate:
+                case ArchipelagoManager.APGameState.StartGenerate:
                     if (GameBase.Instance.GetMenu<MessageMenu>() == null)
                     {
                         GameBase.Instance.SetMenu(MenuType.MESSAGE, "Generation In Progress", "Generating map file...");
@@ -634,7 +652,7 @@ namespace HammerwatchAP.Archipelago
                     }
                     try
                     {
-                        ArchipelagoManager.gameState = ArchipelagoManager.GameState.Generating;
+                        ArchipelagoManager.SetGameState(ArchipelagoManager.APGameState.Generating);
                         string baseFile = ArchipelagoManager.archipelagoData.mapType == MapType.Castle ? "levels\\campaign.hwm" : "levels\\campaign2.hwm";
                         if (!APMapPatcher.CreateAPMapFile(baseFile, session.RoomState.Seed, session.ConnectionInfo.Slot, out ArchipelagoManager.archipelagoData.mapFileName, this, ArchipelagoManager.archipelagoData))
                         {
@@ -643,7 +661,7 @@ namespace HammerwatchAP.Archipelago
                     }
                     catch (Exception e)
                     {
-                        ArchipelagoManager.gameState = ArchipelagoManager.GameState.FailedGenerate;
+                        ArchipelagoManager.SetGameState(ArchipelagoManager.APGameState.FailedGenerate);
                         ArchipelagoManager.OutputError(e);
                     }
                     ArchipelagoManager.CompletedGeneration();
@@ -717,6 +735,7 @@ namespace HammerwatchAP.Archipelago
         }
         public void SendTrapLink(NetworkItem item)
         {
+            if (!ConnectionActive) return;
             string itemName = ArchipelagoManager.GetReceiveItemName(item);
             SendTrapLink(itemName);
         }
@@ -755,7 +774,6 @@ namespace HammerwatchAP.Archipelago
 
         public enum ConnectionState
         {
-            Unconnected,
             Disconnected,
             SetupSession,
             ServerAuth,

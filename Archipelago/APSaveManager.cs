@@ -179,8 +179,7 @@ namespace HammerwatchAP.Archipelago
                 connectionData.StartConnection(archipelagoData);
                 if (!connectionData.connectedToAP)
                 {
-                    GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connection Error", "Failed to connect to Archipelago server");
-                    ArchipelagoManager.DisconnectFromArchipelago();
+                    connectionData.ConnectionError("Failed to connect to Archipelago server");
                     GameBase.Instance.ResetGame(false);
                 }
             }
