@@ -127,9 +127,9 @@ namespace HammerwatchAP.Archipelago
             if (File.Exists(fuzzyDictFilePath) && !alwaysOverride)
             {
                 Logging.Log("Reading ap_item_matching list");
-                string readFuzzyDict = File.ReadAllText(fuzzyDictFilePath);
                 try
                 {
+                    string readFuzzyDict = File.ReadAllText(fuzzyDictFilePath);
                     Dictionary<string, List<string[]>> readGameFuzzyItemNameToXMLDict = JsonConvert.DeserializeObject<Dictionary<string, List<string[]>>>(readFuzzyDict);
                     activeGameFuzzyItemNameToXMLDict = readGameFuzzyItemNameToXMLDict;
                 }
@@ -150,7 +150,14 @@ namespace HammerwatchAP.Archipelago
                 fuzzyDictString = fuzzyDictString.Replace("\",\r\n      ", "\", ");
                 fuzzyDictString = fuzzyDictString.Replace("[\r\n      ", "[ ");
                 fuzzyDictString = fuzzyDictString.Replace("\"\r\n    ", "\" ");
-                File.WriteAllText(fuzzyDictFilePath, fuzzyDictString);
+                try
+                {
+                    File.WriteAllText(fuzzyDictFilePath, fuzzyDictString);
+                }
+                catch(Exception)
+                {
+                    Logging.Log("Failed to write ap_item_matching list file!");
+                }
             }
             remoteItemToXmlNameCache = new Dictionary<string, Dictionary<long, string>>
             {
@@ -162,9 +169,9 @@ namespace HammerwatchAP.Archipelago
             if (File.Exists(trapLinkDictFilePath) && !alwaysOverride)
             {
                 Logging.Log("Reading trap_link_matching list");
-                string readTrapLinkDictString = File.ReadAllText(trapLinkDictFilePath);
                 try
                 {
+                    string readTrapLinkDictString = File.ReadAllText(trapLinkDictFilePath);
                     activeTrapLinkDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(readTrapLinkDictString);
                 }
                 catch (Exception)
@@ -181,7 +188,14 @@ namespace HammerwatchAP.Archipelago
 
                 Logging.Log("Creating trap_link_matching list file");
                 string trapLinkDictString = JsonConvert.SerializeObject(APData.trapLinkInterpretNames, Formatting.Indented);
-                File.WriteAllText(trapLinkDictFilePath, trapLinkDictString);
+                try
+                {
+                    File.WriteAllText(trapLinkDictFilePath, trapLinkDictString);
+                }
+                catch (Exception)
+                {
+                    Logging.Log("Failed to write trap_link_matching list file!");
+                }
             }
 
             QoL.Setup();
