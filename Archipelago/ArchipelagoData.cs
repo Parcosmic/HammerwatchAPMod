@@ -81,6 +81,7 @@ namespace HammerwatchAP.Archipelago
         {
             if (!ArchipelagoManager.playingArchipelagoSave) return -1;
             int locId = GetLocationIdFromPos(pos, currentLevelName);
+            if (locId == -1) return locId;
             CheckLocation(locId, showPickupMessage);
             return locId;
         }
@@ -108,6 +109,19 @@ namespace HammerwatchAP.Archipelago
             {
                 ArchipelagoManager.AddPickupMessageToQueue(item);
             }
+        }
+        public int CheckItemLocation(int nodeID, Vector2 position, bool showPickupMessage = false)
+        {
+            int locationID = ArchipelagoManager.GetDynamicLocation(nodeID);
+            if (locationID == -1)
+            {
+                locationID = ArchipelagoManager.archipelagoData.CheckLocation(position, showPickupMessage);
+            }
+            else
+            {
+                ArchipelagoManager.archipelagoData.CheckLocation(locationID, true);
+            }
+            return locationID;
         }
 
         public void PickupItemEffectsXml(string xmlName, bool receive) //For item effects based on the xml name of the item
@@ -373,9 +387,9 @@ namespace HammerwatchAP.Archipelago
         public int GetLocationIdFromPos(Vector2 pos, string levelId)
         {
             int locId = APData.GetLocationIdFromPos(mapType, levelId, pos);
-            locId = APData.GetAdjustedLocationId(locId, this);
             if (locId == -1)
                 return -1;
+            locId = APData.GetAdjustedLocationId(locId, this);
             return locId;
         }
         public int GetGenLocationIdFromPos(Vector2 pos, string levelFile)
@@ -411,6 +425,7 @@ namespace HammerwatchAP.Archipelago
             string xmlName = null;
             long locationId = GetGenLocationIdFromPos(pos, levelFile);
             //If this location was checked (likely by someone playing the same slot beforehand) there shouldn't be an item there
+            if (locationId == -1) return "";
             if (checkedLocations.Contains(locationId) && ArchipelagoManager.IsItemOurs(GetItemFromLoc(locationId), false)) return "";
             if (locationToItem.ContainsKey(locationId))
             {

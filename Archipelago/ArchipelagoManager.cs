@@ -556,6 +556,7 @@ namespace HammerwatchAP.Archipelago
                         void SpawnButtonEventItem(int location)
                         {
                             long locId = APData.GetAdjustedLocationId(location, archipelagoData);
+                            if (locId == -1) return;
                             NetworkItem item = archipelagoData.GetItemFromLoc(locId);
                             if (item.Item == -1) return;
                             archipelagoData.CheckLocation(locId, true);
@@ -1576,6 +1577,7 @@ namespace HammerwatchAP.Archipelago
 
         public static void AddDynamicLocation(int itemNodeID, int locationID)
         {
+            //Logging.Debug($"Creating dynamic location (location ID: {locationID}, item node ID: {itemNodeID})");
             if (!archipelagoData.dynamicItemLocations.ContainsKey(archipelagoData.currentLevelName))
                 archipelagoData.dynamicItemLocations[archipelagoData.currentLevelName] = new Dictionary<int, int>();
             archipelagoData.dynamicItemLocations[archipelagoData.currentLevelName][itemNodeID] = locationID;
@@ -1584,14 +1586,15 @@ namespace HammerwatchAP.Archipelago
         {
             if (!archipelagoData.dynamicItemLocations.TryGetValue(archipelagoData.currentLevelName, out Dictionary<int, int> levelDynamicLocs))
             {
-                //Logging.Log($"Dynamic location doesn't exist for current level (item node ID: {itemNodeID})!");
+                //Logging.Debug($"Dynamic location doesn't exist for current level (item node ID: {itemNodeID})!");
                 return -1;
             }
             if (!levelDynamicLocs.TryGetValue(itemNodeID, out int dynamicLoc))
             {
-                //Logging.Log($"Dynamic location doesn't exist for item node ID: {itemNodeID}!");
+                //Logging.Debug($"Dynamic location doesn't exist for item node ID: {itemNodeID}!");
                 return -1;
             }
+            //Logging.Debug($"Found dynamic location for item node ID: {itemNodeID} - location id: {dynamicLoc}");
             levelDynamicLocs.Remove(itemNodeID);
             return dynamicLoc;
         }

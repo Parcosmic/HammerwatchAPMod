@@ -24,11 +24,12 @@ namespace HammerwatchAP.Hooks
         [HarmonyPatch(typeof(WorldItemPickupBehavior), nameof(WorldItemPickupBehavior.TryPickup))]
         internal static class TryPickup
         {
+            //For consumables that you might not be able to pick up, this lets us report to the server that we found the check
             static void Postfix(WorldItemPickupBehavior __instance, WorldItem item, bool ___taken)
             {
                 if (!___taken)
                 {
-                    ArchipelagoManager.archipelagoData.CheckLocation(item.Position);
+                    ArchipelagoManager.archipelagoData.CheckItemLocation(item.NodeId, item.Position);
                 }
             }
         }
@@ -48,17 +49,8 @@ namespace HammerwatchAP.Hooks
                             ___pickupText = ArchipelagoManager.GetSendItemMessageFromPos(item.Position); //For floor master keys/boss runes?
                         }
                     }
-                    int dynamicLocationID = ArchipelagoManager.GetDynamicLocation(item.NodeId);
-                    if (dynamicLocationID == -1)
-                    {
-                        int locId = ArchipelagoManager.archipelagoData.CheckLocation(item.Position, string.IsNullOrEmpty(___pickupText));
-                        ArchipelagoManager.PickupItemEffects(locId);
-                    }
-                    else
-                    {
-                        ArchipelagoManager.archipelagoData.CheckLocation(dynamicLocationID, true);
-                        ArchipelagoManager.PickupItemEffects(dynamicLocationID);
-                    }
+                    int location = ArchipelagoManager.archipelagoData.CheckItemLocation(item.NodeId, item.Position, string.IsNullOrEmpty(___pickupText));
+                    ArchipelagoManager.PickupItemEffects(location);
                     ArchipelagoManager.PickupItemEffectsXml(item.Producer.Name, false);
                 }
             }
