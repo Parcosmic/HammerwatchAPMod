@@ -1999,6 +1999,18 @@ namespace HammerwatchAP.Archipelago
 
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(plankNodeIdCounter, new Vector2(30, -26.5f), 1)); //Offset +0,+2 from RectangleShape
                             break;
+                        case "level_esc_1.xml": //First escape room
+                            //Unhook game end node
+                            NodeHelper.SetConnectionNodes(idToNode["159"], 63);
+                            break;
+                        case "level_esc_2.xml": //Second escape room
+                            //Unhook game end node
+                            NodeHelper.SetConnectionNodes(idToNode["64"], 22);
+                            break;
+                        case "level_esc_3.xml": //Third escape room
+                            //Unhook game end node
+                            NodeHelper.SetConnectionNodes(idToNode["440"], 436);
+                            break;
                         case "level_esc_4.xml": //Last escape room
                             //Prevent the level from collapsing if the player doesn't have the hammer
                             int e4CheckHammerFlagNodeId = modNodeStartId++;
@@ -2023,9 +2035,9 @@ namespace HammerwatchAP.Archipelago
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 8000 });
                             scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(0, 14), "Well?", 2000, 0, true, -1));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 3000 });
-                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(0, 16), "You're going to have to quit out", 120000, 0, true, -1));
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(0, 16), "Come back with the hammer!", 120000, 0, true, -1));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 3000 });
-                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(2, 18), "Fight the dragon WITH the hammer this time!!", 117000, 1, true, -1));
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(2, 18), "Use the /t command to return back to the start", 117000, 1, true, -1));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
                             scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4TauntBasePos + new Vector2(4, 20), "Go on, shoo", 3000, 2, true, -1));
                             //Disable the game from ending (avoids potential softlocks, it doesn't add anything to the randomizer anyway)
