@@ -195,6 +195,35 @@ namespace HammerwatchAP.Archipelago
             }},
         };
 
+        private static readonly float[] pegDistribution = new float[26]{
+            2.98023223877e-8f,
+            7.45058059692e-7f,
+            0.00000894069671631f,
+            0.0000685453414917f,
+            0.000376999378204f,
+            0.00158339738846f,
+            0.00527799129486f,
+            0.0143259763718f,
+            0.0322334468365f,
+            0.06088539958f,
+            0.097416639328f,
+            0.132840871811f,
+            0.154981017113f,
+            0.154981017113f,
+            0.132840871811f,
+            0.097416639328f,
+            0.06088539958f,
+            0.0322334468365f,
+            0.0143259763718f,
+            0.00527799129486f,
+            0.00158339738846f,
+            0.000376999378204f,
+            0.0000685453414917f,
+            0.00000894069671631f,
+            7.45058059692e-7f,
+            2.98023223877e-8f,
+        };
+
         public static string GetAPMapFileName(string seed, int slotId)
         {
             return seed != null ? $"archipelago-{seed}-{slotId}.hwm" : null;
@@ -542,6 +571,8 @@ namespace HammerwatchAP.Archipelago
                     {
                         fragmentsGroup.Add(NodeHelper.CreateGUITextNode($"{toolFragments[t]}-fragments", $"-13 {22 - 13 * t}", "", "menus/px-20.xml", false));
                     }
+                    fragmentsGroup.Add(NodeHelper.CreateGUITextNode($"lever-fragments-2", $"-23 22", "", "menus/px-20.xml", false));
+                    fragmentsGroup.Add(NodeHelper.CreateGUITextNode($"lever-fragments-3", $"-33 22", "", "menus/px-20.xml", false));
                     hudBaseNode.Add(fragmentsGroup);
                 }
 
@@ -619,30 +650,123 @@ namespace HammerwatchAP.Archipelago
                     File.WriteAllText(plantItemPath, plantItemDoc.ToString());
                 }
 
-                //Modify desert_quest_lever_solved prefab
-                string leverQuestItemPath = Path.Combine(campaignAssetPath, "prefabs", "desert_quest_lever_solved.xml");
-                if (!File.Exists(leverQuestItemPath))
+                //Modify desert_quest_lever_solved prefab so Telarian is only hidden when the quest is not solved rather than on level load
+                //We need to patch this prefab every generation, it's dependent on options/locations!
+                string dialogueA = null;
+                string dialogueB = null;
+                string dialogueC = null;
+                string dialogueD = null;
+                bool splitLever = archipelagoData.GetOption(SlotDataKeys.leverFragments) == 0;
+                NetworkItem pumpsItem = archipelagoData.GetItemFromLoc(1114751);
+                if(!ArchipelagoManager.IsItemOurs(pumpsItem, false) || pumpsItem.Item != 20 + APData.templeButtonItemStartID) //If this item is the regular pumps don't change the dialogue
                 {
-                    XDocument leverQuestItemDoc = XDocument.Parse(File.ReadAllText(Path.Combine(templeMapPath, "prefabs", "desert_quest_lever_solved.xml")));
-                    XElement leverQuestScriptNodeBase = leverQuestItemDoc.Root.Element("dictionary").Elements().ToArray()[4].Element("array");
-                    foreach (XElement scriptNode in leverQuestScriptNodeBase.Elements())
+                    if (archipelagoData.GetOption(SlotDataKeys.buttonsanity) > 0)
                     {
-                        string scriptNodeId = scriptNode.Element("int").Value;
-                        switch (scriptNodeId)
+                        long pumpsItemRelativeId = pumpsItem.Item - APData.templeButtonItemStartID;
+                        bool itemIsPumpsActivation = pumpsItemRelativeId == 66 || pumpsItemRelativeId == 67 || pumpsItemRelativeId == 68;
+                        bool pumpsItemIsCorporeal = APData.IsItemXmlNameCorporeal(ArchipelagoManager.GetItemXmlName(pumpsItem));
+                        if (splitLever)
                         {
-                            case "154134": //LevelLoaded EventTrigger
-                                NodeHelper.SetConnectionNodes(scriptNode, 154137);
-                                break;
-                            case "154137": //CheckFlag node for if the quest was solved
-                                XElement[] dictNodes = scriptNode.Element("dictionary").Elements().ToArray();
-                                XElement staticNode = new XElement(dictNodes[1].Element("int-arr"));
-                                staticNode.Value = "154133";
-                                dictNodes[2].Add(staticNode);
-                                break;
+                            dialogueA = "Ok, the lever fits but it doesn't seem to be engaging completely.";
+                            if(ArchipelagoManager.IsItemOurs(pumpsItem, false) && itemIsPumpsActivation)
+                            {
+                                dialogueA += " It likely only started the pumps on one of the cave levels.";
+                            }
+                            else if(pumpsItemIsCorporeal)
+                            {
+                                dialogueA += " Also instead of the pumps turning on that thing appeared...?";
+                            }
+                            else
+                            {
+                                dialogueA += " Also the pumps didn't turn on...";
+                            }
+                        }
+                        else
+                        {
+                            if (pumpsItemIsCorporeal)
+                            {
+                                dialogueA = "Ok, that thing appeared instead of the pumps starting?";
+                            }
+                            else
+                            {
+                                dialogueA = "Ok, I put in the lever but the pumps didn't turn on...?";
+                            }
+                        }
+                        dialogueB = "Sorry, you might have to look around and find another way to turn on all the pumps.";
+                        dialogueC = "I don't know how that happened.";
+                        dialogueD = "Hope you can lower the water level!";
+                    }
+                    else
+                    {
+                        if (splitLever)
+                        {
+                            dialogueA = "Ok, the lever fits but doesn't seem to be engaging completely. It likely only started the pumps on one of the cave levels.";
+                            dialogueB = "When the water is low enough on the first cave level, you should be able to reach Krilith!";
+                            //No dialogue D
                         }
                     }
-                    File.WriteAllText(leverQuestItemPath, leverQuestItemDoc.ToString());
                 }
+                string leverQuestItemPath = Path.Combine(campaignAssetPath, "prefabs", "desert_quest_lever_solved.xml");
+                int leverQuestModNodeId = 200000;
+                int extraCheckQuestNodeStartId = leverQuestModNodeId++;
+                XDocument leverQuestItemDoc = XDocument.Parse(File.ReadAllText(Path.Combine(templeMapPath, "prefabs", "desert_quest_lever_solved.xml")));
+                XElement leverQuestScriptNodeBase = leverQuestItemDoc.Root.Element("dictionary").Elements().ToArray()[4].Element("array");
+                foreach (XElement scriptNode in leverQuestScriptNodeBase.Elements())
+                {
+                    string scriptNodeId = scriptNode.Element("int").Value;
+                    switch (scriptNodeId)
+                    {
+                        case "154134": //LevelLoaded EventTrigger
+                            NodeHelper.SetConnectionNodes(scriptNode, 154137);
+                            break;
+                        case "154137": //CheckFlag node for if the quest was solved
+                            XElement paramsNode = scriptNode.Element("dictionary");
+                            XElement[] paramsNodeChildren = paramsNode.Elements().ToArray();
+                            XElement onTrueConnections = paramsNodeChildren[1].Element("int-arr");
+                            XElement onFalseConnections = new XElement(onTrueConnections)
+                            {
+                                Value = "154133"
+                            };
+                            if(splitLever)
+                            {
+                                onFalseConnections.Value = extraCheckQuestNodeStartId.ToString();
+                                paramsNodeChildren[0].Value = "quest_pumps_solved_1";
+                            }
+                            paramsNodeChildren[2].Add(onFalseConnections);
+                            break;
+                        case "154151": //Node that deactivates pump dialogue and enables repeatable filler dialogue
+                            if(splitLever) //Make it so we can repeatedly interact with Telarian if we have split lever on
+                                scriptNode.Element("bool").Value = "False";
+                            break;
+                        case "154149": //apply_lever EventTrigger
+                            NodeHelper.SetTriggerTimes(scriptNode, -1);
+                            break;
+                        case "154143":
+                            if (dialogueA != null)
+                                NodeHelper.EditShowSpeechBubbleNode(scriptNode, dialogueA);
+                            break;
+                        case "154148":
+                            if (dialogueB != null)
+                                NodeHelper.EditShowSpeechBubbleNode(scriptNode, dialogueB);
+                            break;
+                        case "154142":
+                            if (dialogueC != null)
+                                NodeHelper.EditShowSpeechBubbleNode(scriptNode, dialogueC);
+                            break;
+                        case "154153":
+                            if (dialogueD != null)
+                                NodeHelper.EditShowSpeechBubbleNode(scriptNode, dialogueD);
+                            break;
+                    }
+                }
+                //Add additional nodes if the lever is split
+                if(splitLever)
+                {
+                    leverQuestScriptNodeBase.Add(NodeHelper.CreateCheckGlobalFlagNode(extraCheckQuestNodeStartId, new Vector2(-6, 4), "quest_pumps_solved_2", false, new int[] { 154139 }, false, new int[] { leverQuestModNodeId }));
+                    leverQuestScriptNodeBase.Add(NodeHelper.CreateCheckGlobalFlagNode(leverQuestModNodeId, new Vector2(-8, 4), "quest_pumps_solved_3", false, new int[] { 154139 }, false, new int[] { 154133 }));
+                }
+                //leverQuestScriptNodeBase.Add(NodeHelper.CreateGlobalEventTriggerNode(leverQuestModNodeId++, -1, new Vector2(0, 6), "", new int[] { 154137 }));
+                File.WriteAllText(leverQuestItemPath, leverQuestItemDoc.ToString());
 
                 //Modify desert_vendor prefabs
                 string[] otherDesertVendorNames = new[]
@@ -710,7 +834,7 @@ namespace HammerwatchAP.Archipelago
 
             //Modify wall node object event trigger to run infinitely and move connections to a check global flag node
             XElement wallNode = idToNode[objectEventTriggerNodeId];
-            wallNode.Elements("int").ToArray()[1].Value = (-1).ToString();
+            NodeHelper.SetTriggerTimes(wallNode, -1);
             XElement[] wallConnectionNodes = wallNode.Elements("int-arr").ToArray();
             string wallConnectionNodeIdString = wallConnectionNodes[0].Value;
             List<int> wallConnectionNodeIds = new List<int>();
@@ -730,7 +854,7 @@ namespace HammerwatchAP.Archipelago
                 XElement counterConnectNode = idToNode[counterConnectionString];
                 if (counterConnectNode.Element("string").Value == "DestroyObject")
                 {
-                    counterConnectNode.Elements("int").ToArray()[1].Value = "1";
+                    NodeHelper.SetTriggerTimes(counterConnectNode, 1);
                     string[] destroyConnectNodeIds = counterConnectNode.Element("int-arr").Value.Split(' ');
                     foreach (string destroyConnectNodeId in destroyConnectNodeIds)
                     {
@@ -838,6 +962,7 @@ namespace HammerwatchAP.Archipelago
             int bossDefeatMessageDelay = 2000;
 
             string pumpsItemName = ArchipelagoManager.GetItemName(20 + APData.templeButtonItemStartID);
+            bool splitLever = archipelagoData.GetSlotInt(SlotDataKeys.leverFragments) == 0;
 
             List<int> buttonEffectNodeIds = new List<int>();
 
@@ -851,20 +976,30 @@ namespace HammerwatchAP.Archipelago
                         //Castle Hammerwatch
                         case "level_1.xml": //Prison 1
                             int[] p1BronzeKeyEntrance = { 424, 423 }; //Lower, Upper
-                            int[] p1BronzeKeySouth = { 3291, 3160, 4234 }; //3 Entries
-                            int[] p1BronzeKeySouth2 = { 4048, 3474, 3290, 2839 }; //4 Entries
-                            int[] p1BronzeKeyNe = { 3916, 2512, 3775 }; //3 Entries
-                            int[] p1BronzeKeyExit = { 3676, 1203 }; //2 Entries
+                            int[] p1BronzeKeySouth = { 3291, 3160, 4234 };
+                            int[] p1BronzeKeySouth2 = { 4048, 3474, 3290, 2839 };
+                            int[] p1BronzeKeyNe = { 3916, 2512, 3775 };
+                            int[] p1BronzeKeyExit = { 3676, 1203 };
 
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p1BronzeKeyEntrance[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 1")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p1BronzeKeySouth[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 2")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p1BronzeKeySouth2[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 3")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p1BronzeKeyNe[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 4")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p1BronzeKeyExit[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 5")]);
+                            //List<int> p1GlobalScriptNodeTest = new List<int>();
+                            //p1GlobalScriptNodeTest.Add(p1BronzeKeyEntrance[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 1")]);
+                            //p1GlobalScriptNodeTest.Add(p1BronzeKeySouth[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 2")]);
+                            //p1GlobalScriptNodeTest.Add(p1BronzeKeySouth2[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 3")]);
+                            //p1GlobalScriptNodeTest.Add(p1BronzeKeyNe[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 4")]);
+                            //p1GlobalScriptNodeTest.Add(p1BronzeKeyExit[archipelagoData.GetRandomLocation("Prison 1 Bronze Key 5")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.AddRange(p1GlobalScriptNodeTest);
+
+                            List<int> p1RandomNodes = new List<int>();
+                            p1RandomNodes.AddRange(p1BronzeKeyEntrance);
+                            p1RandomNodes.AddRange(p1BronzeKeySouth);
+                            p1RandomNodes.AddRange(p1BronzeKeySouth2);
+                            p1RandomNodes.AddRange(p1BronzeKeyNe);
+                            p1RandomNodes.AddRange(p1BronzeKeyExit);
+                            AddRandomSpawnNodesToTrigger(levelFile, idToNode, p1RandomNodes);
 
                             nodesToNuke = new List<int> { 425, 3161, 3475, 3917, 1141, 3915 }; //Bronze Keys, Strange plank trigger
 
-                            //Change thief dialogue to show goal
+                            //Change adventurer dialogue to show goal and change thief dialogue to inform about planks
                             //Adventurer dialogue node 1: 1652 //The Bridge!
                             string newText = "";
                             string goalCheckText1 = "";
@@ -981,13 +1116,23 @@ namespace HammerwatchAP.Archipelago
                             int[] p2GoldKey1 = { 2267, 2268, 2730, 416 };
                             int[] p2GoldKey2 = { 3351, 3349, 3655 };
 
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p2BronzeKey1[archipelagoData.GetRandomLocation("Prison 2 Bronze Key 1")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p2BronzeKey2[archipelagoData.GetRandomLocation("Prison 2 Bronze Key 2")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p2BronzeKey3[archipelagoData.GetRandomLocation("Prison 2 Bronze Key 3")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p2BronzeKey4[archipelagoData.GetRandomLocation("Prison 2 Bronze Key 4")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p2SilverKey[archipelagoData.GetRandomLocation("Prison 2 Silver Key 1")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p2GoldKey1[archipelagoData.GetRandomLocation("Prison 2 Gold Key 1")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p2GoldKey2[archipelagoData.GetRandomLocation("Prison 2 Gold Key 2")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p2BronzeKey1[archipelagoData.GetRandomLocation("Prison 2 Bronze Key 1")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p2BronzeKey2[archipelagoData.GetRandomLocation("Prison 2 Bronze Key 2")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p2BronzeKey3[archipelagoData.GetRandomLocation("Prison 2 Bronze Key 3")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p2BronzeKey4[archipelagoData.GetRandomLocation("Prison 2 Bronze Key 4")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p2SilverKey[archipelagoData.GetRandomLocation("Prison 2 Silver Key 1")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p2GoldKey1[archipelagoData.GetRandomLocation("Prison 2 Gold Key 1")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p2GoldKey2[archipelagoData.GetRandomLocation("Prison 2 Gold Key 2")]);
+
+                            List<int> p2RandomNodes = new List<int>();
+                            p2RandomNodes.AddRange(p2BronzeKey1);
+                            p2RandomNodes.AddRange(p2BronzeKey2);
+                            p2RandomNodes.AddRange(p2BronzeKey3);
+                            p2RandomNodes.AddRange(p2BronzeKey4);
+                            p2RandomNodes.AddRange(p2SilverKey);
+                            p2RandomNodes.AddRange(p2GoldKey1);
+                            p2RandomNodes.AddRange(p2GoldKey2);
+                            AddRandomSpawnNodesToTrigger(levelFile, idToNode, p2RandomNodes);
 
                             nodesToNuke = new List<int> { 2873, 6211, 6210, 6209, 1501, 2269, 3350, 3653 }; //Bronze Keys, Silver Key, Gold Keys, Strange plank trigger
 
@@ -1062,11 +1207,19 @@ namespace HammerwatchAP.Archipelago
                             int[] p3SilverKey = { 1826, 191, 192, 1597, 1598 };
                             int[] p3GoldKey = { 5217, 2224, 2448, 2223, 2447 };
 
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p3BronzeKey1[archipelagoData.GetRandomLocation("Prison 3 Bronze Key 1")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p3BronzeKey2[archipelagoData.GetRandomLocation("Prison 3 Bronze Key 2")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p3BronzeKey3[archipelagoData.GetRandomLocation("Prison 3 Bronze Key 3")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p3SilverKey[archipelagoData.GetRandomLocation("Prison 3 Silver Key 1")]);
-                            globalScriptNodesToTriggerOnceOnLoad.Add(p3GoldKey[archipelagoData.GetRandomLocation("Prison 3 Gold Key 1")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p3BronzeKey1[archipelagoData.GetRandomLocation("Prison 3 Bronze Key 1")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p3BronzeKey2[archipelagoData.GetRandomLocation("Prison 3 Bronze Key 2")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p3BronzeKey3[archipelagoData.GetRandomLocation("Prison 3 Bronze Key 3")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p3SilverKey[archipelagoData.GetRandomLocation("Prison 3 Silver Key 1")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(p3GoldKey[archipelagoData.GetRandomLocation("Prison 3 Gold Key 1")]);
+
+                            List<int> p3RandomNodes = new List<int>();
+                            p3RandomNodes.AddRange(p3BronzeKey1);
+                            p3RandomNodes.AddRange(p3BronzeKey2);
+                            p3RandomNodes.AddRange(p3BronzeKey3);
+                            p3RandomNodes.AddRange(p3SilverKey);
+                            p3RandomNodes.AddRange(p3GoldKey);
+                            AddRandomSpawnNodesToTrigger(levelFile, idToNode, p3RandomNodes);
 
                             nodesToNuke = new List<int> { 640, 3287, 7304, 380, 5218, 6689, 1043, 1045, 2062 }; //Bronze Keys, Silver Key, Gold Key, Strange plank trigger, bonus close nodes, C2 bridge destroy
 
@@ -1086,7 +1239,7 @@ namespace HammerwatchAP.Archipelago
                             List<string> p3TorchIds = new List<string> { "1204", "4245", "4246", "1215", "1210" };
                             foreach (string torchId in p3TorchIds)
                             {
-                                idToNode[torchId].Elements("int").ToArray()[1].Value = "1";
+                                NodeHelper.SetTriggerTimes(idToNode[torchId], 1);
                             }
                             if (buttonsanity > 0)
                             {
@@ -1290,7 +1443,7 @@ namespace HammerwatchAP.Archipelago
                             nodesToNuke = new List<int> { 4819, 302 }; //Strange plank trigger, bonus tp close
 
                             //Make the bonus portal exit area trigger times be infinite
-                            idToNode["295"].Elements("int").ToArray()[1].Value = "-1";
+                            NodeHelper.SetTriggerTimes(idToNode["295"], -1);
                             //Wire the bonus return area trigger node to open the wall
                             NodeHelper.AddConnectionNodes(idToNode["116"], new[] { 3122 });
 
@@ -1367,7 +1520,7 @@ namespace HammerwatchAP.Archipelago
                             intArrNodes[0].Value = "1592";
                             intArrNodes[1].Value = "0";
                             //Make the level 6 entrance only spawn the torch once
-                            idToNode["423"].Elements("int").ToArray()[1].Value = "1";
+                            NodeHelper.SetTriggerTimes(idToNode["423"], 1);
 
                             if (buttonsanity > 0)
                             {
@@ -1476,7 +1629,7 @@ namespace HammerwatchAP.Archipelago
                             scriptNodesToAdd.Add(NodeHelper.CreateDestroyObjectNode(l7DestroyId, new Vector2(19f, 30f), 1, new int[] { 4459 })); //Destroy doodad
 
                             //Make the torch spawn only once
-                            idToNode["6430"].Elements("int").ToArray()[1].Value = "1";
+                            NodeHelper.SetTriggerTimes(idToNode["6430"], 1);
 
                             //Remove cover over left exit if both exits are opened
                             idToNode["6271"].Element("dictionary").Element("int-arr").Value += " 6246";
@@ -1496,7 +1649,7 @@ namespace HammerwatchAP.Archipelago
                             scriptNodesToAdd.Add(NodeHelper.CreateDestroyObjectNode(l8DestroyId, new Vector2(-19f, -5f), 1, new int[] { 4102, 4101, 4100, 4096, 4099 })); //Destroy doodads
 
                             //Make the torch spawn only once
-                            idToNode["4188"].Elements("int").ToArray()[1].Value = "1";
+                            NodeHelper.SetTriggerTimes(idToNode["4188"], 1);
 
                             if (buttonsanity > 0)
                             {
@@ -1588,7 +1741,7 @@ namespace HammerwatchAP.Archipelago
                                 List<string> r3TorchIds = new List<string> { "4545", "5651" };
                                 foreach (string torchId in r3TorchIds)
                                 {
-                                    idToNode[torchId].Elements("int").ToArray()[1].Value = "1";
+                                    NodeHelper.SetTriggerTimes(idToNode[torchId], 1);
                                 }
 
                                 //Boss rune item and rewire
@@ -1790,7 +1943,7 @@ namespace HammerwatchAP.Archipelago
                             List<string> torchIds = new List<string> { "2799", "2794" };
                             foreach (string torchId in torchIds) //Make bonus torch nodes only trigger once
                             {
-                                idToNode[torchId].Elements("int").ToArray()[1].Value = "1";
+                                NodeHelper.SetTriggerTimes(idToNode[torchId], 1);
                             }
                             if (buttonsanity > 0)
                             {
@@ -1936,7 +2089,7 @@ namespace HammerwatchAP.Archipelago
                             int plankNodeIdCounter = modNodeStartId + 30;
 
                             //Music node, make it so reentering will replay boss music
-                            idToNode["1215"].Elements("int").ToArray()[1].Value = "-1";
+                            NodeHelper.SetTriggerTimes(idToNode["1215"], -1);
 
                             if(archipelagoData.goalType != ArchipelagoData.GoalType.FullCompletion)
                             {
@@ -2063,7 +2216,7 @@ namespace HammerwatchAP.Archipelago
                     }
                     break;
                 case ArchipelagoData.MapType.Temple:
-                    panLocation = archipelagoData.GetRandomLocation("Frying Pan");
+                    //panLocation = archipelagoData.GetRandomLocation("Frying Pan");
                     switch (levelFile)
                     {
                         case "level_hub.xml":
@@ -2173,17 +2326,23 @@ namespace HammerwatchAP.Archipelago
                             scriptNodesToAdd.Add(NodeHelper.CreateLevelStartNode(modNodeStartId, new Vector2(34f, -13f), 5)); //Cave return
                             break;
                         case "level_cave_1.xml":
-                            if (archipelagoData.GetRandomLocation("Cave 3 Squire") == 1)
-                            {
-                                globalScriptNodesToTriggerOnceOnLoad.Add(112648);
-                            }
+                            //if (archipelagoData.GetRandomLocation("Cave 3 Squire") == 1)
+                            //{
+                            //    globalScriptNodesToTriggerOnceOnLoad.Add(112648);
+                            //}
 
-                            int[] c3PanNodes = { 135491, 135495, 135494 };
+                            //if (panLocation >= 0 && panLocation < 3)
+                            //{
+                            //    globalScriptNodesToTriggerOnceOnLoad.Add(c3PanNodes[panLocation]);
+                            //}
 
-                            if (panLocation >= 0 && panLocation < 3)
+                            List<int> c3PanNodes = new List<int>{ 135491, 135495, 135494 };
+                            List<int> c1RandomNodes = new List<int>(4)
                             {
-                                globalScriptNodesToTriggerOnceOnLoad.Add(c3PanNodes[panLocation]);
-                            }
+                                112648 //Squire upgrade
+                            };
+                            c1RandomNodes.AddRange(c3PanNodes);
+                            AddRandomSpawnNodesToTrigger(levelFile, idToNode, c1RandomNodes);
 
                             //Change npc dialogue of the guard at the entrance
                             NetworkItem c1Guarditem = archipelagoData.GetItemFromPos(new Vector2(-74.375f, 27.375f), "level_cave_1.xml");
@@ -2250,6 +2409,11 @@ namespace HammerwatchAP.Archipelago
                                 message += " I wasn't sure if it was safe to try to find it, so I hid here instead.";
                                 NodeHelper.EditShowSpeechBubbleNode(idToNode["137737"], message);
                             }
+
+                            if (splitLever)
+                            {
+                                pumpsItemName = ArchipelagoManager.GetItemName(66 + APData.templeButtonItemStartID);
+                            }
                             if (buttonsanity > 0)
                             {
                                 //CheckGlobalFlag node for the pumps
@@ -2269,6 +2433,11 @@ namespace HammerwatchAP.Archipelago
                                 idToNode["111849"].Element("int").Value = exitHideNodeId.ToString();
                                 idToNode["111543"].Element("int").Value = seBankHideNodeId.ToString();
                             }
+                            else if (splitLever)
+                            {
+                                //CheckGlobalFlag node for the pumps
+                                idToNode["111152"].Element("dictionary").Element("string").Value = "machine_pump_start_3";
+                            }
 
                             nodesToNuke = new List<int> { 112649, 135490, 135496 }; //Squire powerup rando, pan placer rando, pan trigger node
 
@@ -2279,16 +2448,22 @@ namespace HammerwatchAP.Archipelago
                             doodadsToAdd.AddRange(c1PofDoodads);
                             break;
                         case "level_cave_2.xml":
-                            int[] c2PortalNodes = { 113663, 113662, 113721 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(c2PortalNodes[archipelagoData.GetRandomLocation("Cave 2 Portal")]);
                             int[] c2KeystoneNodes = { 111541, 111540, 111543, 111544, 111539 };
                             int[] c2PanNodes = { 135491, 135494, 135495 };
 
-                            globalScriptNodesToTriggerOnceOnLoad.Add(c2KeystoneNodes[archipelagoData.GetRandomLocation("Cave 2 Keystone")]);
-                            if (panLocation >= 3 && panLocation < 6)
-                            {
-                                globalScriptNodesToTriggerOnceOnLoad.Add(c2PanNodes[panLocation - 3]);
-                            }
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(c2KeystoneNodes[archipelagoData.GetRandomLocation("Cave 2 Keystone")]);
+                            //if (panLocation >= 3 && panLocation < 6)
+                            //{
+                            //    globalScriptNodesToTriggerOnceOnLoad.Add(c2PanNodes[panLocation - 3]);
+                            //}
+
+                            List<int> c2RandomNodes = new List<int>();
+                            c2RandomNodes.AddRange(c2KeystoneNodes);
+                            c2RandomNodes.AddRange(c2PanNodes);
+                            AddRandomSpawnNodesToTrigger(levelFile, idToNode, c2RandomNodes);
+
+                            int[] c2PortalNodes = { 113663, 113662, 113721 };
+                            globalScriptNodesToTriggerOnceOnLoad.Add(c2PortalNodes[archipelagoData.GetRandomLocation("Cave 2 Portal")]);
 
                             nodesToNuke = new List<int> { 111550, 135490, 113664, 135496 }; //Keystone, Pan, Portal, Pan trigger
 
@@ -2298,39 +2473,82 @@ namespace HammerwatchAP.Archipelago
                             //Fix the double bridge button from being up half a unit
                             idToNode["110670"].Element("vec2").Value = "9.5 14";
 
+                            //Make script node that activates the pump stuff only trigger once
+                            NodeHelper.SetTriggerTimes(idToNode["111290"], 1);
+
+                            int pumpsEffect1NodeId = -1;
+                            int pumpsEffect2NodeId = modNodeStartId++;
+                            int pumpsEffect3NodeId = -1;
+                            //If split lever is on, we need to change the apply_lever node to trigger after getting the cave level 2 pumps activation
+                            if (splitLever)
+                            {
+                                pumpsItemName = ArchipelagoManager.GetItemName(67 + APData.templeButtonItemStartID);
+
+                                int questPumpsSolved1CheckFlagNodeId = modNodeStartId++;
+                                int questPumpsSolved3CheckFlagNodeId = modNodeStartId++;
+
+                                //Make apply_lever node connect to all our check flag nodes and trigger infinitely
+                                NodeHelper.SetTriggerTimes(idToNode["154145"], -1);
+                                NodeHelper.SetConnectionNodes(idToNode["154145"], new int[] { 154144, questPumpsSolved1CheckFlagNodeId, questPumpsSolved3CheckFlagNodeId });
+
+                                int changeDoodadStateNodeId = 110213;
+                                NodeHelper.SetTriggerTimes(idToNode["110213"], 1); //Make ChangeDoodadState node only trigger once
+                                NodeHelper.SetConnectionNodes(idToNode["110213"], new int[] { 110211, 153202 }); //Remove link to the script node that activates the pump stuff (111290)
+
+                                //Make mission completion nodes only trigger once
+                                NodeHelper.SetTriggerTimes(idToNode["153202"], 1);
+
+                                pumpsEffect1NodeId = modNodeStartId++;
+                                pumpsEffect3NodeId = modNodeStartId++;
+                                if (buttonsanity == 0)
+                                {
+                                    scriptNodesToAdd.Add(NodeHelper.CreateSetGlobalFlagNode(pumpsEffect1NodeId, new Vector2(7, -38), 1, "machine_pump_start_1", true));
+                                    pumpsEffect2NodeId = 111290;
+                                    scriptNodesToAdd.Add(NodeHelper.CreateSetGlobalFlagNode(pumpsEffect3NodeId, new Vector2(11, -38), 1, "machine_pump_start_3", true));
+                                }
+
+                                scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(questPumpsSolved1CheckFlagNodeId, new Vector2(7, -40.5f), "quest_pumps_solved_1", false, new int[] { changeDoodadStateNodeId, pumpsEffect1NodeId }, false, null));
+                                XElement newCheckGlobalFlagNode = NodeHelper.CreateCheckGlobalFlagNode(154144, new Vector2(9, -40.5f), "quest_pumps_solved_2", false, new int[] { changeDoodadStateNodeId, pumpsEffect2NodeId }, false, null);
+                                scriptNodesToAdd.Add(newCheckGlobalFlagNode);
+                                scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(questPumpsSolved3CheckFlagNodeId, new Vector2(11, -40.5f), "quest_pumps_solved_3", false, new int[] { changeDoodadStateNodeId, pumpsEffect3NodeId }, false, null));
+
+                                //Swap the ScriptLink node from the apply_lever node to check if we received the 2nd level pumps lever
+                                idToNode["154144"].Remove();
+                                idToNode["154144"] = newCheckGlobalFlagNode;
+                            }
+
                             //Change pumps event_trigger to be the buttonsanity item
                             if (buttonsanity > 0)
                             {
+                                int buttonItemNodeId = modNodeStartId++;
                                 int pumpsTriggerNodeId = 111290;
                                 //Pumps EventTrigger, change flag to be our item and rewire to not toggle the lever doodad
-                                idToNode["154145"].Elements("string").ToArray()[1].Value = pumpsItemName; //Activate Water Pumps
-                                NodeHelper.SetConnectionNodes(idToNode["154145"], pumpsTriggerNodeId);
+                                //idToNode["154145"].Elements("string").ToArray()[1].Value = pumpsItemName; //Activate Water Pumps
+                                //NodeHelper.SetConnectionNodes(idToNode["154145"], buttonItemNodeId);
+
+                                NodeHelper.AddConnectionNodes(idToNode["154144"], new[] { pumpsEffect2NodeId });
 
                                 //ChangeDoodadState node for the lever
                                 NodeHelper.SetConnectionNodes(idToNode["110213"], new[] { 110211, 153202 });
 
                                 int pumpsItemFlagId = modNodeStartId++;
                                 buttonEffectNodeIds.Add(pumpsItemFlagId);
-                                XElement checkPumpsItemNode = NodeHelper.CreateCheckGlobalFlagNode(pumpsItemFlagId, new Vector2(9, -41.5f), pumpsItemName, false, new[] { pumpsTriggerNodeId }, false, null);
-                                scriptNodesToAdd.Add(checkPumpsItemNode);
+                                scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(pumpsItemFlagId, new Vector2(7, -42.5f), pumpsItemName, false, new[] { pumpsTriggerNodeId }, false, null));
+                                scriptNodesToAdd.Add(NodeHelper.CreateGlobalEventTriggerNode(modNodeStartId++, -1, new Vector2(5, -45f), pumpsItemName, new[] { pumpsTriggerNodeId }));
                                 globalScriptNodesToTriggerOnLoad.Add(pumpsItemFlagId);
 
-                                //Make the activate pumps effect scriptLink node only run once
-                                idToNode[pumpsTriggerNodeId.ToString()].Elements("int").ToArray()[1].Value = "1";
-
-                                //Add in AreaTrigger for the lever if you have the pumps lever
-                                int leverRectangleShapeId = modNodeStartId++;
-                                int checkNodeId = modNodeStartId++;
-                                int soundNodeId = modNodeStartId++;
                                 Vector2 leverPos = new Vector2(-2, -42);
-                                scriptNodesToAdd.Add(NodeHelper.CreateRectangleShapeNode(leverRectangleShapeId, leverPos, 1, 1, 1));
-                                scriptNodesToAdd.Add(NodeHelper.CreateAreaTriggerNode(modNodeStartId++, -1, leverPos + new Vector2(0, -2.5f), 0, 1, new[] { leverRectangleShapeId }, new[] { checkNodeId }));
-                                scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(checkNodeId, leverPos + new Vector2(2, -2.5f), "quest_pumps_solved", false, new[] { modNodeStartId }, false, new[] { soundNodeId }));
-                                scriptNodesToAdd.Add(NodeHelper.CreatePlaySoundNode(soundNodeId, leverPos, "sound/misc.xml:info_nokey", false, true, 5));
-                                scriptNodesToAdd.Add(NodeHelper.CreateScriptLinkNode(modNodeStartId++, true, 1, new Vector2(0, -42), new[] { 110213, modNodeStartId }));
-
                                 Vector2 leverItemPos = leverPos + new Vector2(0, 1);
-                                scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, ref modNodeStartId, leverItemPos, true));
+                                if(splitLever) //Create spawn item nodes if split lever is on
+                                {
+                                    scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, pumpsEffect3NodeId, ref modNodeStartId, leverItemPos, true));
+                                    scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, pumpsEffect2NodeId, ref modNodeStartId, leverItemPos + new Vector2(0, 1.5f), true));
+                                    scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, pumpsEffect1NodeId, ref modNodeStartId, leverItemPos + new Vector2(0, 3f), true));
+                                }
+                                else
+                                {
+                                    scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, pumpsEffect2NodeId, ref modNodeStartId, leverItemPos, true));
+                                }
 
                                 nodesToNuke.AddRange(new[] { 153202, 154103 }); //quest_lever_icon_complete GlobalFlag, raise pyramid GlobalEventTrigger
                             }
@@ -2342,18 +2560,24 @@ namespace HammerwatchAP.Archipelago
                             doodadsToAdd.AddRange(c2PofDoodads);
                             break;
                         case "level_cave_3.xml":
-                            int[] c1PortalNodes = { 117695, 117696, 121089 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(c1PortalNodes[archipelagoData.GetRandomLocation("Cave 1 Portal")]);
                             int[] c1KeystoneNodes = { 117646, 117644, 117645 };
                             int[] c1PanNodes = { 136200, 136198, 136199 };
+
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(c1KeystoneNodes[archipelagoData.GetRandomLocation("Cave 1 Keystone")]);
+                            //if (panLocation >= 6)
+                            //{
+                            //    globalScriptNodesToTriggerOnceOnLoad.Add(c1PanNodes[panLocation - 6]);
+                            //}
+
+                            List<int> tc1RandomNodes = new List<int>();
+                            tc1RandomNodes.AddRange(c1KeystoneNodes);
+                            tc1RandomNodes.AddRange(c1PanNodes);
+                            AddRandomSpawnNodesToTrigger(levelFile, idToNode, tc1RandomNodes);
+
+                            int[] c1PortalNodes = { 117695, 117696, 121089 };
+                            globalScriptNodesToTriggerOnceOnLoad.Add(c1PortalNodes[archipelagoData.GetRandomLocation("Cave 1 Portal")]);
                             int[] c1Exit = { 122536, 122537 }; //Open bottom, top
                             globalScriptNodesToTriggerOnceOnLoad.Add(c1Exit[archipelagoData.GetRandomLocation("Cave 1 Exit")]);
-
-                            globalScriptNodesToTriggerOnceOnLoad.Add(c1KeystoneNodes[archipelagoData.GetRandomLocation("Cave 1 Keystone")]);
-                            if (panLocation >= 6)
-                            {
-                                globalScriptNodesToTriggerOnceOnLoad.Add(c1PanNodes[panLocation - 6]);
-                            }
 
                             nodesToNuke = new List<int> { 117647, 136205, 117697, 136201, 122551, 124202 }; //Keystone, Pan, Portal, Pan trigger, Exit, Puzzle spawn node
                             if (exitRando)
@@ -2370,13 +2594,17 @@ namespace HammerwatchAP.Archipelago
                             idToNode["115377"].Elements("int-arr").ToArray()[1].Value = "0 0 10 0 0 0 0 0 0 0 0 0 10 10 0 0 0";
 
                             //Fix the random fly trap spawns running infinitely
-                            idToNode["157682"].Elements("int").ToArray()[1].Value = "1";
+                            NodeHelper.SetTriggerTimes(idToNode["157682"], 1);
 
                             //Exit returns
                             string[] c1ReturnNodes = { "122797", "122800" };
                             //Enable start node in case we come in from the back
                             idToNode[c1ReturnNodes[archipelagoData.GetRandomLocation("Cave 1 Exit")]].Element("bool").Value = "True";
 
+                            if (splitLever)
+                            {
+                                pumpsItemName = ArchipelagoManager.GetItemName(68 + APData.templeButtonItemStartID);
+                            }
                             if (buttonsanity > 0)
                             {
                                 //CheckGlobalFlag node for the pumps
@@ -2386,6 +2614,11 @@ namespace HammerwatchAP.Archipelago
                                 scriptNodesToAdd.Add(c3PumpsEventTriggerNode);
 
                                 nodesToNuke.Add(155718); //puzzle_bonus_solved GlobalEventTrigger
+                            }
+                            else if (splitLever)
+                            {
+                                //CheckGlobalFlag node for the pumps
+                                idToNode["141518"].Element("dictionary").Element("string").Value = "machine_pump_start_1";
                             }
 
                             //The last puzzle in this level is spawned via script, we disabled it so we need to manually create the puzzle
@@ -2487,42 +2720,52 @@ namespace HammerwatchAP.Archipelago
                             effectNodePositions.Add("156281", new Vector2(81.5f, -0.5f));
                             effectNodePositions.Add("156282", new Vector2(81.5f, -0.5f));
 
+                            //int[] t1KeystoneNodes = { 126436, 126437, 132118, 126435 };
+                            int[] t1KeystoneNodes = { 126436, 126437, 126435 }; //We're removing the third node because if an item is there we would just be modifying the freestanding item anyways
+                            int[] sSilverKeyNodes = { 126145, 126146, 126144 };
+                            int[] nSilverKeyNodes = { 132226, 132227 };
+                            int[] iceTurretSilverKeyNodes = { 132229, 132228 };
+                            int[] funkySilverKeyNodes = { 127922, 127923 };
+                            int[] funkyOreNodes = { 127926, 127927 };
+                            int[] goldKeyNodes = { 132223, 132221 };
+                            int[] eOreNodes = { 141934, 141935 };
+                            int[] t1MirrorNodes = { 132218, 132216, 132217 };
+                            //int t1Keystone = archipelagoData.GetRandomLocation("Temple 1 Keystone");
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(t1KeystoneNodes[t1Keystone]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(sSilverKeyNodes[archipelagoData.GetRandomLocation("Temple 1 South Silver Key")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(nSilverKeyNodes[archipelagoData.GetRandomLocation("Temple 1 North Silver Key")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(iceTurretSilverKeyNodes[archipelagoData.GetRandomLocation("Temple 1 Ice Turret Silver Key")]);
+                            //int funkySilverKey = archipelagoData.GetRandomLocation("Temple 1 Funky Silver Key");
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(funkySilverKeyNodes[funkySilverKey]);
+                            //if (funkySilverKey == 0)
+                            //{
+                            //    globalScriptNodesToTriggerOnceOnLoad.Add(funkyOreNodes[archipelagoData.GetRandomLocation("Temple 1 Funky Ore")]);
+                            //}
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(goldKeyNodes[archipelagoData.GetRandomLocation("Temple 1 Gold Key")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(eOreNodes[archipelagoData.GetRandomLocation("Temple 1 East Ore")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(t1MirrorNodes[archipelagoData.GetRandomLocation("Temple 1 Mirror")]);
+
+                            List<int> t1RandomNodes = new List<int>();
+                            t1RandomNodes.AddRange(t1KeystoneNodes);
+                            t1RandomNodes.AddRange(sSilverKeyNodes);
+                            t1RandomNodes.AddRange(nSilverKeyNodes);
+                            t1RandomNodes.AddRange(iceTurretSilverKeyNodes);
+                            t1RandomNodes.AddRange(funkySilverKeyNodes);
+                            t1RandomNodes.AddRange(funkyOreNodes);
+                            t1RandomNodes.AddRange(goldKeyNodes);
+                            t1RandomNodes.AddRange(eOreNodes);
+                            t1RandomNodes.AddRange(t1MirrorNodes);
+                            AddRandomSpawnNodesToTrigger(levelFile, idToNode, t1RandomNodes);
+
+
                             int[] t1PortalNodes = { 131895, 131894, 130029 };
                             globalScriptNodesToTriggerOnceOnLoad.Add(t1PortalNodes[archipelagoData.GetRandomLocation("Temple 1 Portal")]);
-                            int[] t1KeystoneNodes = { 126436, 126437, 132118, 126435 };
-                            int t1Keystone = archipelagoData.GetRandomLocation("Temple 1 Keystone");
-                            globalScriptNodesToTriggerOnceOnLoad.Add(t1KeystoneNodes[t1Keystone]);
-                            if (t1Keystone == 2)
-                            {
-                                //If this will be placed on the right ledge where the item already exists remove the spawn node, we're just going to be modifying the freestanding item anyways
-                                nodesToNuke.Add(132118);
-                            }
-                            int[] sSilverKeyNodes = { 126145, 126146, 126144 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(sSilverKeyNodes[archipelagoData.GetRandomLocation("Temple 1 South Silver Key")]);
-                            int[] nSilverKeyNodes = { 132226, 132227 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(nSilverKeyNodes[archipelagoData.GetRandomLocation("Temple 1 North Silver Key")]);
-                            int[] iceTurretSilverKeyNodes = { 132229, 132228 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(iceTurretSilverKeyNodes[archipelagoData.GetRandomLocation("Temple 1 Ice Turret Silver Key")]);
-                            int[] funkySilverKeyNodes = { 127922, 127923 };
-                            int funkySilverKey = archipelagoData.GetRandomLocation("Temple 1 Funky Silver Key");
-                            globalScriptNodesToTriggerOnceOnLoad.Add(funkySilverKeyNodes[funkySilverKey]);
-                            if (funkySilverKey == 0)
-                            {
-                                int[] funkyOreNodes = { 127926, 127927 };
-                                globalScriptNodesToTriggerOnceOnLoad.Add(funkyOreNodes[archipelagoData.GetRandomLocation("Temple 1 Funky Ore")]);
-                            }
-
-                            int[] goldKeyNodes = { 132223, 132221 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(goldKeyNodes[archipelagoData.GetRandomLocation("Temple 1 Gold Key")]);
-                            int[] eOreNodes = { 141934, 141935 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(eOreNodes[archipelagoData.GetRandomLocation("Temple 1 East Ore")]);
-                            int[] t1MirrorNodes = { 132218, 132216, 132217 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(t1MirrorNodes[archipelagoData.GetRandomLocation("Temple 1 Mirror")]);
+                            int[] t1ExitNodes = { 133955, 133956 };
+                            globalScriptNodesToTriggerOnceOnLoad.Add(t1ExitNodes[archipelagoData.GetRandomLocation("Temple 2 Entrance")]);
                             if (archipelagoData.GetRandomLocation("Temple 1 Hidden Room Random Node") == 1)
                                 globalScriptNodesToTriggerOnceOnLoad.Add(129835);
                             int[] t1PuzzleNodes = { 134196, 134210 }; //Deactivate right, left
                             int t1PuzzleNode = t1PuzzleNodes[archipelagoData.GetRandomLocation("Temple 1 Puzzle Spawn")];
-
                             //Add delay to the deactivation node, as there's funky stuff with timing and activating
                             idToNode[t1PuzzleNode.ToString()].Elements("int-arr").ToArray()[1].Value = "1 1";
                             //Replace hallway prefab in SpawnObject node, hallway spawn node in west puzzle
@@ -2531,9 +2774,7 @@ namespace HammerwatchAP.Archipelago
                             //Bottom levelLoaded GlobalEventTrigger, we need to add this manually else the walls won't be diabled correctly
                             NodeHelper.AddConnectionNodes(idToNode["112617"], new[] { t1PuzzleNode }, new[] { 100 });
 
-                            int[] t1ExitNodes = { 133955, 133956 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(t1ExitNodes[archipelagoData.GetRandomLocation("Temple 2 Entrance")]);
-
+                            nodesToNuke.Add(132118); //Random node to place the keystone on the right, we're just going to be modifying the freestanding item anyways
                             nodesToNuke.AddRange(new List<int> { 126439, 131896, 141936, 132219/*SE mirror*/, 127928, 129840, 134207, 154194, 133957 });
                             //Keystone, portal, east ore, se mirror, funky silver key ore, hidden room, puzzle, Lever trigger, exit
                             nodesToNuke.AddRange(new[] { 126147, 127924, 132231, 132232 }); //Silver keys: left key, funky key node, ice turret key, north silver key
@@ -2585,6 +2826,11 @@ namespace HammerwatchAP.Archipelago
                                 case "items/tool_lever.xml":
                                     t1TelarianMessage += t1TelarianSentences[t1TelarianMessage.Length - 2]; //Keep the dialogue as normal
                                     break;
+                                case "items/tool_lever_split_1.xml":
+                                case "items/tool_lever_split_2.xml":
+                                case "items/tool_lever_split_3.xml":
+                                    t1TelarianMessage += "However, what I found looks a bit different! If you want to lower the water, help me bring the lever to the pump station and we'll hope it works!";
+                                    break;
                                 case "items/tool_lever_fragment.xml":
                                     t1TelarianMessage += "However, when I got here all I found was that piece of it! If you want to lower the water, find the rest of them and bring the whole lever to the pump station.";
                                     break;
@@ -2629,10 +2875,51 @@ namespace HammerwatchAP.Archipelago
                             NodeHelper.AddConnectionNodes(idToNode["158133"], new int[] { b2FlagId });
                             break;
                         case "level_temple_2.xml":
+                            int[] t2KeystoneNodes = { 145350, 145355, 145353, 145352, 145351, 145349, 145354 };
+                            int[] t2JonesNodes = { 144534, 144529 };
+                            int[] t2GoldKeyNodes = { 144531, 144532, 144530 };
+                            int[] t2SilverKey1Nodes = { 144456, 144457, 144462, 144459, 144460 };
+                            int[] t2SilverKey2Nodes = { 144466, 144467, 144465, 144464 };
+                            int[] pickaxeNodes = { 150186, 150192 };
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(t2KeystoneNodes[archipelagoData.GetRandomLocation("Temple 2 Keystone")]);
+                            //if (archipelagoData.GetRandomLocation("Temple 2 Jones Reward") == 0)
+                            //{
+                            //    globalScriptNodesToTriggerOnceOnLoad.Add(t2GoldKeyNodes[archipelagoData.GetRandomLocation("Temple 2 Gold Key")]);
+                            //}
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(t2JonesNodes[archipelagoData.GetRandomLocation("Temple 2 Jones Reward")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(t2SilverKey1Nodes[archipelagoData.GetRandomLocation("Temple 2 Silver Key 1")]);
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(t2SilverKey2Nodes[archipelagoData.GetRandomLocation("Temple 2 Silver Key 2")]);
+
+                            List<int> t2RandomNodes = new List<int>();
+                            t2RandomNodes.AddRange(t2KeystoneNodes);
+                            t2RandomNodes.Add(144534); //Don't use the second node here as that's already covered in the gold key nodes
+                            t2RandomNodes.AddRange(t2GoldKeyNodes);
+                            t2RandomNodes.AddRange(t2SilverKey1Nodes);
+                            t2RandomNodes.AddRange(t2SilverKey2Nodes);
+                            t2RandomNodes.AddRange(pickaxeNodes);
+                            List<int> t2ScriptlNodesToTrigger = AddRandomSpawnNodesToTrigger(levelFile, idToNode, t2RandomNodes);
+
+                            //int pickaxeSpawnIndex = archipelagoData.GetRandomLocation("Pickaxe");
+                            //globalScriptNodesToTriggerOnceOnLoad.Add(pickaxeNodes[pickaxeSpawnIndex]);
+                            //Pickaxe ice block effect nodes
+                            Vector2 pickaxePosition;
+                            if (t2ScriptlNodesToTrigger.Contains(150186)) //First pickaxe node
+                            {
+                                pickaxePosition = new Vector2(-65, -17);
+                                effectNodePositions.Add("156283", pickaxePosition);
+                            }
+                            else
+                            {
+                                pickaxePosition = new Vector2(3, 34);
+                                effectNodePositions.Add("156282", pickaxePosition);
+                            }
+                            int pickaxeSpawnNodeId = modNodeStartId; //898249;
+                            scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, ref modNodeStartId, pickaxePosition, true));
+                            scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(modNodeStartId++, pickaxePosition, "boss_krilith_dead", false, new[] { pickaxeSpawnNodeId }, false, null));
+                            globalScriptNodesToTriggerOnceOnLoad.Add(modNodeStartId - 1);
+
                             int[] t2PortalNodes = { 3322, 137953, 137951, 137952 };
                             globalScriptNodesToTriggerOnceOnLoad.Add(t2PortalNodes[archipelagoData.GetRandomLocation("Temple 2 Portal")]);
-                            int[] t2KeystoneNodes = { 145350, 145355, 145353, 145352, 145351, 145349, 145354 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(t2KeystoneNodes[archipelagoData.GetRandomLocation("Temple 2 Keystone")]);
                             int[] t2Puzzle1Nodes = { 136507, 136503 };
                             globalScriptNodesToTriggerOnceOnLoad.Add(t2Puzzle1Nodes[archipelagoData.GetRandomLocation("Temple 2 Puzzle Spawn EW")]);
                             int[] t2Puzzle2Nodes = { 136505, 136488 };
@@ -2653,49 +2940,14 @@ namespace HammerwatchAP.Archipelago
                             if (buttonsanity > 0)
                             {
                                 //Light bridges effect sound node and portal sequence effect node, set trigger times to 1
-                                idToNode["141393"].Elements("int").ToArray()[1].Value = "1";
-                                idToNode["143589"].Elements("int").ToArray()[1].Value = "1";
+                                NodeHelper.SetTriggerTimes(idToNode["141393"], 1);
+                                NodeHelper.SetTriggerTimes(idToNode["143589"], 1);
                                 //Light bridges sequence scriptLink node
                                 NodeHelper.SetConnectionNodes(idToNode["141391"], t2LightBridgesItemId);
                                 //Portal sequence scriptLink node
                                 NodeHelper.SetConnectionNodes(idToNode["143587"], t2PortalSequenceItemId);
 
                                 nodesToNuke.Add(154103); //puzzle_bonus_solved GlobalEventTrigger
-                            }
-
-                            int[] t2JonesNodes = { 144534, 144529 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(t2JonesNodes[archipelagoData.GetRandomLocation("Temple 2 Jones Reward")]);
-                            if (archipelagoData.GetRandomLocation("Temple 2 Jones Reward") == 0)
-                            {
-                                int[] t2GoldKeyNodes = { 144531, 144532, 144530 };
-                                globalScriptNodesToTriggerOnceOnLoad.Add(t2GoldKeyNodes[archipelagoData.GetRandomLocation("Temple 2 Gold Key")]);
-                            }
-                            int[] t2SilverKey1Nodes = { 144456, 144457, 144462, 144459, 144460 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(t2SilverKey1Nodes[archipelagoData.GetRandomLocation("Temple 2 Silver Key 1")]);
-                            int[] t2SilverKey2Nodes = { 144466, 144467, 144465, 144464 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(t2SilverKey2Nodes[archipelagoData.GetRandomLocation("Temple 2 Silver Key 2")]);
-
-                            int pickaxeSpawnIndex = archipelagoData.GetRandomLocation("Pickaxe");
-                            int[] pickaxeNodes = { 150186, 150192 };
-                            globalScriptNodesToTriggerOnceOnLoad.Add(pickaxeNodes[pickaxeSpawnIndex]);
-                            //Pickaxe ice block effect nodes
-                            if (pickaxeSpawnIndex == 0)
-                            {
-                                Vector2 leftPickaxePos = new Vector2(-65, -17);
-                                effectNodePositions.Add("156283", leftPickaxePos);
-                                int spawnNodeId = modNodeStartId; //898249;
-                                scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, ref modNodeStartId, leftPickaxePos, true));
-                                scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(modNodeStartId++, leftPickaxePos, "boss_krilith_dead", false, new[] { spawnNodeId }, false, null));
-                                globalScriptNodesToTriggerOnLoad.Add(modNodeStartId - 1);
-                            }
-                            else
-                            {
-                                Vector2 rightPickaxePos = new Vector2(3, 34);
-                                effectNodePositions.Add("156282", rightPickaxePos);
-                                int spawnNodeId = modNodeStartId; //898249;
-                                scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, ref modNodeStartId, rightPickaxePos, true));
-                                scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(modNodeStartId++, rightPickaxePos, "boss_krilith_dead", false, new[] { spawnNodeId }, false, null));
-                                globalScriptNodesToTriggerOnLoad.Add(modNodeStartId - 1);
                             }
 
                             int[] t2StartAreaEnableNodes = { 2189, 2585 };
@@ -2726,19 +2978,37 @@ namespace HammerwatchAP.Archipelago
                         case "level_temple_3.xml":
                             List<int> blockItemNodes = new List<int>(5);
 
-                            int[] t3Block1Nodes = { 143522, 143523 };
-                            blockItemNodes.Add(t3Block1Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 1")]);
-                            int[] t3Block2Nodes = { 143518, 143510 };
-                            blockItemNodes.Add(t3Block2Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 2")]);
-                            int[] t3Block3Nodes = { 143519, 143520 };
-                            blockItemNodes.Add(t3Block3Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 3")]);
-                            int[] t3Block4Nodes = { 143528, 143529 };
-                            blockItemNodes.Add(t3Block4Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 4")]);
-                            int[] t3Block5Nodes = { 143525, 143526 };
-                            blockItemNodes.Add(t3Block5Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 5")]);
+                            //int[] t3Block1Nodes = { 143522, 143523 };
+                            //int[] t3Block2Nodes = { 143518, 143510 };
+                            //int[] t3Block3Nodes = { 143519, 143520 };
+                            //int[] t3Block4Nodes = { 143528, 143529 };
+                            //int[] t3Block5Nodes = { 143525, 143526 };
+                            Dictionary<int, int> t3BlockNodes = new Dictionary<int, int>()
+                            {
+                                { 143523, 143522 },
+                                { 143510, 143518 },
+                                { 143520, 143519 },
+                                { 143529, 143528 },
+                                { 143526, 143525 },
+                            };
+                            foreach(var blockNodePair in t3BlockNodes)
+                            {
+                                if(archipelagoData.LocationExists(NodeHelper.GetNodePos(idToNode[blockNodePair.Key.ToString()]), levelFile))
+                                {
+                                    blockItemNodes.Add(blockNodePair.Key);
+                                }
+                                else
+                                {
+                                    blockItemNodes.Add(blockNodePair.Value);
+                                }
+                            }
+                            //blockItemNodes.Add(t3Block1Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 1")]);
+                            //blockItemNodes.Add(t3Block2Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 2")]);
+                            //blockItemNodes.Add(t3Block3Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 3")]);
+                            //blockItemNodes.Add(t3Block4Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 4")]);
+                            //blockItemNodes.Add(t3Block5Nodes[archipelagoData.GetRandomLocation("Temple 3 S Beam 5")]);
 
-                            nodesToNuke = new List<int> { 143524, 143517, 143521, 143530, 143527 };
-                            //S Beam 1 though 5
+                            nodesToNuke = new List<int> { 143524, 143517, 143521, 143530, 143527 }; //S Beam 1 though 5
 
                             int t3CombinationItemId = modNodeStartId++;
                             scriptNodesToAdd.Add(NodeHelper.CreateGlobalEventTriggerNode(t3CombinationItemId, 1, new Vector2(-10.5f, -51), "t3_levers", null));
@@ -2899,6 +3169,22 @@ namespace HammerwatchAP.Archipelago
             CheckDuplicateNodeIds(levelFile, doodadsNodeRoot, scriptNodeRoot, lightNodeRoot, actorNodeRoot, itemNodeRoot);
 
             return doc.ToString();
+        }
+        private static List<int> AddRandomSpawnNodesToTrigger(string levelFile, Dictionary<string, XElement> idToNode, List<int> scriptNodes)
+        {
+            List<int> triggerSpawnNodes = new List<int>(scriptNodes.Count);
+            foreach (int nodeId in scriptNodes)
+            {
+                XElement node = idToNode[nodeId.ToString()];
+                Vector2 pos = NodeHelper.PosFromString(node.Element("vec2").Value);
+                NetworkItem item = archipelagoData.GetGenItemFromPos(pos, levelFile);
+                if (item.Item != -1)
+                {
+                    triggerSpawnNodes.Add(nodeId);
+                }
+            }
+            globalScriptNodesToTriggerOnceOnLoad.AddRange(triggerSpawnNodes);
+            return triggerSpawnNodes;
         }
         private static void CheckDuplicateNodeIds(string levelFile, XElement doodadsNodeRoot, XElement scriptNodeRoot, XElement lightNodeRoot, XElement actorNodeRoot, XElement itemNodeRoot)
         {
@@ -3167,19 +3453,17 @@ namespace HammerwatchAP.Archipelago
                             XElement[] positions = prefabGroup.Elements().ToArray();
                             foreach (XElement pos in positions)
                             {
-                                if (archipelagoData.GetRandomLocation($"{levelPrefix} Secret {randomPrefabIndex++}") == 0)
+                                Vector2 posVec = NodeHelper.PosFromString(pos.Value);
+                                posVec += new Vector2(.5f, -5f); //Item offset from prefab position
+                                int nodeId = nodeIdCounter++;
+                                string xmlName = CreateItemScriptNodes(levelFile, nodeId, posVec, ref nodeIdCounter, out List<XElement> prefabItemNodes, true, out int holoEffectNodeId);
+                                if (xmlName == null)
                                 {
                                     pos.Remove();
                                     secretDud.Add(pos);
                                 }
                                 else
                                 {
-                                    Vector2 posVec = NodeHelper.PosFromString(pos.Value);
-                                    posVec += new Vector2(.5f, -5f); //Item offset is (.5, -5) btw
-                                    int nodeId = nodeIdCounter++;
-                                    string xmlName = CreateItemScriptNodes(levelFile, nodeId, posVec, ref nodeIdCounter, out List<XElement> prefabItemNodes, true, out int holoEffectNodeId);
-                                    if (xmlName == null)
-                                        continue;
                                     scriptNodesToAdd.AddRange(prefabItemNodes);
                                     scriptNodesToAdd.Add(NodeHelper.CreateSpawnObjectNode(nodeId, xmlName, posVec));
                                     if (holoEffectNodeId != -1)
@@ -3211,12 +3495,10 @@ namespace HammerwatchAP.Archipelago
                             foreach (XElement pos in positions)
                             {
                                 string puzzleSlotName = $"{levelPrefix} Puzzle {puzzleCounter++}";
-                                int puzzlePegs = archipelagoData.GetRandomLocation(puzzleSlotName);
-                                if (puzzlePegs >= 0)
+                                Vector2 basePosVec = NodeHelper.PosFromString(pos.Value);
+                                List<XElement> puzzleNodes = CreateRandomizedPegPuzzle(levelFile, basePosVec, ref puzzleItemCounter, puzzleSlotName, out List<XElement> doodads, ref buttonEventNodes);
+                                if (puzzleNodes != null)
                                 {
-                                    Vector2 basePosVec = NodeHelper.PosFromString(pos.Value);
-                                    List<XElement> puzzleNodes = CreateRandomizedPegPuzzle(levelFile, basePosVec, ref puzzleItemCounter, puzzleSlotName,
-                                        out List<XElement> doodads, ref buttonEventNodes);
                                     scriptNodesToAdd.AddRange(puzzleNodes);
                                     doodadsToAdd.AddRange(doodads);
                                     pos.Remove();
@@ -3295,6 +3577,52 @@ namespace HammerwatchAP.Archipelago
                         type = type[0].ToString().ToUpper() + type.Remove(0, 1);
                         string shuffledType = APData.GetShopPrefabSuffixFromAPId(archipelagoData.GetShopLocation($"{type} Shop"));
                         groupName.Value = $"prefabs/desert_vendor_{shuffledType}.xml";
+                    }
+                }
+            }
+            //Replace machine pump prefabs with doodads with split lever
+            if(archipelagoData.mapType == ArchipelagoData.MapType.Temple && archipelagoData.GetOption(SlotDataKeys.leverFragments) == 0)
+            {
+                string pumpsActiveButtonName = null;
+                string pumpsActiveFlag = null;
+                switch (levelFile)
+                {
+                    case "level_cave_1.xml":
+                        pumpsActiveButtonName = ArchipelagoManager.GetItemName(66 + APData.templeButtonItemStartID);
+                        pumpsActiveFlag = "machine_pump_start_3";
+                        break;
+                    //We can skip level 2 as we can just use the machine_pump_start trigger
+                    case "level_cave_3.xml":
+                        pumpsActiveButtonName = ArchipelagoManager.GetItemName(68 + APData.templeButtonItemStartID);
+                        pumpsActiveFlag = "machine_pump_start_1";
+                        break;
+                }
+                if(pumpsActiveFlag != null)
+                {
+                    foreach (XElement prefabGroup in prefabsNode.Elements().ToArray())
+                    {
+                        string prefabGroupXmlName = prefabGroup.Attribute("name").Value;
+                        if (prefabGroupXmlName == "prefabs/machine_pump.xml")
+                        {
+                            XElement[] positions = prefabGroup.Elements().ToArray();
+                            List<int> machineDoodadIds = new List<int>(positions.Length);
+                            List<int> machineSoundNodeIds = new List<int>(positions.Length);
+                            foreach (XElement pos in positions)
+                            {
+                                machineDoodadIds.Add(nodeIdCounter);
+                                doodadsToAdd.Add(NodeHelper.CreateDoodadNode(nodeIdCounter++, "doodads/generic/machine_pump.xml", pos.Value, true));
+                                machineSoundNodeIds.Add(nodeIdCounter);
+                                scriptNodesToAdd.Add(NodeHelper.CreatePlaySoundNode(nodeIdCounter++, NodeHelper.PosFromString(pos.Value), "sound/misc.xml:info_machine_pump", true, true, 5));
+                            }
+                            scriptNodesToAdd.Add(NodeHelper.CreateGlobalEventTriggerNode(nodeIdCounter++, -1, new Vector2(2f, 19f), pumpsActiveButtonName, new int[] { nodeIdCounter + 1 }));
+                            globalScriptNodesToTriggerOnLoad.Add(nodeIdCounter);
+                            scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(nodeIdCounter++, new Vector2(0, 17.5f), pumpsActiveFlag, false, new int[] { nodeIdCounter }, false, null));
+                            XElement changeDoodadStateNode = NodeHelper.CreateChangeDoodadStateNode(nodeIdCounter++, new Vector2(0, 20), -1, "activate", machineDoodadIds.ToArray());
+                            NodeHelper.AddConnectionNodes(changeDoodadStateNode, machineSoundNodeIds.ToArray());
+                            scriptNodesToAdd.Add(changeDoodadStateNode);
+                            prefabGroup.Remove();
+                            break;
+                        }
                     }
                 }
             }
@@ -4000,10 +4328,12 @@ namespace HammerwatchAP.Archipelago
         private static string CreateItemScriptNodes(string levelFile, int itemId, Vector2 pos, ref int extraNodeCounter, out List<XElement> scriptNodesToAdd, bool isScriptItem, out int holoEffectNodeId)
         {
             scriptNodesToAdd = new List<XElement>();
-            if (itemId == extraNodeCounter) extraNodeCounter++;
-            NetworkItem item = archipelagoData.GetGenItemFromPos(pos, levelFile);
-            string xmlName = item.Item == -1 ? null : ArchipelagoManager.GetItemXmlName(item);
             holoEffectNodeId = -1;
+            NetworkItem item = archipelagoData.GetGenItemFromPos(pos, levelFile);
+            if (item.Item == -1)
+                return null;
+            string xmlName = ArchipelagoManager.GetItemXmlName(item);
+            if (itemId == extraNodeCounter) extraNodeCounter++;
             switch (xmlName)
             {
                 case null:
@@ -4404,8 +4734,74 @@ namespace HammerwatchAP.Archipelago
             List<XElement> scriptNodes = new List<XElement>();
             doodads = new List<XElement>(29);
 
+            List<Vector2> prizePositions = new List<Vector2>()
+            {
+                puzzlePos + new Vector2(0, 4.5f),
+                puzzlePos + new Vector2(-4.5f, 0),
+                puzzlePos + new Vector2(4.5f, 0),
+                puzzlePos + new Vector2(0, -4.5f),
+            };
+            int puzzleLocations = 0;
+            List<int> puzzleNodeIds = new List<int>(prizePositions.Count);
+            for (int p = 0; p < prizePositions.Count; p++)
+            {
+                Vector2 prizePos = prizePositions[p];
+                int itemSpawnId = idCounter;
+                string xmlName = CreateItemScriptNodes(levelFile, itemSpawnId, prizePos, ref idCounter, out List<XElement> extraNodes, true, out int holoEffectNodeId);
+                if (xmlName == null) //If the location doesn't exist skip the reward
+                {
+                    break;
+                }
+                puzzleLocations++;
+                puzzleNodeIds.Add(itemSpawnId);
+                scriptNodes.Add(NodeHelper.CreateSpawnObjectNode(itemSpawnId, xmlName, prizePos));
+                if (holoEffectNodeId != -1)
+                    NodeHelper.AddConnectionNodes(scriptNodes[scriptNodes.Count - 1], new int[] { holoEffectNodeId });
+                scriptNodes.AddRange(extraNodes);
+                puzzleNodeIds.Add(idCounter);
+                scriptNodes.Add(NodeHelper.CreatePlaySoundNode(idCounter++, prizePos, "sound/misc.xml:spawn_tele", false, true, 5));
+                puzzleNodeIds.Add(idCounter);
+                scriptNodes.Add(NodeHelper.CreatePlayEffectNode(idCounter++, prizePos, "effects/particles.xml:flash"));
+            }
+            if (puzzleLocations == 0)
+                return null;
+
+            //Determine number of pegs that should pop up after activating the peg puzzle
+            int pegs = 0;
+            int maxPegs = 1;
+            switch(puzzleLocations)
+            {
+                case 1:
+                    pegs = 1;
+                    maxPegs = 10;
+                    break;
+                case 2:
+                    pegs = 10;
+                    maxPegs = 14;
+                    break;
+                case 3:
+                    pegs = 14;
+                    maxPegs = 18;
+                    break;
+                case 4:
+                    pegs = 18;
+                    maxPegs = 26;
+                    break;
+            }
+            double totalPegChance = 0;
+            for(int p = pegs; p < maxPegs; p++)
+            {
+                totalPegChance += pegDistribution[p];
+            }
+            double pegRoll = random.NextDouble() * totalPegChance;
+            for (int p = pegs; p < maxPegs; p++)
+            {
+                pegRoll -= pegDistribution[p];
+                if (pegRoll <= 0) break;
+                pegs++;
+            }
             List<int> numbers = new List<int>(25);
-            int pegs = archipelagoData.GetRandomLocation(puzzleCode);
+            //int pegs = archipelagoData.GetRandomLocation(puzzleCode);
             List<int> popupNums = new List<int>(pegs);
             for (int n = 0; n < 25; n++)
             {
@@ -4461,59 +4857,6 @@ namespace HammerwatchAP.Archipelago
             NodeHelper.AddConnectionNodes(scriptNodes[scriptNodes.Count - 1], pegSpawnIds.ToArray(), new int[24]);
             XElement itemLinkNode = NodeHelper.CreateScriptLinkNode(idCounter++, true, -1, puzzlePos + new Vector2(8, 2));
             scriptNodes.Add(itemLinkNode);
-
-            List<Vector2> prizePositions = new List<Vector2>();
-            if (pegs >= 1)
-            {
-                prizePositions.Add(puzzlePos + new Vector2(0, 4.5f));
-            }
-            if (pegs >= 10)
-            {
-                prizePositions.Add(puzzlePos + new Vector2(-4.5f, 0));
-            }
-            if (pegs >= 14)
-            {
-                prizePositions.Add(puzzlePos + new Vector2(4.5f, 0));
-            }
-            if (pegs >= 18)
-            {
-                prizePositions.Add(puzzlePos + new Vector2(0, -4.5f));
-            }
-
-            List<int> puzzleNodeIds = new List<int>(prizePositions.Count);
-            for (int p = 0; p < prizePositions.Count; p++)
-            {
-                Vector2 prizePos = prizePositions[p];
-                puzzleNodeIds.Add(idCounter);
-                scriptNodes.Add(NodeHelper.CreatePlaySoundNode(idCounter++, prizePos, "sound/misc.xml:spawn_tele", false, true, 5));
-                puzzleNodeIds.Add(idCounter);
-                scriptNodes.Add(NodeHelper.CreatePlayEffectNode(idCounter++, prizePos, "effects/particles.xml:flash"));
-                int itemSpawnId = idCounter;
-                string xmlName = CreateItemScriptNodes(levelFile, itemSpawnId, prizePos, ref idCounter, out List<XElement> extraNodes, true, out int holoEffectNodeId);
-                if (xmlName == null) //The item is not randomized so it stays the same
-                {
-                    switch (p)
-                    {
-                        case 0:
-                            xmlName = "items/powerup_potion2.xml";
-                            break;
-                        case 1:
-                            xmlName = "items/powerup_1up.xml";
-                            break;
-                        case 2:
-                            xmlName = "prefabs/upgrade_random.xml";
-                            break;
-                        case 3:
-                            xmlName = "items/chest_purple.xml";
-                            break;
-                    }
-                }
-                puzzleNodeIds.Add(itemSpawnId);
-                scriptNodes.Add(NodeHelper.CreateSpawnObjectNode(itemSpawnId, xmlName, prizePos));
-                if (holoEffectNodeId != -1)
-                    NodeHelper.AddConnectionNodes(scriptNodes[scriptNodes.Count - 1], new int[] { holoEffectNodeId });
-                scriptNodes.AddRange(extraNodes);
-            }
             NodeHelper.AddConnectionNodes(itemLinkNode, puzzleNodeIds.ToArray());
 
             return scriptNodes;

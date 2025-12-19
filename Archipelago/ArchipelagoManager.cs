@@ -1517,6 +1517,20 @@ namespace HammerwatchAP.Archipelago
                     archipelagoData.pofRaiseLevel = newPofRaiseLevel;
                     EventSystem.Instance.FireEvent("pyramid_update");
                 }
+
+                if(itemName.EndsWith("Water Pumps"))
+                {
+                    string[] splits = itemName.Split(' ');
+                    if(splits.Length > 3)
+                    {
+                        int caveLevel = int.Parse(splits[3]);
+                        GameInterface.SetGlobalFlag($"machine_pump_start_{caveLevel}");
+                    }
+                    else
+                    {
+                        GameInterface.SetGlobalFlag($"machine_pump_start");
+                    }
+                }
             }
 
             if (itemName.Contains("Master") || itemName.StartsWith("Dune Sharks Arena"))

@@ -484,6 +484,10 @@ namespace HammerwatchAP.Util
         //    connectionNodes[0].Value += " " + string.Join(" ", connections);
         //    connectionNodes[1].Value += " " + string.Join(" ", connectionDelays);
         //}
+        public static void SetTriggerTimes(XElement node, int triggerTimes)
+        {
+            node.Elements("int").ToArray()[1].Value = triggerTimes.ToString();
+        }
 
         public static void EditShowSpeechBubbleNode(XElement node, string text)
         {

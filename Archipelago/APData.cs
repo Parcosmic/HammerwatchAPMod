@@ -11,12 +11,15 @@ namespace HammerwatchAP.Archipelago
 {
     public static class APData
     {
-        public const int castleStartID = 0x111000;
-        public const int templeStartID = 0x110000;
+        public const int CASTLE_LOCATION_BASE_ID = 0x111000;
+        public const int TEMPLE_LOCATION_BASE_ID = 0x110000;
+        public const int ITEM_BASE_ID = 0x110000;
 
-        public const int castleButtonItemStartID = templeStartID + 768;
-        public const int templeButtonItemStartID = templeStartID + 1024;
-        public const int shopLocationIdOffset = templeStartID + 65536; //0x10000
+        public const int castleButtonItemStartID = ITEM_BASE_ID + 768;
+        public const int templeButtonItemStartID = ITEM_BASE_ID + 1024;
+        public const int CASTLE_BUTTON_ITEM_END_ID = castleButtonItemStartID + 203;
+        public const int TEMPLE_BUTTON_ITEM_END_ID = templeButtonItemStartID + 68;
+        public const int SHOP_LOCATION_ID_OFFSET = TEMPLE_LOCATION_BASE_ID + 65536; //0x10000
 
         public const int PLAYER_KEYS = 11;
         public static int GetAdjustedLocationId(int locId, ArchipelagoData archipelagoData)
@@ -24,17 +27,17 @@ namespace HammerwatchAP.Archipelago
             switch (archipelagoData.mapType)
             {
                 case ArchipelagoData.MapType.Castle:
-                    locId += castleStartID;
+                    locId += CASTLE_LOCATION_BASE_ID;
                     break;
                 case ArchipelagoData.MapType.Temple:
-                    locId += templeStartID;
+                    locId += TEMPLE_LOCATION_BASE_ID;
                     break;
             }
             return locId;
         }
 
-        public const int shopItemOffset = 1280;
-        public const int shopItemBaseId = templeStartID + shopItemOffset;
+        public const int SHOP_ITEM_ID_OFFSET = 1280;
+        public const int SHOP_ITEM_BASE_ID = ITEM_BASE_ID + SHOP_ITEM_ID_OFFSET;
 
         private const string archipelagoItemXmlName = "items/archipelago_item.xml";
         private const string archipelagoFillerItemXmlName = "items/archipelago_filler_item.xml";
@@ -347,9 +350,12 @@ namespace HammerwatchAP.Archipelago
             { "Pickaxe", "items/tool_pickaxe.xml" },
             { "Hammer", "items/tool_hammer.xml" },
             { "Frying Pan Fragment", "items/tool_pan_fragment.xml" },
-            { "Pumps Lever Fragment",   "items/tool_lever_fragment.xml" },
+            { "Pumps Lever Fragment", "items/tool_lever_fragment.xml" },
             { "Pickaxe Fragment", "items/tool_pickaxe_fragment.xml" },
             { "Hammer Fragment", "items/tool_hammer_fragment.xml" },
+            { "Cave Level 3 Pumps Lever", "items/tool_lever_split_3.xml" },
+            { "Cave Level 2 Pumps Lever", "items/tool_lever_split_2.xml" },
+            { "Cave Level 1 Pumps Lever", "items/tool_lever_split_1.xml" },
             { "Gold Ring", "items/special_ring.xml" },
             { "Serious Health Upgrade", "items/special_serious_health.xml" },
             { "Bomb Trap", bombTrapXmlName }, //If changing this update the generation code //Wood
@@ -4242,6 +4248,8 @@ namespace HammerwatchAP.Archipelago
             { new Vector2(24.0f, 12.0f), 643 },
             { new Vector2(21.0f, 15.0f), 644 },
             { new Vector2(24.0f, 15.0f), 645 },
+            { new Vector2(-2f, -39.5f), 726 },
+            { new Vector2(-2f, -38f), 727 },
             }},
             {"level_cave_3.xml", new Dictionary<Vector2, int>
             {
@@ -5193,7 +5201,7 @@ namespace HammerwatchAP.Archipelago
         }
         public static string GetHammerwatchItemDescription(int itemId)
         {
-            int relId = itemId - templeStartID;
+            int relId = itemId - ITEM_BASE_ID;
             if (itemDescriptions.TryGetValue(relId, out string desc))
                 return desc;
             if (relId >= 545 && relId < 592) //Floor master keys
@@ -5218,7 +5226,7 @@ namespace HammerwatchAP.Archipelago
             }
             if (IsItemShopUpgrade(itemId)) //Shop upgrades
             {
-                int shopRelId = itemId - shopItemBaseId;
+                int shopRelId = itemId - SHOP_ITEM_BASE_ID;
                 return ArchipelagoMessageManager.GetLanguageString(shopItemDescriptions[shopRelId]);
             }
             return $"Unknown item description: {itemId}";
@@ -5616,16 +5624,16 @@ namespace HammerwatchAP.Archipelago
         {
             if (!shopLocationVanillaUpgradeMapping[playerClass].TryGetValue(upgradeId, out int locId))
                 return -1;
-            return locId + shopLocationIdOffset;
+            return locId + SHOP_LOCATION_ID_OFFSET;
         }
         public static string[] GetShopIdsFromItemId(int itemId)
         {
-            int relId = itemId - shopItemBaseId;
+            int relId = itemId - SHOP_ITEM_BASE_ID;
             return shopItemData[relId].shopItemIds;
         }
         public static PlayerClass GetShopItemClass(int itemId)
         {
-            int relId = itemId - templeStartID;
+            int relId = itemId - ITEM_BASE_ID;
             if (relId < 1280)
                 return PlayerClass.KNIGHT; //This isn't a shop item!
             if (relId < 1300)
@@ -5646,7 +5654,7 @@ namespace HammerwatchAP.Archipelago
         }
         public static string GetShopItemXml(int itemId)
         {
-            int relId = itemId - shopItemBaseId;
+            int relId = itemId - SHOP_ITEM_BASE_ID;
             return $"items/shop_item_{shopItemData[relId].shopType}.xml";
         }
 
@@ -6757,9 +6765,9 @@ namespace HammerwatchAP.Archipelago
             }}
         };
 
-        public static bool IsItemUnique(long itemId)
+        public static bool IsReceiveItemUnique(long itemId)
         {
-            long relId = itemId - templeStartID;
+            long relId = itemId - ITEM_BASE_ID;
             //Tool items
             switch (relId)
             {
@@ -6777,17 +6785,17 @@ namespace HammerwatchAP.Archipelago
         }
         public static bool IsItemButton(long itemId)
         {
-            return (itemId >= castleButtonItemStartID && itemId <= castleButtonItemStartID + 203)
-                || (itemId >= templeButtonItemStartID && itemId <= templeButtonItemStartID + 65);
+            return (itemId >= castleButtonItemStartID && itemId <= CASTLE_BUTTON_ITEM_END_ID)
+                || (itemId >= templeButtonItemStartID && itemId <= TEMPLE_BUTTON_ITEM_END_ID);
         }
         public static bool IsItemShopUpgrade(long itemId)
         {
-            long relId = itemId - templeStartID - shopItemOffset;
+            long relId = itemId - SHOP_ITEM_BASE_ID;
             return relId >= 0 && relId < 146;
         }
         public static bool IsItemFloorMasterKey(long itemId)
         {
-            return itemId >= templeStartID + 545 && itemId <= templeStartID + 591;
+            return itemId >= ITEM_BASE_ID + 545 && itemId <= ITEM_BASE_ID + 591;
         }
         public static bool IsItemXmlNameOffworld(string xmlName)
         {

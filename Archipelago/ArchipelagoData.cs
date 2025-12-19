@@ -220,6 +220,20 @@ namespace HammerwatchAP.Archipelago
                     }
                 }
             }
+            if(xmlName.StartsWith("items/tool_lever_split_"))
+            {
+                int splitLevel = int.Parse(xmlName.Substring("items/tool_lever_split_".Length, 1));
+
+                bool foundAnotherLever = GameInterface.GetGlobalFlag("quest_pumps_solved_1") || GameInterface.GetGlobalFlag("quest_pumps_solved_2") || GameInterface.GetGlobalFlag("quest_pumps_solved_3");
+
+                GameInterface.SetGlobalFlag($"quest_pumps_solved_{splitLevel}", true);
+                GameInterface.SetGlobalFlag("quest_lever_icon_updated", true);
+
+                if(foundAnotherLever)
+                    ArchipelagoMessageManager.AddTranslatedMessageToQueue("Obtained Jahns pump lever... again...?");
+                else
+                    ArchipelagoMessageManager.AddTranslatedMessageToQueue("d.quest.lever");
+            }
 
             if (hasPickaxe)
             {
@@ -412,6 +426,14 @@ namespace HammerwatchAP.Archipelago
         {
             long locId = GetGenLocationIdFromPos(pos, levelId);
             return GetItemFromLoc(locId);
+        }
+        public bool LocationExists(int locId)
+        {
+            return locationToItem.ContainsKey(locId);
+        }
+        public bool LocationExists(Vector2 pos, string levelFile)
+        {
+            return LocationExists(GetGenLocationIdFromPos(pos, levelFile));
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using ARPGGame;
 using ARPGGame.Menus;
 using ARPGGame.GUI;
 using HammerwatchAP.Archipelago;
+using HammerwatchAP.Game;
 using HammerwatchAP.Util;
 
 namespace HammerwatchAP.Hooks
@@ -94,24 +95,79 @@ namespace HammerwatchAP.Hooks
 						Widget extraInfo2 = __instance.Document.GetWidget("extra-info-2");
 						HooksHelper.SetWidgetVisible(extraInfo2, GameBase.Instance.WorldDrawer.ShowMinimap);
 						TextWidget leverWidget = ((TextWidget)extraInfo2.GetWidget("lever-fragments"));
+						TextWidget leverWidget2 = ((TextWidget)extraInfo2.GetWidget("lever-fragments-2"));
+						TextWidget leverWidget3 = ((TextWidget)extraInfo2.GetWidget("lever-fragments-3"));
 						TextWidget panWidget = ((TextWidget)extraInfo2.GetWidget("pan-fragments"));
 						TextWidget pickaxeWidget = ((TextWidget)extraInfo2.GetWidget("pickaxe-fragments"));
-						if (ArchipelagoManager.archipelagoData.totalPanFragments > 1 && ArchipelagoManager.archipelagoData.panFragments != ArchipelagoManager.archipelagoData.totalPanFragments)
-							HooksHelper.SetWidgetVisible(panWidget, true);
+						if(panWidget != null)
+						{
+							if (ArchipelagoManager.archipelagoData.totalPanFragments > 1 && ArchipelagoManager.archipelagoData.panFragments != ArchipelagoManager.archipelagoData.totalPanFragments)
+								HooksHelper.SetWidgetVisible(panWidget, true);
+							else
+								HooksHelper.SetWidgetVisible(panWidget, false);
+						}
+						if(leverWidget != null)
+						{
+							if(ArchipelagoManager.archipelagoData.totalLeverFragments == 0)
+							{
+								if(GameInterface.GetGlobalFlag("quest_pumps_solved_1"))
+								{
+									leverWidget.SetText("1");
+									HooksHelper.SetWidgetVisible(leverWidget, true);
+								}
+								else
+                                {
+									leverWidget.SetText("");
+								}
+							}
+							else
+							{
+								if (ArchipelagoManager.archipelagoData.totalLeverFragments > 1 && ArchipelagoManager.archipelagoData.leverFragments != ArchipelagoManager.archipelagoData.totalLeverFragments)
+									HooksHelper.SetWidgetVisible(leverWidget, true);
+								else
+									HooksHelper.SetWidgetVisible(leverWidget, false);
+							}
+						}
+						if(pickaxeWidget != null)
+						{
+							if (ArchipelagoManager.archipelagoData.totalPickaxeFragments > 1 && ArchipelagoManager.archipelagoData.pickaxeFragments != ArchipelagoManager.archipelagoData.totalPickaxeFragments)
+								HooksHelper.SetWidgetVisible(pickaxeWidget, true);
+							else
+								HooksHelper.SetWidgetVisible(pickaxeWidget, false);
+						}
+						if (ArchipelagoManager.archipelagoData.totalLeverFragments == 0)
+						{
+							if (leverWidget2 != null)
+							{
+								if (GameInterface.GetGlobalFlag("quest_pumps_solved_2"))
+								{
+									leverWidget2.SetText("2");
+									HooksHelper.SetWidgetVisible(leverWidget2, true);
+								}
+								else
+								{
+									leverWidget2.SetText("");
+								}
+							}
+							if (leverWidget3 != null)
+							{
+								if (GameInterface.GetGlobalFlag("quest_pumps_solved_3"))
+								{
+									leverWidget3.SetText("3");
+									HooksHelper.SetWidgetVisible(leverWidget3, true);
+								}
+								else
+								{
+									leverWidget3.SetText("");
+								}
+							}
+						}
 						else
-							HooksHelper.SetWidgetVisible(panWidget, false);
-						if (ArchipelagoManager.archipelagoData.totalLeverFragments > 1 && ArchipelagoManager.archipelagoData.leverFragments != ArchipelagoManager.archipelagoData.totalLeverFragments)
-							HooksHelper.SetWidgetVisible(leverWidget, true);
-						else
-							HooksHelper.SetWidgetVisible(leverWidget, false);
-						if (ArchipelagoManager.archipelagoData.totalPickaxeFragments > 1 && ArchipelagoManager.archipelagoData.pickaxeFragments != ArchipelagoManager.archipelagoData.totalPickaxeFragments)
-							HooksHelper.SetWidgetVisible(pickaxeWidget, true);
-						else
-							HooksHelper.SetWidgetVisible(pickaxeWidget, false);
-						panWidget.SetText(ArchipelagoManager.archipelagoData.panFragments.ToString());
-						leverWidget.SetText(ArchipelagoManager.archipelagoData.leverFragments.ToString());
-						pickaxeWidget.SetText(ArchipelagoManager.archipelagoData.pickaxeFragments.ToString());
-
+						{
+							panWidget.SetText(ArchipelagoManager.archipelagoData.panFragments.ToString());
+							leverWidget.SetText(ArchipelagoManager.archipelagoData.leverFragments.ToString());
+							pickaxeWidget.SetText(ArchipelagoManager.archipelagoData.pickaxeFragments.ToString());
+						}
 					}
 				}
 			}

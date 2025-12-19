@@ -136,8 +136,9 @@ namespace HammerwatchAP.Archipelago
 
             Logging.LogConnectionInfo(ip);
 
+            failedConnectMsg = null;
             session = ArchipelagoSessionFactory.CreateSession(ip);
-            if(session == null)
+            if (session == null)
             {
                 failedConnectMsg = "Couldn't create Archipelago session";
                 return false;
@@ -306,14 +307,14 @@ namespace HammerwatchAP.Archipelago
                             {
                                 case MiscHelper.VersionMisMatch.Major:
                                 case MiscHelper.VersionMisMatch.Minor:
-                                    ArchipelagoManager.DisconnectFromArchipelago($"Server requires higher mod version ({clientVersion}) than is currently installed. Update your mod!");
                                     SetConnectionState(ConnectionState.ConnectionFailure);
+                                    ArchipelagoManager.DisconnectFromArchipelago($"Server requires higher mod version ({clientVersion}) than is currently installed. Update your mod!");
                                     return;
                                 case MiscHelper.VersionMisMatch.Build:
                                     if (!connectIgnoringWarnings)
                                     {
-                                        ArchipelagoManager.DisconnectFromArchipelago("There is a newer version of the mod, it is recommended to update before you start playing!");
                                         SetConnectionState(ConnectionState.ConnectionFailure);
+                                        ArchipelagoManager.DisconnectFromArchipelago("There is a newer version of the mod, it is recommended to update before you start playing!");
                                     }
                                     connectIgnoringWarnings = true;
                                     break;
@@ -439,7 +440,7 @@ namespace HammerwatchAP.Archipelago
                                 string itemName = ArchipelagoManager.GetReceiveItemName(item);
                                 if (++archipelagoData.itemIndexCounter <= archipelagoData.itemsReceived)
                                 {
-                                    if (APData.IsItemUnique(item.Item))
+                                    if (APData.IsReceiveItemUnique(item.Item))
                                     {
                                         Logging.Debug($"Re-receiving {itemName}");
                                         ArchipelagoManager.PickupItemEffects(item, true, true);
@@ -510,7 +511,6 @@ namespace HammerwatchAP.Archipelago
                 else
                     Logging.Log($"Disconnected from AP socket: {failedConnectMsg}");
                 DisconnectedFromArchipelago();
-                failedConnectMsg = null;
             };
             ArchipelagoManager.datapackageUpToDate = false;
             loginResult = session.TryConnectAndLogin("Hammerwatch", slotName, ItemsHandlingFlags.IncludeStartingInventory, ArchipelagoManager.AP_VERSION, null, null, password);
@@ -596,9 +596,12 @@ namespace HammerwatchAP.Archipelago
         {
             connectedToAP = false;
             deathLinkService = null;
-            SetConnectionState(ConnectionState.Disconnected);
+            if(connectionState != ConnectionState.ConnectionFailure)
+            {
+                SetConnectionState(ConnectionState.Disconnected);
+                RefreshReconnectTimer();
+            }
             ArchipelagoManager.DisconnectedFromArchipelago(failedConnectMsg);
-            RefreshReconnectTimer();
         }
         private void RefreshReconnectTimer()
         {
