@@ -43,6 +43,7 @@ namespace HammerwatchAP.Archipelago
 
         public ArchipelagoSession session;
         private DeathLinkService deathLinkService;
+        private bool socketClosed;
         public bool ConnectionActive
         {
             get
@@ -136,6 +137,7 @@ namespace HammerwatchAP.Archipelago
 
             Logging.LogConnectionInfo(ip);
 
+            socketClosed = false;
             failedConnectMsg = null;
             session = ArchipelagoSessionFactory.CreateSession(ip);
             if (session == null)
@@ -418,10 +420,8 @@ namespace HammerwatchAP.Archipelago
                                     case ConnectionRefusedError.SlotAlreadyTaken:
                                         break;
                                 }
-                                Logging.Log(errorMessage);
                                 failedConnectMsg = errorMessage;
                             }
-                            SetConnectionState(ConnectionState.ConnectionFailure);
                             break;
                         case ArchipelagoPacketType.ReceivedItems:
                             ReceivedItemsPacket rIPacket = (ReceivedItemsPacket)packet;
@@ -506,6 +506,11 @@ namespace HammerwatchAP.Archipelago
             };
             session.Socket.SocketClosed += reason =>
             {
+                if(socketClosed) //For some reason this event gets run twice when the socket closes???
+                {
+                    return;
+                }
+                socketClosed = true;
                 if (failedConnectMsg == null)
                     Logging.Log($"Disconnected from AP socket: {reason}");
                 else
@@ -532,9 +537,10 @@ namespace HammerwatchAP.Archipelago
             if (!connectedToAP)
             {
                 if (loginResult is LoginFailure loginFailure)
-                    ConnectionError(loginFailure.Errors[0]);
+                    ConnectionResponseError(loginFailure.Errors[0]);
                 else
-                    ConnectionError(failedConnectMsg);
+                    ConnectionResponseError(failedConnectMsg);
+                SetConnectionState(ConnectionState.Disconnected);
                 return false;
             }
 
@@ -565,22 +571,16 @@ namespace HammerwatchAP.Archipelago
             ArchipelagoManager.FinishConnectingToAP();
             return true;
         }
-        public void ConnectionError(string errorMessage)
+        public void ConnectionResponseError(string errorMessage)
         {
-            if(ArchipelagoManager.GameState != ArchipelagoManager.APGameState.InGame)
-                GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connection Error", errorMessage);
-            else
-            {
-                ArchipelagoMessageManager.SendHWErrorMessage(errorMessage);
-            }
-            if (session.Socket.Connected)
-            {
-                DisconnectFromArchipelago(errorMessage);
-            }
-            else
+            Logging.Log("ConnectionError: " + errorMessage);
+            if(ArchipelagoManager.GameState == ArchipelagoManager.APGameState.InGame)
             {
                 RefreshReconnectTimer();
-                SetConnectionState(ConnectionState.Disconnected);
+            }
+            else
+            {
+                GameBase.Instance.SetMenu(MenuType.MESSAGE, "Connection Error", errorMessage);
             }
         }
         public void DisconnectFromArchipelago(string reason = null)
@@ -596,6 +596,7 @@ namespace HammerwatchAP.Archipelago
         {
             connectedToAP = false;
             deathLinkService = null;
+            ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
             if(connectionState != ConnectionState.ConnectionFailure)
             {
                 SetConnectionState(ConnectionState.Disconnected);

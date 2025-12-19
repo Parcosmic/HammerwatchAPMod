@@ -262,7 +262,6 @@ namespace HammerwatchAP.Archipelago
         }
         public static void DisconnectedFromArchipelago(string failedConnectMsg)
         {
-            ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
             MainMenu mainMenu = GameBase.Instance.GetMenu<MainMenu>();
             if (mainMenu != null)
             {
