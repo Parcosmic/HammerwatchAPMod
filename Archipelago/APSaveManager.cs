@@ -55,8 +55,7 @@ namespace HammerwatchAP.Archipelago
             foreach (SValue loc in locations)
             {
                 int savedCheckedLocation = loc.GetInteger();
-                if (archipelagoData.checkedLocations.Contains(savedCheckedLocation)) continue;
-                archipelagoData.checkedLocations.Add(savedCheckedLocation);
+                archipelagoData.AddToCheckedLocations(savedCheckedLocation);
             }
 
             archipelagoData.planks = save.Get("ap-planks").GetInteger();

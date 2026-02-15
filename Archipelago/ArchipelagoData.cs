@@ -19,6 +19,7 @@ namespace HammerwatchAP.Archipelago
         public string[] playerGames;
 
         public string mapFileName;
+        public string saveFileName;
 
         //Check data
         public List<NetworkItem> itemsToReceive = new List<NetworkItem>();
@@ -63,7 +64,7 @@ namespace HammerwatchAP.Archipelago
         public int wormCounter = 0;
         public int neededPlayers;
         public PlayerClass?[] shopsanityClasses;
-        public string saveFileName;
+        public bool shopItemsNeedSync = false;
 
         public enum MapType
         {
@@ -89,10 +90,9 @@ namespace HammerwatchAP.Archipelago
         {
             if (locationID == -1 || !ArchipelagoManager.playingArchipelagoSave) return;
             if (allLocalLocations != null && !allLocalLocations.Contains(locationID)) return; //This item is a randomized location, but it isn't active this game
-            if (!checkedLocations.Contains(locationID))
+            if (AddToCheckedLocations(locationID))
             {
                 Logging.Debug($"Found check: {locationID}");
-                checkedLocations.Add(locationID);
                 if (ArchipelagoManager.ConnectedToAP())
                 {
                     ArchipelagoManager.connectionInfo.session.Locations.CompleteLocationChecksAsync(new long[] { locationID });
@@ -122,6 +122,12 @@ namespace HammerwatchAP.Archipelago
                 ArchipelagoManager.archipelagoData.CheckLocation(locationID, true);
             }
             return locationID;
+        }
+        public bool AddToCheckedLocations(long locId)
+        {
+            if (checkedLocations.Contains(locId)) return false;
+            checkedLocations.Add(locId);
+            return true;
         }
 
         public void PickupItemEffectsXml(string xmlName, bool receive) //For item effects based on the xml name of the item
@@ -484,6 +490,11 @@ namespace HammerwatchAP.Archipelago
                 }
                 ArchipelagoMessageManager.announceMessageQueue.Add(ArchipelagoManager.GetReceiveItemMessage(itemToReceive));
                 ArchipelagoManager.CreateItemInWorld(itemToReceive, true);
+            }
+            if(shopItemsNeedSync)
+            {
+                shopItemsNeedSync = false;
+                ArchipelagoManager.SyncUpgrades();
             }
         }
 

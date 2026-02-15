@@ -645,14 +645,17 @@ namespace HammerwatchAP.Archipelago
         }
         public static void SyncUpgrades(PlayerInfo updatePlayer = null)
         {
+            if(updatePlayer == null)
+                Logging.Debug("Syncing upgrades for all players");
+            else
+                Logging.Debug("Syncing upgrades for player " + updatePlayer.PeerID);
             Dictionary<PlayerClass, Dictionary<int, int>> playerReceivedItemUpgradeCounts = new Dictionary<PlayerClass, Dictionary<int, int>>();
-            Dictionary<PlayerClass, List<string>> classActiveAPUpgrades = new Dictionary<PlayerClass, List<string>>();
             foreach (PlayerClass playerClass in Enum.GetValues(typeof(PlayerClass)))
             {
                 playerReceivedItemUpgradeCounts[playerClass] = new Dictionary<int, int>();
             }
             Dictionary<int, List<string>> playerActiveUpgradeIds = new Dictionary<int, List<string>>();
-            HashSet<int> activeAPUpgrades = new HashSet<int>();
+            HashSet<string> activeAPUpgrades = new HashSet<string>();
             foreach (PlayerInfo player in GameBase.Instance.Players)
             {
                 playerActiveUpgradeIds[player.PeerID] = new List<string>();
@@ -660,13 +663,13 @@ namespace HammerwatchAP.Archipelago
                 {
                     if (upgrade.ID.StartsWith("ap-"))
                     {
-                        int apLocId = int.Parse(upgrade.ID.Substring(3));
-                        activeAPUpgrades.Add(apLocId);
+                        activeAPUpgrades.Add(upgrade.ID);
                     }
                     else
                         playerActiveUpgradeIds[player.PeerID].Add(upgrade.ID);
                 }
             }
+            //Sync received/found item upgrades and shop locations
             List<NetworkItem> itemsToSync = new List<NetworkItem>(archipelagoData.itemsToReceive.Where((itm) => APData.IsItemShopUpgrade(itm.Item)));
             itemsToSync.AddRange(archipelagoData.checkedLocations.Where((locId) => APData.IsItemShopUpgrade(archipelagoData.locationToItem[locId].Item)).Select((locId) => archipelagoData.locationToItem[locId]));
             foreach (NetworkItem item in itemsToSync)
@@ -685,6 +688,16 @@ namespace HammerwatchAP.Archipelago
                 Dictionary<string, Upgrade> upgradeIdToUpgrade = new Dictionary<string, Upgrade>();
                 foreach (Upgrade upgrade in player.TweakData.GetAllUpgrades())
                 {
+                    if(upgrade.ID.StartsWith("ap-"))
+                    {
+                        //Activate shop location upgrades that have been checked on the server but not applied locally, we don't want these items to be in the shops
+                        long upgradeAPID = long.Parse(upgrade.ID.Substring(3));
+                        if (!activeAPUpgrades.Contains(upgrade.ID) && archipelagoData.checkedLocations.Contains(upgradeAPID))
+                        {
+                            player.TweakData.ActivateUpgrade(upgrade.ID);
+                        }
+                        continue;
+                    }
                     upgradeIdToUpgrade[upgrade.ID] = upgrade;
                 }
                 Dictionary<int, int> receivedItemUpgradeCounts = new Dictionary<int, int>(playerReceivedItemUpgradeCounts[player.Class]);
@@ -742,7 +755,7 @@ namespace HammerwatchAP.Archipelago
                     if (player.Actor != null)
                         ((PlayerActorBehavior)player.Actor.Behavior).RefreshTweakData(GameBase.Instance.resources);
                     else
-                        Console.WriteLine("Player actor doesn't exist for player " + player.PeerID);
+                        Logging.Debug("Player actor doesn't exist for player " + player.PeerID);
                 }
             }
         }

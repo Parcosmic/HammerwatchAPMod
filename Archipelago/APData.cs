@@ -19,7 +19,7 @@ namespace HammerwatchAP.Archipelago
         public const int templeButtonItemStartID = ITEM_BASE_ID + 1024;
         public const int CASTLE_BUTTON_ITEM_END_ID = castleButtonItemStartID + 203;
         public const int TEMPLE_BUTTON_ITEM_END_ID = templeButtonItemStartID + 68;
-        public const int SHOP_LOCATION_ID_OFFSET = TEMPLE_LOCATION_BASE_ID + 65536; //0x10000
+        public const int SHOP_LOCATION_ID_OFFSET = TEMPLE_LOCATION_BASE_ID + 65536; //=0x120000
 
         public const int PLAYER_KEYS = 11;
         public static int GetAdjustedLocationId(int locId, ArchipelagoData archipelagoData)
@@ -170,54 +170,73 @@ namespace HammerwatchAP.Archipelago
             //{ "Blue Balls Curse", "" },
             { "Bomb", "Bomb Trap" },
             { "Bonk Trap", "Stun Trap" },
-            //{ "Breakout Trap", "" },
+            { "Breakout Trap", "Hey! Trap" },
             { "Bubble Trap", "Stun Trap" },
+            { "Bullet Time Trap", "Frost Trap" },
+            { "Burn Trap", "Fire Trap" },
             { "Buyon Trap", "Chaser Trap" },
-            //{ "Camera Rotate Trap", "" },
+            { "Camera Rotate Trap", "Confuse Trap" },
             { "Chaos Control Trap", "Stun Trap" },
+            { "Chart Modifier Trap", "Confuse Trap" },
+            { "Clear Image Trap", "Mana Drain Trap" },
             { "Confound Trap", "Confuse Trap" },
             { "Confusion Trap", "Confuse Trap" },
+            //{ "Control Ball Trap", "" },
             { "Controller Drift Trap", "Confuse Trap" },
             { "Cursed Ball Trap", "Confuse Trap" },
             { "Cutscene Trap", "Hey! Trap" },
             { "Damage Trap", "Fire Trap" },
             //{ "Deisometric Trap", "" },
             { "Depletion Trap", "Mana Drain Trap" },
-            //{ "Disable A Trap", "" },
-            //{ "Disable B Trap", "" },
-            //{ "Disable C Up Trap", "" },
-            //{ "Disable Z Trap", "" },
+            { "Disable A Trap", "Disarm Trap" },
+            { "Disable B Trap", "Disarm Trap" },
+            { "Disable C Up Trap", "Disarm Trap" },
+            { "Disable Tag Trap", "Disarm Trap" },
+            { "Disable Z Trap", "Disarm Trap" },
             //{ "Double Damage", "" },
             { "Dry Trap", "Mana Drain Trap" },
             { "Eject Ability", "Mana Drain Trap" },
             { "Electrocution Trap", "Stun Trap" },
+            { "Empty Item Box Trap", "Mana Drain Trap" },
+            { "Enemy Ball Trap", "Confuse Trap" },
+            { "Energy Drain Trap", "Mana Drain Trap" },
             //{ "Expensive Stocks", "" },
             { "Exposition Trap", "Hey! Trap" },
             //{ "Fake Transition", "" },
             //{ "Fast Trap", "" },
             //{ "Fear Trap", "" },
+            //{ "Fish Eye Trap", "" },
             //{ "Fishing Trap", "" },
-            //{ "Flip Trap", "" },
+            { "Fishin' Boo Trap", "Chaser Trap" },
+            { "Flip Horizontal Trap", "Confuse Trap" },
+            { "Flip Trap", "Confuse Trap" },
+            { "Flip Vertical Trap", "Confuse Trap" },
+            { "Frame Slime Trap", "Frost Trap" },
             { "Freeze Trap", "Frost Trap" },
-            //{ "Frog Trap", "" },
+            { "Frog Trap", "Disarm Trap" },
             { "Frozen Trap", "Frost Trap" },
             { "Fuzzy Trap", "Confuse Trap" },
             //{ "Gadget Shuffle Trap", "" },
-            { "Get Out Trap", "Chaser Trap" },
+            { "Get Out Trap", "Chaser Trap" }, //Should be Escape Trap if we add it
             { "Ghost", "Chaser Trap" },
             { "Ghost Chat", "Hey! Trap" },
             { "Gooey Bag", "Poison Trap" },
             //{ "Gravity Trap", "" },
+            { "Help Trap", "Hey! Trap" },
             { "Hiccup Trap", "Stun Trap" },
             { "Home Trap", "home_tp_trap" },
             { "Honey Trap", "Frost Trap" },
             //{ "Ice Floor Trap", "" },
             { "Ice Trap", "Frost Trap" },
             //{ "Icey Hot Pants Trap", "" },
-            //{ "Input Sequence Trap", "Stun Trap" },
+            { "Input Sequence Trap", "Stun Trap" },
             //{ "Instant Crystal Trap", "" },
             { "Instant Death Trap", "Bomb Trap" },
+            //{ "Invert Colors Trap", "" },
+            { "Inverted Mouse Trap", "Confuse Trap" },
+            //{ "Invisiball Trap", "" },
             //{ "Invisible Trap", "" },
+            //{ "Invisibility Trap", "" },
             { "Iron Boots Trap", "Frost Trap" },
             { "Items to Bombs", "Bomb Trap" },
             { "Jump Trap", "Stun Trap" },
@@ -225,12 +244,13 @@ namespace HammerwatchAP.Archipelago
             { "Laughter Trap", "Stun Trap" },
             //{ "Light Up Path Trap", "" },
             { "Literature Trap", "Hey! Trap" },
+            { "Market Crash Trap", "Mana Drain Trap" },
             { "Math Quiz Trap", "Hey! Trap" },
             { "Meteor Trap", "Bomb Trap" },
-            //{ "Mirror Trap", "" },
+            { "Mirror Trap", "Confuse Trap" },
             { "Monkey Mash Trap", "Confuse Trap" },
-            //{ "My Turn! Trap", "" },
-            //{ "No Guarding", "" },
+            { "My Turn! Trap", "Confuse Trap" },
+            { "No Guarding", "Disarm Trap" },
             //{ "No Petals", "" },
             //{ "No Revivals", "" },
             //{ "No Stocks", "" },
@@ -238,12 +258,14 @@ namespace HammerwatchAP.Archipelago
             //{ "Number Sequence Trap", "" },
             { "Nut Trap", "Bomb Trap" },
             { "OmoTrap", "Chaser Trap" },
-            //{ "One Hit KO", "" },
+            { "One Hit KO", "Stun Trap" },
             //{ "Paper Trap", "" },
             { "Paralyze Trap", "Stun Trap" },
+            { "Paralysis Trap", "Stun Trap" },
             { "Phone Trap", "Hey! Trap" },
             { "Pie Trap", "Frost Trap" },
             //{ "Pinball Trap", "" },
+            //{ "Pixelate Trap", "" },
             //{ "Pixellation Trap", "" },
             { "Poison Mushroom", "Poison Trap" },
             { "Pokemon Count Trap", "Hey! Trap" },
@@ -252,45 +274,55 @@ namespace HammerwatchAP.Archipelago
             //{ "PONG Challenge", "" },
             //{ "Pong Trap", "" },
             { "Posession Trap", "Poison Trap" },
-            //{ "PowerPoint Trap", "" },
+            { "PowerPoint Trap", "Frost Trap" },
             //{ "Push Trap", "" },
+            { "Radiation Trap", "Poison Trap" },
             //{ "Rail Trap", "" },
+            { "Ranch Trap", "home_tp_trap" },
+            { "Random Status Trap", "Banner Trap" },
             { "Resistance Trap", "Chaser Trap" },
             { "Reversal Trap", "Confuse Trap" },
+            { "Reverse Controls Trap", "Confuse Trap" },
             { "Reverse Trap", "Confuse Trap" },
             { "Rockfall Trap", "Bomb Trap" },
             { "Screen Flip Trap", "Confuse Trap" },
-            //{ "Slip Trap", "" },
+            { "Sleep Trap", "Stun Trap" },
+            { "Slip Trap", "Stun Trap" },
             { "Slow Trap", "Frost Trap" },
             { "Slowness Trap", "Frost Trap" },
             //{ "Snake Trap", "" },
+            { "Spam Trap", "Hey! Trap" },
             { "Spike Ball Trap", "Bomb Trap" },
             //{ "Spooky Time", "" },
+            //{ "Spotlight Trap", "" },
             //{ "Spring Trap", "" },
             { "Squash Trap", "Bomb Trap" },
             { "Sticky Floor Trap", "Frost Trap" },
+            { "Sticky Hands Trap", "Disarm Trap" },
             { "SvC Effect", "Banner Trap" },
             //{ "Swap Trap", "" },
+            { "Tarr Trap", "Chaser Trap" },
+            { "Teleport Trap", "ap_beetle_tp_trap" },
+            { "Text Trap", "Hey! Trap" },
             { "Thwimp Trap", "Chaser Trap" },
-            //{ "Time Limit", "" },
+            //{ "Time Limit", "" }, //Escape Trap
             //{ "Time Warp Trap", "" },
             //{ "Timer Trap", "" },
             //{ "Tiny Trap", "" },
             { "Tip Trap", "Hey! Trap" },
             { "TNT Barrel Trap", "Bomb Trap" },
+            { "TNT Trap", "Bomb Trap" },
+            //{ "Tool Swap Trap", "" },
             { "Trivia Trap", "Hey! Trap" },
             { "Tutorial Trap", "Hey! Trap" },
-            //{ "Uno Trap", "" },
+            //{ "Underwater Trap", "" },
+            { "Undo Trap", "home_tp_trap" },
+            //{ "UNO Challenge", "" },
             //{ "W I D E Trap", "" },
-            //{ "Whoops! Trap", "" },
+            { "Whoops! Trap", "home_tp_trap" },
+            //{ "Zoom In Trap", "" },
+            //{ "Zoom Out Trap", "" },
             //{ "Zoom Trap", "" },
-            { "Fishin' Boo Trap", "Chaser Trap" },
-            //{ "Sticky Hands Trap", "" },
-            //{ "Pixelate Trap", "" },
-            //{ "Spotlight Trap", "" },
-            { "Bullet Time Trap", "Frost Trap" },
-            //{ "Invisibility Trap", "" },
-            { "Empty Item Box Trap", "Mana Drain Trap" },
         };
 
         public static bool IsItemTrap(string itemName)
@@ -481,7 +513,6 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Tank", "items/powerup_potion2.xml" },
                 new string[]{ "Jar", "items/powerup_potion2.xml" },
                 new string[]{ "Brew", "items/powerup_potion3.xml" },
-                new string[]{ "Vessel", "items/powerup_potion3.xml" },
 
                 new string[]{ "Diamond", "items/valuable_diamond.xml" },
                 new string[]{ "Ruby", "items/valuable_diamond_red.xml" },
@@ -641,11 +672,16 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Scarecrow", "actors/tower_banner_3.xml:north" },
                 new string[]{ "Obelisk", "actors/tower_banner_2.xml:north" },
 
+                new string[]{ "Barrel", "items/breakable_barrel.xml" },
+                new string[]{ "Keg", "items/breakable_barrel.xml" },
+                new string[]{ "Cask", "items/breakable_barrel.xml" },
+
                 new string[]{ "Pot", "items/breakable_vase_v4.xml" },
-                new string[]{ "Vase", "items/breakable_vase_v4.xml" },
-                new string[]{ "Urn", "items/breakable_vase_v4.xml" },
-                new string[]{ "Basin", "items/breakable_vase_v4.xml" },
-                new string[]{ "Bowl", "items/breakable_vase_v4.xml" },
+                new string[]{ "Vase", "items/breakable_vase_v3.xml" },
+                new string[]{ "Urn", "items/breakable_vase_v2.xml" },
+                new string[]{ "Basin", "items/breakable_vase.xml" },
+                new string[]{ "Bowl", "items/breakable_vase_v2.xml" },
+                new string[]{ "Vessel", "items/breakable_vase_v4.xml" },
 
                 new string[]{ "Bone", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "bone", "doodads/generic/deco_corpse_skull_v4.xml" },
@@ -5204,9 +5240,10 @@ namespace HammerwatchAP.Archipelago
             int relId = itemId - ITEM_BASE_ID;
             if (itemDescriptions.TryGetValue(relId, out string desc))
                 return desc;
+            string itemName = ArchipelagoManager.GetItemName(itemId);
             if (relId >= 545 && relId < 592) //Floor master keys
             {
-                string[] splits = ArchipelagoManager.GetItemName(itemId).Split(' ');
+                string[] splits = itemName.Split(' ');
                 string location = splits[0];
                 if (location == "Dune")
                     location = "Dune Sharks arena";
@@ -5229,7 +5266,7 @@ namespace HammerwatchAP.Archipelago
                 int shopRelId = itemId - SHOP_ITEM_BASE_ID;
                 return ArchipelagoMessageManager.GetLanguageString(shopItemDescriptions[shopRelId]);
             }
-            return $"Unknown item description: {itemId}";
+            return $"Unknown item description for item: {itemName} (ID: {itemId})";
         }
 
         private static readonly Dictionary<int, string> itemDescriptions = new Dictionary<int, string>()
@@ -5289,6 +5326,9 @@ namespace HammerwatchAP.Archipelago
             { 52, "Enables the destruction of fragile walls" }, //Hammer fragment
             { 53, "Worth 1 gold. Gotta go fast!" }, //Gold Ring
             { 54, "Increases max health by 1. This is a serious upgrade!" }, //Serious health
+            { 55, "Bring to the second level of the caves to activate the water pumps on level 3" }, //Cave Level 3 Pumps Lever
+            { 56, "Bring to the second level of the caves to activate the water pumps on level 2" }, //Cave Level 2 Pumps Lever
+            { 57, "Bring to the second level of the caves to activate the water pumps on level 1" }, //Cave Level 1 Pumps Lever
             { 256, "Causes bombs to drop from above" }, //Bomb trap
             { 257, "Creates a small bomb that drains mana" }, //Mana drain trap
             { 258, "Poisons all creatures in a large radius" }, //Poison trap
@@ -6771,10 +6811,13 @@ namespace HammerwatchAP.Archipelago
             //Tool items
             switch (relId)
             {
-                case 45:
-                case 46:
-                case 47:
-                case 51:
+                case 45: //Frying Pan
+                case 46: //Pumps Lever
+                case 47: //Pickaxe
+                case 51: //Hammer
+                case 55: //Cave Level 3 Pumps Lever
+                case 56: //Cave Level 2 Pumps Lever
+                case 57: //Cave Level 1 Pumps Lever
                     return true;
             }
             if (IsItemButton(itemId) && itemId - templeButtonItemStartID != 0)
@@ -6842,5 +6885,10 @@ namespace HammerwatchAP.Archipelago
             { 4, "power" },
             { 5, "gambler" },
         };
+
+        public static bool IsLocationShopLoc(long locId)
+        {
+            return locId > SHOP_LOCATION_ID_OFFSET;
+        }
     }
 }

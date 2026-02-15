@@ -292,12 +292,22 @@ namespace HammerwatchAP.Archipelago
                             break;
                         case ArchipelagoPacketType.RoomUpdate:
                             RoomUpdatePacket ruPacket = (RoomUpdatePacket)packet;
-                            if(ruPacket.CheckedLocations != null)
+                            if (ruPacket.CheckedLocations != null)
                             {
+                                bool upgradesNeedSync = false;
                                 foreach (long loc in ruPacket.CheckedLocations)
                                 {
-                                    if (archipelagoData.checkedLocations.Contains(loc)) continue;
-                                    archipelagoData.checkedLocations.Add(loc);
+                                    //If locations were checked by someone else we need to remove them from the shop
+                                    if(archipelagoData.AddToCheckedLocations(loc))
+                                    {
+                                        Logging.Debug($"[ConnectionInfo] Server remotely checked location: {loc}");
+                                        if(APData.IsLocationShopLoc(loc))
+                                            upgradesNeedSync = true;
+                                    }
+                                }
+                                if (archipelagoData.IsShopSanityOn() && upgradesNeedSync)
+                                {
+                                    archipelagoData.shopItemsNeedSync = true;
                                 }
                             }
                             break;
@@ -365,8 +375,7 @@ namespace HammerwatchAP.Archipelago
                                 session.Locations.CompleteLocationChecksAsync(unsyncedLocations.ToArray());
                             foreach (long loc in cPacket.LocationsChecked)
                             {
-                                if (archipelagoData.checkedLocations.Contains(loc)) continue;
-                                archipelagoData.checkedLocations.Add(loc);
+                                archipelagoData.AddToCheckedLocations(loc);
                             }
 
                             if (loadedArchipelagoData != null)
