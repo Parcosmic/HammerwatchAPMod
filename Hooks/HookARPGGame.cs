@@ -126,7 +126,18 @@ namespace HammerwatchAP.Hooks
                 {
                     for (int p = 0; p < apBindingDatas.Length; p++)
                     {
-                        apBindingDatas[p] = new APNullControlBindingData(controlBindings[p]);
+                        if (controlBindings[p] is PlayerKeyboardControlBinding hwKeyboardBinding)
+                        {
+                            apBindingDatas[p] = new APKeyboardControlBindingData(hwKeyboardBinding);
+                        }
+                        else if (controlBindings[p] is PlayerJoystickControlBinding hwJoystickBinding)
+                        {
+                            apBindingDatas[p] = new APJoystickControlBindingData(hwJoystickBinding);
+                        }
+                        else
+                        {
+                            apBindingDatas[p] = new APNullControlBindingData(controlBindings[p]);
+                        }
                     }
                 }
                 ControlManager.apControlBindings = new Dictionary<IPlayerControlBinding, APControlBindingData>();
