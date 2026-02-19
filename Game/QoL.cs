@@ -65,7 +65,7 @@ namespace HammerwatchAP.Game
         {
             if (!ArchipelagoManager.playingArchipelagoSave || player == null || player.Actor == null || player.Actor.Behavior.Immortal) return;
             playerExploreSpeedCounter[player.PeerID] = EXPLORE_SPEED_RESET_TIME;
-            PlayerActorBehavior playerBehavior = player.Actor.Behavior as PlayerActorBehavior;
+            if (!(player.Actor.Behavior is PlayerActorBehavior playerBehavior)) return;
             RemovePlayerHitEffectsWithId(playerBehavior, BuffExploreSpeed.EFFECT_ID);
         }
         public static void RefreshImmortalPlayers()

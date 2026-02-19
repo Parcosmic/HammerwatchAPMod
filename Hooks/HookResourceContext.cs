@@ -20,8 +20,9 @@ namespace HammerwatchAP.Hooks
 		[HarmonyPatch(typeof(ResourceContext), nameof(ResourceContext.OutputError))]
 		internal static class OutputError
 		{
-			static void Postfix()
+			static void Postfix(string errName)
 			{
+				if (!errName.Contains("UNHANDLED EXCEPTION")) return;
 				SDL.SDL_ShowSimpleMessageBox(SDL.SDL_MessageBoxFlags.SDL_MESSAGEBOX_ERROR, "Crash! :(", ArchipelagoManager.ERROR_MESSAGE, IntPtr.Zero);
 				throw new Exception(ArchipelagoManager.ERROR_MESSAGE);
 			}

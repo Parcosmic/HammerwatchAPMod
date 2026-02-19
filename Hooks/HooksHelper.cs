@@ -36,10 +36,12 @@ namespace HammerwatchAP.Hooks
         public static readonly MethodInfo _mi_Widget_Visible = typeof(Widget).GetProperty(nameof(Widget.Visible), BindingFlags.Instance | BindingFlags.Public).GetSetMethod(true);
         public static void SetWidgetEnabled(Widget widget, bool enabled)
         {
+            if (widget == null) return;
             _mi_Widget_Enabled.Invoke(widget, new object[] { enabled });
         }
         public static void SetWidgetVisible(Widget widget, bool visible)
         {
+            if (widget == null) return;
             _mi_Widget_Visible.Invoke(widget, new object[] { visible });
         }
 

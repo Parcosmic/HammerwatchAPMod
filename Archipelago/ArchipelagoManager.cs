@@ -33,7 +33,7 @@ namespace HammerwatchAP.Archipelago
 {
     public static class ArchipelagoManager
     {
-        public const int PRERELEASE = 1;
+        public const int PRERELEASE = 2;
         public static readonly Version MOD_VERSION = new Version(2, 0, 0);
         public static readonly Version APWORLD_VERSION = new Version(4, 0, 0);
         public static readonly Version AP_VERSION = new Version(0, 6, 0);
