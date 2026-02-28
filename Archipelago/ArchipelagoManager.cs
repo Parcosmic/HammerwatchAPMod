@@ -33,7 +33,7 @@ namespace HammerwatchAP.Archipelago
 {
     public static class ArchipelagoManager
     {
-        public const int PRERELEASE = 2;
+        public const int PRERELEASE = 3;
         public static readonly Version MOD_VERSION = new Version(2, 0, 0);
         public static readonly Version APWORLD_VERSION = new Version(4, 0, 0);
         public static readonly Version AP_VERSION = new Version(0, 6, 0);
@@ -223,6 +223,7 @@ namespace HammerwatchAP.Archipelago
         }
         public static void ResetAPVars()
         {
+            playingArchipelagoSave = false;
             deathlinkQueue = null;
             trapLinkIndex = 0;
             trapLinkQueue.Clear();
@@ -362,7 +363,7 @@ namespace HammerwatchAP.Archipelago
                         }
                         break;
                     case APGameState.InGame:
-                        if (GameBase.Instance.Players[0] != null && GameBase.Instance.Players[0].Actor != null)
+                        if (GameBase.Instance.Players != null && GameBase.Instance.Players[0] != null && GameBase.Instance.Players[0].Actor != null)
                         {
                             if (archipelagoData != null)
                             {
@@ -578,6 +579,11 @@ namespace HammerwatchAP.Archipelago
         public static void DataStorageMarkBossCompleted(int boss)
         {
             connectionInfo.SetDataStorageValue($"{connectionInfo.playerTeam}:{connectionInfo.playerId}:boss_{boss}", "1");
+        }
+        public static void ResetGame(bool loadMenu)
+        {
+            generateInfo.Reset();
+            connectionInfo.DisconnectFromArchipelago();
         }
 
         //Shop functions
@@ -1375,9 +1381,15 @@ namespace HammerwatchAP.Archipelago
                 ARPGScriptNodeTypeCollection scriptCollection = new ARPGScriptNodeTypeCollection(null, GameBase.Instance.resources);
                 PrefabProducer pref = GameBase.Instance.resources.GetResource<PrefabProducer>("prefabs/bomb_roof_trap.xml");
                 if (pref == null)
+                {
                     Logging.Log("ERROR: failed to get bomb trap resource!!!");
-                pref.ProduceInGame(spawnPos, GameBase.Instance.resources, GameBase.Instance.world, scriptCollection);
-                QoL.ResetExploreSpeed(defaultPlayer);
+                    return;
+                }
+                else
+                {
+                    pref.ProduceInGame(spawnPos, GameBase.Instance.resources, GameBase.Instance.world, scriptCollection);
+                    QoL.ResetExploreSpeed(defaultPlayer);
+                }
             }
             else if (itemName == "Chaser Trap")
             {

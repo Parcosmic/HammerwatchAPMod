@@ -25,6 +25,7 @@ namespace HammerwatchAP.Hooks
             HooksHelper.Hook(typeof(InitializeResources));
             HooksHelper.Hook(typeof(StartGame));
             HooksHelper.Hook(typeof(ChangeLevel));
+            HooksHelper.Hook(typeof(ResetGame));
             HooksHelper.Hook(typeof(PlayerDeath));
             HooksHelper.Hook(typeof(ClientDisconnected));
             HooksHelper.Hook(typeof(ClientDropin));
@@ -99,6 +100,15 @@ namespace HammerwatchAP.Hooks
                     startPosition = int.Parse(startSplits[1]);
                 }
                 return startPosition;
+            }
+        }
+
+        [HarmonyPatch(typeof(GameBase), nameof(GameBase.ResetGame))]
+        internal static class ResetGame
+        {
+            static void Postfix(bool loadMenu)
+            {
+                ArchipelagoManager.ResetGame(loadMenu);
             }
         }
 

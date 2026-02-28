@@ -56,8 +56,9 @@ namespace HammerwatchAP.Hooks
 					}
 				}
 				else
+				{
 					SetArchipelagoButtons(__instance, false, false);
-				ArchipelagoManager.generateInfo.Reset();
+				}
 			}
 
 			static XDocument PatchMainMenuDoc(ResourceContext context)
