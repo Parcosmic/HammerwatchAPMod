@@ -172,8 +172,10 @@ namespace HammerwatchAP.Hooks
                     }
                     if (codes[c].opcode == OpCodes.Endfinally)
                     {
-                        //Skip the code that resets keys when entering a new act
-                        codes[c + 4] = new CodeInstruction(OpCodes.Br, codes[c + 7].operand);
+                        codes[c + 25].opcode = OpCodes.Nop;
+                        codes[c + 26].opcode = OpCodes.Nop;
+                        codes[c + 30].opcode = OpCodes.Nop;
+                        codes[c + 31].opcode = OpCodes.Nop;
                         break;
                     }
                 }
