@@ -161,6 +161,7 @@ namespace HammerwatchAP.Hooks
                 MethodInfo _mi_ArchipelagoManager_RefreshEvents = typeof(ArchipelagoManager).GetMethod(nameof(ArchipelagoManager.RefreshEvents), BindingFlags.Public | BindingFlags.Static);
 
                 bool refreshCodeInserted = false;
+                int endFinallyCounter = 0;
                 for (int c = 0; c < codes.Count - 7; c++)
                 {
                     if (codes[c].opcode == OpCodes.Ldc_I4_0 && !refreshCodeInserted)
@@ -172,11 +173,23 @@ namespace HammerwatchAP.Hooks
                     }
                     if (codes[c].opcode == OpCodes.Endfinally)
                     {
-                        codes[c + 25].opcode = OpCodes.Nop;
-                        codes[c + 26].opcode = OpCodes.Nop;
-                        codes[c + 30].opcode = OpCodes.Nop;
-                        codes[c + 31].opcode = OpCodes.Nop;
-                        break;
+                        endFinallyCounter++;
+                        if (endFinallyCounter == 1)
+                        {
+                            //Nop the code that clears player keys and rejuvenates them when they enter a new act
+                            codes[c + 25].opcode = OpCodes.Nop;
+                            codes[c + 26].opcode = OpCodes.Nop;
+                            codes[c + 30].opcode = OpCodes.Nop;
+                            codes[c + 31].opcode = OpCodes.Nop;
+                        }
+                        else if (endFinallyCounter == 2)
+                        {
+                            //Nop the code that clears all saves when entering a new act
+                            codes[c + 1].opcode = OpCodes.Nop;
+                            codes[c + 2].opcode = OpCodes.Nop;
+                            codes[c + 3].opcode = OpCodes.Nop;
+                            break;
+                        }
                     }
                 }
 
