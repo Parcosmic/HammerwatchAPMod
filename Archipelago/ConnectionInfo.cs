@@ -595,6 +595,7 @@ namespace HammerwatchAP.Archipelago
         public void DisconnectFromArchipelago(string reason = null)
         {
             SetConnectionState(ConnectionState.Disconnecting);
+            session?.SetClientState(ArchipelagoClientState.ClientUnknown);
             failedConnectMsg = "Disconnected from Archipelago server";
             if (reason != null)
                 failedConnectMsg = reason;

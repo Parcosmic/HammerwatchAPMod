@@ -176,6 +176,7 @@ namespace HammerwatchAP.Archipelago
             { "Burn Trap", "Fire Trap" },
             { "Buyon Trap", "Chaser Trap" },
             { "Camera Rotate Trap", "Confuse Trap" },
+            // { "Chaos Trap", "" },
             { "Chaos Control Trap", "Stun Trap" },
             { "Chart Modifier Trap", "Confuse Trap" },
             { "Clear Image Trap", "Mana Drain Trap" },
@@ -201,7 +202,9 @@ namespace HammerwatchAP.Archipelago
             { "Enemy Ball Trap", "Confuse Trap" },
             { "Energy Drain Trap", "Mana Drain Trap" },
             //{ "Expensive Stocks", "" },
+            { "Explosion Trap", "Bomb Trap" },
             { "Exposition Trap", "Hey! Trap" },
+            // { "Extreme Chaos Trap", "" },
             //{ "Fake Transition", "" },
             //{ "Fast Trap", "" },
             //{ "Fear Trap", "" },
@@ -217,6 +220,7 @@ namespace HammerwatchAP.Archipelago
             { "Frozen Trap", "Frost Trap" },
             { "Fuzzy Trap", "Confuse Trap" },
             //{ "Gadget Shuffle Trap", "" },
+            { "Gas Trap", "Confuse Trap" },
             { "Get Out Trap", "Chaser Trap" }, //Should be Escape Trap if we add it
             { "Ghost", "Chaser Trap" },
             { "Ghost Chat", "Hey! Trap" },
@@ -247,9 +251,11 @@ namespace HammerwatchAP.Archipelago
             { "Market Crash Trap", "Mana Drain Trap" },
             { "Math Quiz Trap", "Hey! Trap" },
             { "Meteor Trap", "Bomb Trap" },
+            { "Metronome Trap", "Confuse Trap" },
             { "Mirror Trap", "Confuse Trap" },
             { "Monkey Mash Trap", "Confuse Trap" },
             { "My Turn! Trap", "Confuse Trap" },
+            { "Ninja Trap", "Chaser Trap" },
             { "No Guarding", "Disarm Trap" },
             //{ "No Petals", "" },
             //{ "No Revivals", "" },
@@ -262,6 +268,7 @@ namespace HammerwatchAP.Archipelago
             //{ "Paper Trap", "" },
             { "Paralyze Trap", "Stun Trap" },
             { "Paralysis Trap", "Stun Trap" },
+            { "Person Trap", "Hey! Trap" },
             { "Phone Trap", "Hey! Trap" },
             { "Pie Trap", "Frost Trap" },
             //{ "Pinball Trap", "" },
@@ -285,7 +292,9 @@ namespace HammerwatchAP.Archipelago
             { "Reverse Controls Trap", "Confuse Trap" },
             { "Reverse Trap", "Confuse Trap" },
             { "Rockfall Trap", "Bomb Trap" },
+            { "Sandstorm Trap", "Bomb Trap" },
             { "Screen Flip Trap", "Confuse Trap" },
+            { "Shake Trap", "Stun Trap" }, //Make a trap that causes the screen shake effect?
             { "Sleep Trap", "Stun Trap" },
             { "Slip Trap", "Stun Trap" },
             { "Slow Trap", "Frost Trap" },
@@ -319,6 +328,7 @@ namespace HammerwatchAP.Archipelago
             { "Undo Trap", "home_tp_trap" },
             //{ "UNO Challenge", "" },
             //{ "W I D E Trap", "" },
+            { "Whirlpool Trap", "Bomb Trap" },
             { "Whoops! Trap", "home_tp_trap" },
             //{ "Zoom In Trap", "" },
             //{ "Zoom Out Trap", "" },
@@ -457,6 +467,7 @@ namespace HammerwatchAP.Archipelago
             "Fish",
         };
 
+        //Offworld item matching
         public static readonly Dictionary<string, List<string[]>> gameFuzzyItemNameToXML = new Dictionary<string, List<string[]>>()
         {
             { "", new List<string[]>()
@@ -498,7 +509,6 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Mirror", "items/key_mirror.xml" },
                 new string[]{ "Glass", "items/key_mirror.xml" },
                 new string[]{ "Lens", "items/key_mirror.xml" },
-                new string[]{ "Ore", "items/key_ore.xml" },
                 new string[]{ "Rune", "items/key_teleport.xml" },
                 new string[]{ "Red Potion", "items/powerup_potion3.xml" }, //Red
                 new string[]{ "Yellow Potion", "items/powerup_potion2.xml" }, //Yellow
@@ -506,6 +516,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Potion", "items/powerup_potion2.xml" }, //Yellow
                 new string[]{ "Ambrosia", "items/powerup_potion3.xml" }, //Red
                 new string[]{ "Juice", "items/powerup_potion1.xml" }, //Purple
+                new string[]{ "Ether", "items/powerup_potion1.xml" }, //Purple
                 new string[]{ "Bottle", "items/powerup_potion2.xml" },
                 new string[]{ "Flask", "items/powerup_potion2.xml" },
                 new string[]{ "Lemonade", "items/powerup_potion2.xml" },
@@ -572,6 +583,8 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Soul", "actors/wisp_1.xml:south" },
                 new string[]{ "Essence", "actors/wisp_2.xml:south" },
 
+                new string[]{ "Eye", "actors/eye_1.xml:south" },
+
                 new string[]{ "Heal", "items/upgrade_health.xml" },
                 new string[]{ "Life", "items/upgrade_health.xml" },
                 new string[]{ "Cure", "items/upgrade_health.xml" },
@@ -609,6 +622,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Grappling", "items/tool_shovel.xml" },
                 new string[]{ "Club", "items/tool_shovel.xml" },
                 new string[]{ "Hammer", "items/tool_hammer.xml" },
+                new string[]{ "Tool", "items/tool_hammer.xml" },
 
                 new string[]{ "Pickaxe", "items/tool_pickaxe.xml" },
                 new string[]{ "Axe", "items/tool_pickaxe.xml" },
@@ -644,6 +658,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Tablet", "doodads/generic/deco_bookstand_ground_paper_v3.xml" },
                 new string[]{ "Scroll", "doodads/generic/deco_bookstand_ground_paper_v3.xml" },
                 new string[]{ "Ticket", "doodads/generic/deco_bookstand_ground_paper_v3.xml" },
+                new string[]{ "Keycard", "doodads/generic/deco_bookstand_ground_paper_v1.xml" },
 
                 new string[]{ "Contract", "doodads/generic/deco_bookstand_ground_paper_v3.xml" }, //Cuphead
 
@@ -663,7 +678,10 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Mask", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "Skull", "doodads/generic/deco_corpse_skull_v4.xml" },
 
+                new string[]{ "Ore", "items/key_ore.xml" },
+
                 new string[]{ "Orb", "items/crystal_purple.xml" },
+                new string[]{ "Pearl", "items/crystal_green.xml" },
 
                 new string[]{ "Grub", "actors/maggot_1_small.xml:northeast" },
                 new string[]{ "Slime", "actors/slime_1_spawn.xml:north" },
@@ -682,6 +700,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Basin", "items/breakable_vase.xml" },
                 new string[]{ "Bowl", "items/breakable_vase_v2.xml" },
                 new string[]{ "Vessel", "items/breakable_vase_v4.xml" },
+                new string[]{ "Vat", "items/breakable_vase_v4.xml" },
 
                 new string[]{ "Bone", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "bone", "doodads/generic/deco_corpse_skull_v4.xml" },
@@ -810,6 +829,7 @@ namespace HammerwatchAP.Archipelago
             }},
             { "Blasphemous", new List<string[]>()
             {
+                new string[]{ "Fervour Upgrade", "items/upgrade_mana.xml" },
                 new string[]{ "Calcaneum", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "Capitate", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "Clavicle", "doodads/generic/deco_corpse_skull_v4.xml" },
@@ -833,7 +853,7 @@ namespace HammerwatchAP.Archipelago
                 new string[]{ "Phalanx", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "Pisiform", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "Radius", "doodads/generic/deco_corpse_skull_v4.xml" },
-                new string[]{ "Rib", "doodads/generic/deco_corpse_skull_v4.xml" },
+                new string[]{ "Rib ", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "Sacrum of the Dark Warlock", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "Scaphoid", "doodads/generic/deco_corpse_skull_v4.xml" },
                 new string[]{ "Scapula", "doodads/generic/deco_corpse_skull_v4.xml" },

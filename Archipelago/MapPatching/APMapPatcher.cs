@@ -580,6 +580,15 @@ namespace HammerwatchAP.Archipelago
                 File.WriteAllText(apGuiFilePath, hudFileDoc.ToString());
             }
 
+            //Remove layer node for vgt_plant
+            string plantItemPath = Path.Combine(apAssetsPath, "common", "items", "vgt_plant.xml");
+            if (!File.Exists(plantItemPath))
+            {
+                XDocument plantItemDoc = XDocument.Parse(File.ReadAllText(Path.Combine(hwAssetPath, "items", "vgt_plant.xml")));
+                plantItemDoc.Root.Element("behavior").Element("dictionary").Element("entry").Remove();
+                File.WriteAllText(plantItemPath, plantItemDoc.ToString());
+            }
+
             if (archipelagoData.mapType == ArchipelagoData.MapType.Castle)
             {
                 //Remove lower collider from dragon corpse
@@ -639,15 +648,6 @@ namespace HammerwatchAP.Archipelago
                     AddHammerNodesToBreakableWall(ref secretNodeCounter, idToNode, "86302", pillarScriptNodeBase);
                     Directory.CreateDirectory(Path.Combine(campaignAssetPath, "prefabs"));
                     File.WriteAllText(bonusPillarPrefabPath, pillarPrefabDoc.ToString());
-                }
-
-                //Remove layer node for vgt_plant
-                string plantItemPath = Path.Combine(apAssetsPath, "common", "items", "vgt_plant.xml");
-                if (!File.Exists(plantItemPath))
-                {
-                    XDocument plantItemDoc = XDocument.Parse(File.ReadAllText(Path.Combine(hwAssetPath, "items", "vgt_plant.xml")));
-                    plantItemDoc.Root.Element("behavior").Element("dictionary").Element("entry").Remove();
-                    File.WriteAllText(plantItemPath, plantItemDoc.ToString());
                 }
 
                 //Modify desert_quest_lever_solved prefab so Telarian is only hidden when the quest is not solved rather than on level load
@@ -2197,7 +2197,7 @@ namespace HammerwatchAP.Archipelago
                             int e4EndTauntNodeBaseId = modNodeStartId++;
                             Vector2 e4EndTauntBasePos = new Vector2(-59.5f, -49f);
                             NodeHelper.SetConnectionNodes(idToNode["269"], new int[] { e4EndTauntNodeBaseId }, new int[] { 1000 });
-                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(e4EndTauntNodeBaseId, e4EndTauntBasePos + new Vector2(0, 2), "Cmon we don't have all day!", 5000, 1, true, -1));
+                            scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(e4EndTauntNodeBaseId, e4EndTauntBasePos + new Vector2(0, 2), "C'mon we don't have all day!", 5000, 1, true, -1));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 5000 });
                             scriptNodesToAdd.Add(NodeHelper.CreateAnnounceTextNode(modNodeStartId++, e4EndTauntBasePos + new Vector2(0, 4), "The castle is falling apart!", 5000, 1, true, -1));
                             NodeHelper.AddConnectionNodes(scriptNodesToAdd[scriptNodesToAdd.Count - 1], new int[] { modNodeStartId }, new int[] { 7000 });

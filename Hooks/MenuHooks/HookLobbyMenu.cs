@@ -210,11 +210,24 @@ namespace HammerwatchAP.Hooks
                 {
                     if (GetMyPeerId(__instance) != -1)
                     {
-                        for (int p = 0; p < 4; p++)
+                        Widget[] slotWidgets = GetSlotWidgets(__instance);
+                        for (int p = 0; p < ArchipelagoManager.archipelagoData.shopsanityClasses.Length; p++)
                         {
                             if (ArchipelagoManager.archipelagoData.shopsanityClasses[p].HasValue)
-                                HooksHelper.SetWidgetEnabled((ButtonWidget)GetSlotWidgets(__instance)[p].GetWidget("class").Children[0], false);
-                                //((ButtonWidget)GetSlotWidgets(__instance)[p].GetWidget("class").Children[0]).Enabled = false;
+                            {
+                                if (p >= slotWidgets.Length)
+                                {
+                                    Logging.Debug($"Slot widgets are less than {p}??");
+                                    break;
+                                }
+                                List<Widget> childrenWidgets = slotWidgets[p].GetWidget("class").Children;
+                                if (childrenWidgets.Count == 0)
+                                {
+                                    Logging.Debug($"Slot widget of index {p} doesn't have children??");
+                                    continue;
+                                }
+                                HooksHelper.SetWidgetEnabled((ButtonWidget)childrenWidgets[0], false);
+                            }
                         }
                     }
                 }
