@@ -37,11 +37,11 @@ namespace HammerwatchAP.Hooks
             HooksHelper.Hook(typeof(LobbyMenuConstructor));
             HooksHelper.Hook(typeof(LobbyMenuConstructor2));
             HooksHelper.Hook(typeof(LoadGUI));
-            HooksHelper.Hook(typeof(JoinRequestResponseDropin));
             HooksHelper.Hook(typeof(PlayerJoined));
             HooksHelper.Hook(typeof(RefreshSlots));
             HooksHelper.Hook(typeof(UpdateModifiers));
             HooksHelper.Hook(typeof(GetFunction));
+            HooksHelper.Hook(typeof(ClientJoinRequest));
         }
 
         [HarmonyPatch(typeof(LobbyMenu), MethodType.Constructor, new Type[] { typeof(GameBase), typeof(ResourceBank), typeof(GamePlayers) })]
@@ -51,6 +51,7 @@ namespace HammerwatchAP.Hooks
             {
                 if (!ArchipelagoManager.playingArchipelagoSave)
                     return;
+                Logging.Debug("Opened ap lobby menu - thin constructor");
                 __instance.SetDifficulty(ArchipelagoManager.archipelagoData.GetDifficulty());
             }
         }
@@ -62,6 +63,7 @@ namespace HammerwatchAP.Hooks
             {
                 if (!ArchipelagoManager.playingArchipelagoSave)
                     return;
+                Logging.Debug("Opened ap lobby menu");
                 __instance.SetDifficulty(ArchipelagoManager.archipelagoData.GetDifficulty());
                 //Lock shopsanity players if this is a new save
                 if(ArchipelagoManager.saveFileName == null)
@@ -125,19 +127,7 @@ namespace HammerwatchAP.Hooks
             {
                 List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
                 MethodInfo _mi_PatchLobbyMenuDoc = typeof(LoadGUI).GetMethod(nameof(PatchLobbyMenuDoc), BindingFlags.NonPublic | BindingFlags.Static);
-
-                //for (int c = 0; c < codes.Count; c++)
-                //{
-                //    if (codes[c].opcode == OpCodes.Callvirt)
-                //    {
-                //        codes[c + 1] = new CodeInstruction(OpCodes.Nop);
-                //        codes[c + 2] = new CodeInstruction(OpCodes.Nop);
-                //        codes[c + 3] = new CodeInstruction(OpCodes.Call, _mi_PatchMainMenuDoc);
-                //        break;
-                //    }
-                //}
                 HooksHelper.PatchLoadMenu(codes, _mi_PatchLobbyMenuDoc);
-
                 return codes;
             }
 
@@ -167,33 +157,30 @@ namespace HammerwatchAP.Hooks
             }
         }
 
-        [HarmonyPatch(typeof(LobbyMenu), "JoinRequestResponseDropin")]
-        internal static class JoinRequestResponseDropin
-        {
-            static void Postfix(LobbyMenu __instance, int peerId)
-            {
-                if (ArchipelagoManager.playingArchipelagoSave)
-                {
-                    if (ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].HasValue)
-                    {
-                        __instance.ChangeClass(peerId, ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].Value);
-                        Network.SendToAll("ChangeClass", new object[]
-                        {
-                        ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].Value
-                        });
-                        __instance.RefreshSlots();
-                    }
-                }
-            }
-        }
-
-        [HarmonyPatch(typeof(LobbyMenu), "PlayerJoined")]
+        //Potentially unreachable code, might be able to delete
+        [HarmonyPatch(typeof(LobbyMenu), nameof(LobbyMenu.PlayerJoined))]
         internal static class PlayerJoined
         {
             static void Postfix(LobbyMenu __instance, int peerId)
             {
                 if (!ArchipelagoManager.playingArchipelagoSave)
                     return;
+                Logging.Debug($"PlayerJoined peerId: {peerId}");
+                if (ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].HasValue)
+                {
+                    __instance.ChangeClass(peerId, ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].Value);
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(LobbyMenu), nameof(LobbyMenu.ClientJoinRequest))]
+        internal static class ClientJoinRequest
+        {
+            static void Postfix(LobbyMenu __instance, int peerId, string name, int version)
+            {
+                if (!ArchipelagoManager.playingArchipelagoSave)
+                    return;
+                Logging.Debug($"ClientJoinRequest peerId: {peerId}, name: {name}, version: {version}");
                 if (ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].HasValue)
                 {
                     __instance.ChangeClass(peerId, ArchipelagoManager.archipelagoData.shopsanityClasses[peerId].Value);

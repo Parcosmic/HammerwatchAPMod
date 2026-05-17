@@ -425,7 +425,7 @@ namespace HammerwatchAP.Archipelago
             if (!LaunchMapPacker(editorDir))
                 return false;
 
-            Logging.Log("Moving file map file into levels folder");
+            Logging.Log("Moving map file into levels folder");
             //Move the generated map file into the correct levels directory
             string endFilePath = Path.Combine(dir, "levels", mapFileName);
             File.Move(Path.Combine(editorDir, "archipelago.hwm"), endFilePath);

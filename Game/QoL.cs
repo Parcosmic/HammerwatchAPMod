@@ -20,6 +20,8 @@ namespace HammerwatchAP.Game
         public static int[] playerExploreSpeedCounter = new int[4];
         public static bool[] immortalPlayers = new bool[4];
 
+        public static bool enableExploreSpeed = false;
+
         public static void Setup()
         {
             playerExploreSpeedCounter = new int[4];
@@ -37,10 +39,11 @@ namespace HammerwatchAP.Game
                     if (playerExploreSpeedCounter[p] > 0 && playerExploreSpeedCounter[p] - ms <= 0 && ArchipelagoManager.ExploreSpeedPing)
                         SoundHelper.PlayExploreSpeedSound();
                     playerExploreSpeedCounter[p] -= ms;
-                    if (ControlManager.apControlBindings.TryGetValue(player.Controls.Binding, out APControlBindingData apBindingData) && apBindingData.ExploreSpeedPress)
+                    if ((ControlManager.apControlBindings.TryGetValue(player.Controls.Binding, out APControlBindingData apBindingData) && apBindingData.ExploreSpeedPress) || enableExploreSpeed)
                     {
-                        if (playerExploreSpeedCounter[p] <= 0)
+                        if (playerExploreSpeedCounter[p] <= 0 || enableExploreSpeed)
                         {
+                            enableExploreSpeed = false;
                             if (player.Actor != null)
                             {
                                 if (player.Actor.Behavior is PlayerActorBehavior playerBehavior)
