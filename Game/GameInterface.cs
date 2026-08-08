@@ -63,6 +63,7 @@ namespace HammerwatchAP.Game
         public static void SetGlobalFlag(string flag, bool value=true)
         {
             TiltedEngine.WorldObjects.ScriptNodes.SetGlobalFlag.GlobalFlags[flag] = value;
+            Logging.Debug($"Set GlobalFlag {flag} to {value}");
         }
         public static bool GetGlobalFlag(string flag)
         {

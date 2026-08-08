@@ -2950,6 +2950,20 @@ namespace HammerwatchAP.Archipelago
                                 nodesToNuke.Add(154103); //puzzle_bonus_solved GlobalEventTrigger
                             }
 
+                            //Hide south light bridges glasswalk tiles that would normally be out of view
+                            int[] t2_s_light_bridge_glasswalk_doodad_ids = new[] { 149464, 149487, 149486, 149485, 149484, 149483, 149482, 149481, 149480, 149476, 149475, 149474, 149473, 149472, 149471, 149470, 149469, 149429 };
+                            string t2_s_light_bridge_glasswalk_doodad_ids_string = "";
+                            foreach (int doodad_id in t2_s_light_bridge_glasswalk_doodad_ids)
+                            {
+                                string doodad_id_string = doodad_id.ToString();
+                                doodadsToChangeSync[doodad_id_string] = true;
+                                t2_s_light_bridge_glasswalk_doodad_ids_string += " " + doodad_id_string;
+                            }
+                            idToNode["151912"].Element("dictionary").Element("dictionary").Element("int-arr").Value += t2_s_light_bridge_glasswalk_doodad_ids_string;
+                            int t2_s_light_bridge_show_node_id = modNodeStartId++;
+                            NodeHelper.AddConnectionNodes(idToNode["148555"], new int[] { t2_s_light_bridge_show_node_id }, new int[] { 2400 });
+                            scriptNodesToAdd.Add(NodeHelper.CreateHideObjectNode(t2_s_light_bridge_show_node_id, true, 1, new Vector2(9, 70.5f), 0, t2_s_light_bridge_glasswalk_doodad_ids));
+
                             int[] t2StartAreaEnableNodes = { 2189, 2585 };
                             globalScriptNodesToTriggerOnceOnLoad.Add(t2StartAreaEnableNodes[archipelagoData.GetRandomLocation("Temple 2 Entrance")]);
 

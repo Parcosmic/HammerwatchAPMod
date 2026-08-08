@@ -334,6 +334,20 @@ namespace HammerwatchAP.Util
             }));
             return node;
         }
+        //States: 0 - Show, 1 - Hide, 2 - Toggle
+        public static XElement CreateHideObjectNode(int id, bool enabled, int triggerTimes, Vector2 pos, int state, int[] objects)
+        {
+            XElement node = CreateScriptNodeBase(id, "HideObject", enabled, triggerTimes, pos);
+            node.Add(CreateDictionaryNode(new[]
+            {
+                CreateXNode("state", state),
+                CreateDictionaryNode("element", new[]
+                {
+                    CreateXNode("static", objects)
+                }),
+            }));
+            return node;
+        }
 
         public static XElement CreateScriptNodeBase(int id, string type, bool enabled, int triggerTimes, Vector2 pos)
         {

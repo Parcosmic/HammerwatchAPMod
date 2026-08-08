@@ -300,10 +300,16 @@ namespace HammerwatchAP.Archipelago
                             SendHWMessage($"Flag \"{parts[1]}\" set to {flagValue}");
                             return true;
                     }
+                    if (parts.Count > 3)
+                    {
+                        SendHWErrorMessage("Too many arguments, you might want to use quotes if you're setting a flag with spaces!");
+                        return true;
+                    }
                     break;
                 case "deathlink":
                 case "d":
                     ArchipelagoManager.SetDeathlink(!ArchipelagoManager.Deathlink);
+                    SendHWMessage($"Toggled Deathlink {(ArchipelagoManager.Deathlink ? "on" : "off")}");
                     break;
                 case "i":
                     if (GameBase.Instance.Players == null)
