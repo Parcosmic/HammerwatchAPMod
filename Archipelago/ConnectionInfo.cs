@@ -565,7 +565,7 @@ namespace HammerwatchAP.Archipelago
 
             ArchipelagoManager.playingArchipelagoSave = true;
 
-            //ArchipelagoManager.archipelagoData.raceMode = session.DataStorage["_read_race_mode"];
+            ArchipelagoManager.archipelagoData.raceMode = session.DataStorage["_read_race_mode"];
 
             //Setup death link
             deathLinkService = session.CreateDeathLinkService();
@@ -607,7 +607,7 @@ namespace HammerwatchAP.Archipelago
             connectedToAP = false;
             deathLinkService = null;
             ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
-            if(connectionState != ConnectionState.ConnectionFailure)
+            if(connectionState != ConnectionState.Disconnecting)
             {
                 SetConnectionState(ConnectionState.Disconnected);
                 RefreshReconnectTimer();
@@ -707,6 +707,13 @@ namespace HammerwatchAP.Archipelago
         public void SetClientReady()
         {
             if(ConnectionActive)
+            {
+                session.Socket.SendPacketAsync(new StatusUpdatePacket() { Status = ArchipelagoClientState.ClientReady });
+            }
+        }
+        public void SetClientPlaying()
+        {
+            if (ConnectionActive)
             {
                 session.Socket.SendPacketAsync(new StatusUpdatePacket() { Status = ArchipelagoClientState.ClientPlaying });
                 SetDeathlink(ArchipelagoManager.Deathlink);

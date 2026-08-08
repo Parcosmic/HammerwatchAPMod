@@ -108,7 +108,9 @@ namespace HammerwatchAP.Archipelago
             string modString = $"APMod Ver. {MOD_VERSION.ToString(versionLabels)}";
             if(PRERELEASE >= 0)
             {
+#pragma warning disable CS0162 // Unreachable code detected
                 modString += $"pre{PRERELEASE}";
+#pragma warning restore CS0162 // Unreachable code detected
             }
             return modString;
         }
@@ -272,6 +274,10 @@ namespace HammerwatchAP.Archipelago
         {
             SetGameState(APGameState.Generated);
             GameBase.Instance.CloseMenu(MenuType.MESSAGE);
+            if(connectionInfo != null)
+            {
+                connectionInfo.SetClientReady();
+            }
 
             MainMenu mainMenu = GameBase.Instance.GetMenu<MainMenu>();
             if (mainMenu != null)
@@ -447,7 +453,7 @@ namespace HammerwatchAP.Archipelago
             SyncUpgrades();
 
             if (!ConnectedToAP()) return;
-            connectionInfo.SetClientReady();
+            connectionInfo.SetClientPlaying();
         }
         public static void ChangedLevel(string levelId)
         {
@@ -580,7 +586,8 @@ namespace HammerwatchAP.Archipelago
         public static void ResetGame(bool loadMenu)
         {
             generateInfo.Reset();
-            connectionInfo.DisconnectFromArchipelago();
+            connectionInfo.UpdateTags();
+            connectionInfo.DisconnectFromArchipelago("Reset Archipelago connection");
         }
 
         //Shop functions

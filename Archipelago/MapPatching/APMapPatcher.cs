@@ -966,7 +966,6 @@ namespace HammerwatchAP.Archipelago
 
             List<int> buttonEffectNodeIds = new List<int>();
 
-            int panLocation = -1;
             int modNodeStartId = 200000;
             switch (archipelagoData.mapType)
             {
@@ -3449,7 +3448,6 @@ namespace HammerwatchAP.Archipelago
                 if (!deletePrefabs.Contains(prefabGroupXmlName)) continue;
                 prefabGroup.Remove();
             }
-            int randomPrefabIndex = 1;
             //Secret randomization
             if (archipelagoData.GetOption(SlotDataKeys.randomizeSecrets) == 1)
             {
