@@ -145,16 +145,16 @@ namespace HammerwatchAP.Archipelago
         {
             ((ChatWidget)_fi_ChatWidget_chatWidget.GetValue(null))?.AddLine(text, color);
         }
-        public static void SetAnnounceMessage(string translationKey, AnnounceTextType announceType = AnnounceTextType.Text)
+        public static void SetAnnounceMessage(string translationKey, AnnounceTextType announceType = AnnounceTextType.Text, int duration = 2500)
         {
             string plankMsg = GetLanguageString(translationKey, new string[0]);
             GameHUD hud = GameBase.Instance.GetMenu<GameHUD>();
-            hud?.SetAnnounceText(plankMsg ?? translationKey, 2500, announceType);
+            hud?.SetAnnounceText(plankMsg ?? translationKey, duration, announceType);
         }
-        public static void SetAnnounceText(string text, AnnounceTextType announceType = AnnounceTextType.Text)
+        public static void SetAnnounceText(string text, AnnounceTextType announceType = AnnounceTextType.Text, int duration = 2500)
         {
             GameHUD hud = GameBase.Instance.GetMenu<GameHUD>();
-            hud?.SetAnnounceText(text, 2500, announceType);
+            hud?.SetAnnounceText(text, duration, announceType);
         }
         public static void ShowPickupMessage(string text)
         {

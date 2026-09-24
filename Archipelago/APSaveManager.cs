@@ -49,7 +49,11 @@ namespace HammerwatchAP.Archipelago
 
             archipelagoData.mapType = (ArchipelagoData.MapType)save.Get("ap-map").GetInteger();
             archipelagoData.completedGoal = save.Get("ap-goal").GetBoolean();
-            if (archipelagoData.completedGoal) ArchipelagoManager.CompleteGoal();
+            if (archipelagoData.completedGoal)
+            {
+                archipelagoData.didPlankReminder = true; //If the server says we already goaled don't show the reminder
+                ArchipelagoManager.CompleteGoal();
+            }
             archipelagoData.itemsReceived = save.Get("ap-items-received").GetInteger();
             SValue[] locations = save.Get("ap-checked-locations").GetArray();
             foreach (SValue loc in locations)

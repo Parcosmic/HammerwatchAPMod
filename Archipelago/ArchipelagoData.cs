@@ -65,6 +65,8 @@ namespace HammerwatchAP.Archipelago
         public int neededPlayers;
         public PlayerClass?[] shopsanityClasses;
         public bool shopItemsNeedSync = false;
+        public bool didPlankReminder = false;
+        public const int PLANK_REMINDER_DURATION = 10000;
 
         public enum MapType
         {
@@ -179,6 +181,23 @@ namespace HammerwatchAP.Archipelago
                     if (goalType == GoalType.PlankHunt && planks >= plankHuntRequirement)
                     {
                         GameInterface.SetGlobalFlag("goal");
+                        if(!didPlankReminder)
+                        {
+                            didPlankReminder = true;
+                            SoundHelper.PlayMailSendSound();
+                            ArchipelagoMessageManager.SetAnnounceMessage("All Required Strange Planks Found!", ARPGGame.Menus.AnnounceTextType.Title, PLANK_REMINDER_DURATION);
+                            switch(mapType)
+                            {
+                                case MapType.Castle:
+                                    ArchipelagoMessageManager.SetAnnounceMessage("Return to the bridge on the first floor to end the game", ARPGGame.Menus.AnnounceTextType.SubTitle, PLANK_REMINDER_DURATION);
+                                    break;
+                                case MapType.Temple:
+                                    ArchipelagoMessageManager.SetAnnounceMessage("Return to Richard Cain outside the temple to end the game", ARPGGame.Menus.AnnounceTextType.SubTitle, PLANK_REMINDER_DURATION);
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException($"Unimplemented plank reminder for map type {mapType}");
+                            }
+                        }
                     }
                     break;
             }
