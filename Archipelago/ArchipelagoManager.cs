@@ -940,6 +940,33 @@ namespace HammerwatchAP.Archipelago
                 case "explore_speed_trap":
                     QoL.enableExploreSpeed = true;
                     break;
+                case "crt_trap":
+                    GameBase.Instance.WorldDrawer.RenderSettings.PostPhosphor = true;
+                    GameBase.Instance.WorldDrawer.RenderSettings.PostCurvature = true;
+                    GameBase.Instance.WorldDrawer.RenderSettings.PostCurvatureAmount = 0.2f;
+                    GameBase.Instance.WorldDrawer.RenderSettings.PostBloom = true;
+                    break;
+                case "1hp_trap":
+                    if(GameBase.Instance != null && GameBase.Instance.Players != null)
+                    {
+                        foreach(PlayerInfo player in GameBase.Instance.Players)
+                        {
+                            if (player == null || player.Disconnected || player.Health <= 1 || player.Dead) continue;
+                            player.ChangeHealth(1);
+                        }
+                    }
+                    break;
+                case "camera_shake_trap":
+                    CameraShake camera_shake = new CameraShake(30000, 0.25f, 0.25f, 25);
+                    EnemyHiveMind.Instance.Camera.AddCameraShake(camera_shake);
+                    break;
+                case "curvature_trap":
+                    GameBase.Instance.WorldDrawer.RenderSettings.PostCurvature = true;
+                    GameBase.Instance.WorldDrawer.RenderSettings.PostCurvatureAmount = 1f;
+                    break;
+                default:
+                    Logging.Log($"Failed to receive custom trap: {customTrapName}");
+                    break;
             }
         }
 
