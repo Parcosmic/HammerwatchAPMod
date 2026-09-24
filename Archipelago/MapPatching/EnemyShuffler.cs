@@ -137,7 +137,6 @@ namespace HammerwatchAP.Archipelago
             int enemyShuffle = archipelagoData.GetOption(SlotDataKeys.enemyShuffleMode);
             if (enemyShuffle == 0)
                 return;
-            int actRange = archipelagoData.GetOption(SlotDataKeys.enemyShuffleActRange);
             bool enemyShuffleKeepTier = archipelagoData.GetOption(SlotDataKeys.enemyShuffleKeepTier) > 0;
 
             foreach (var pair in docs)
@@ -216,19 +215,20 @@ namespace HammerwatchAP.Archipelago
                 return;
             int acts = APData.GetActCount(archipelagoData);
             bool extraFirstActWeight = actRange > 0 && actRange < acts - 1;
-            for (int a = 1; a <= 4; a++)
+            for (int a = 0; a < 4; a++)
             {
-                ShuffleActTierNodes(ActorType.Enemy, a, actRange, shuffleMode, extraFirstActWeight);
-                ShuffleActTierNodes(ActorType.Spawner, a, actRange, shuffleMode, extraFirstActWeight);
-                ShuffleActTierNodes(ActorType.Miniboss, a, actRange, shuffleMode, extraFirstActWeight);
-                ShuffleActTierNodes(ActorType.Tower, a, actRange, shuffleMode, extraFirstActWeight);
+                ShuffleActTierNodes(ActorType.Enemy, a, actRange, shuffleMode, extraFirstActWeight, acts);
+                ShuffleActTierNodes(ActorType.Spawner, a, actRange, shuffleMode, extraFirstActWeight, acts);
+                ShuffleActTierNodes(ActorType.Miniboss, a, actRange, shuffleMode, extraFirstActWeight, acts);
+                ShuffleActTierNodes(ActorType.Tower, a, actRange, shuffleMode, extraFirstActWeight, acts);
                 extraFirstActWeight = false;
             }
         }
-        public static void ShuffleActTierNodes(ActorType actorType, int actIndex, int actRange, int shuffleMode, bool extraFirstActWeight)
+        public static void ShuffleActTierNodes(ActorType actorType, int actIndex, int actRange, int shuffleMode, bool extraFirstActWeight, int acts)
         {
             Dictionary<string, Dictionary<string, XElement>> parentNodes = new Dictionary<string, Dictionary<string, XElement>>();
-            int maxAct = Math.Min(actIndex + actRange - 1, 3);
+            int minAct = Math.Max(actIndex - actRange, 0);
+            int maxAct = Math.Min(actIndex + actRange, 3);
             for (int a = 0; a <= maxAct; a++)
             {
                 for (int t = 0; t < actorTypeActTierCounts[actorType].GetLength(1); t++)
@@ -269,7 +269,15 @@ namespace HammerwatchAP.Archipelago
                                 }
                                 break;
                             case 3: //Chaos
-                                List<string> availableEnemyNames = actorTypeActTierCounts[actorType][a, t].Keys.ToList();
+                                List<int> randomActIndices = new List<int>(4);
+                                for (int m = minAct; m <= maxAct; m++)
+                                {
+                                    if (actorTypeActTierCounts[actorType][m, t].Count == 0) continue;
+                                    randomActIndices.Add(m);
+                                }
+                                //We should always have at least one act index to pull from, as enemies can always be randomized to themselves
+                                int randomActIndex = MiscHelper.RandomFromList(random, randomActIndices);
+                                List<string> availableEnemyNames = actorTypeActTierCounts[actorType][randomActIndex, t].Keys.ToList();
                                 enemyToSwapTo = MiscHelper.RandomFromList(random, availableEnemyNames);
                                 break;
                             default:
