@@ -524,7 +524,7 @@ namespace HammerwatchAP.Archipelago
                     Logging.Log($"Disconnected from AP socket: {reason}");
                 else
                     Logging.Log($"Disconnected from AP socket: {failedConnectMsg}");
-                DisconnectedFromArchipelago();
+                DisconnectedFromArchipelago(connectionState != ConnectionState.Disconnecting);
             };
             ArchipelagoManager.datapackageUpToDate = false;
             loginResult = session.TryConnectAndLogin("Hammerwatch", slotName, ItemsHandlingFlags.IncludeStartingInventory, ArchipelagoManager.AP_VERSION, null, null, password);
@@ -595,21 +595,28 @@ namespace HammerwatchAP.Archipelago
         public void DisconnectFromArchipelago(string reason = null)
         {
             SetConnectionState(ConnectionState.Disconnecting);
-            session?.SetClientState(ArchipelagoClientState.ClientUnknown);
             failedConnectMsg = "Disconnected from Archipelago server";
             if (reason != null)
                 failedConnectMsg = reason;
             connectedToAP = false;
-            session?.Socket.DisconnectAsync();
+            if (session != null && session.Socket.Connected)
+            {
+                session.SetClientState(ArchipelagoClientState.ClientUnknown);
+                session.Socket.DisconnectAsync();
+            }
+            else if (ArchipelagoManager.GameState == ArchipelagoManager.APGameState.InGame)
+            {
+                DisconnectedFromArchipelago(true);
+            }
         }
-        private void DisconnectedFromArchipelago()
+        private void DisconnectedFromArchipelago(bool tryReconnect)
         {
             connectedToAP = false;
             deathLinkService = null;
             ArchipelagoMessageManager.SendHWErrorMessage(failedConnectMsg ?? "Disconnected from Archipelago server");
-            if(connectionState != ConnectionState.Disconnecting)
+            SetConnectionState(ConnectionState.Disconnected);
+            if (tryReconnect)
             {
-                SetConnectionState(ConnectionState.Disconnected);
                 RefreshReconnectTimer();
             }
             ArchipelagoManager.DisconnectedFromArchipelago(failedConnectMsg);
