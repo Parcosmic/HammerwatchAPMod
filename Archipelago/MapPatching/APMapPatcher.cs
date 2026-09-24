@@ -2235,8 +2235,13 @@ namespace HammerwatchAP.Archipelago
                             scriptNodesToAdd.Add(NodeHelper.CreateToggleElementNode(modNodeStartId++, npcPos + new Vector2(4, -2), -1, 0, new[] { modNodeStartId }));
                             XElement endGameNode = NodeHelper.CreateGlobalEventTriggerNode(modNodeStartId++, -1, npcPos + new Vector2(2, -4), "ap_check_end_game");
                             endGameNode.Element("bool").Value = "False";
-
                             scriptNodesToAdd.Add(endGameNode);
+
+                            //Change dialogue of hub npcs
+                            if (exitRando && APData.exitIdToCode[archipelagoData.GetSlotInt("Start Exit")] != "hub|0")
+                            {
+                                NodeHelper.EditShowSpeechBubbleNode(idToNode["155697"], "Where did you come from?");
+                            }
 
                             //Bump PoF reward spawn node
                             idToNode["155661"].Element("vec2").Value = "24 -1.5";
@@ -2875,11 +2880,11 @@ namespace HammerwatchAP.Archipelago
                             break;
                         case "level_temple_2.xml":
                             int[] t2KeystoneNodes = { 145350, 145355, 145353, 145352, 145351, 145349, 145354 };
-                            int[] t2JonesNodes = { 144534, 144529 };
+                            //int[] t2JonesNodes = { 144534, 144529 };
                             int[] t2GoldKeyNodes = { 144531, 144532, 144530 };
                             int[] t2SilverKey1Nodes = { 144456, 144457, 144462, 144459, 144460 };
                             int[] t2SilverKey2Nodes = { 144466, 144467, 144465, 144464 };
-                            int[] pickaxeNodes = { 150186, 150192 };
+                            //int[] pickaxeNodes = { 150186, 150192 };
                             //globalScriptNodesToTriggerOnceOnLoad.Add(t2KeystoneNodes[archipelagoData.GetRandomLocation("Temple 2 Keystone")]);
                             //if (archipelagoData.GetRandomLocation("Temple 2 Jones Reward") == 0)
                             //{
@@ -2891,31 +2896,32 @@ namespace HammerwatchAP.Archipelago
 
                             List<int> t2RandomNodes = new List<int>();
                             t2RandomNodes.AddRange(t2KeystoneNodes);
-                            t2RandomNodes.Add(144534); //Don't use the second node here as that's already covered in the gold key nodes
+                            t2RandomNodes.Add(144529); //Jones gold key
                             t2RandomNodes.AddRange(t2GoldKeyNodes);
                             t2RandomNodes.AddRange(t2SilverKey1Nodes);
                             t2RandomNodes.AddRange(t2SilverKey2Nodes);
-                            t2RandomNodes.AddRange(pickaxeNodes);
+                            //t2RandomNodes.AddRange(pickaxeNodes);
                             List<int> t2ScriptlNodesToTrigger = AddRandomSpawnNodesToTrigger(levelFile, idToNode, t2RandomNodes);
 
                             //int pickaxeSpawnIndex = archipelagoData.GetRandomLocation("Pickaxe");
                             //globalScriptNodesToTriggerOnceOnLoad.Add(pickaxeNodes[pickaxeSpawnIndex]);
                             //Pickaxe ice block effect nodes
-                            Vector2 pickaxePosition;
-                            if (t2ScriptlNodesToTrigger.Contains(150186)) //First pickaxe node
+                            Vector2 pickaxePosition = new Vector2(-65, -17); //West pickaxe position
+                            if (archipelagoData.LocationExists(pickaxePosition, levelFile))
                             {
-                                pickaxePosition = new Vector2(-65, -17);
                                 effectNodePositions.Add("156283", pickaxePosition);
+                                globalScriptNodesToTriggerOnceOnLoad.Add(150186); //Force trigger the destroy node to make the gate and destroy the other
                             }
                             else
                             {
                                 pickaxePosition = new Vector2(3, 34);
                                 effectNodePositions.Add("156282", pickaxePosition);
+                                globalScriptNodesToTriggerOnceOnLoad.Add(150192); //Force trigger the destroy node to make the gate and destroy the other
                             }
                             int pickaxeSpawnNodeId = modNodeStartId; //898249;
                             scriptNodesToAdd.AddRange(CreateSpawnItemScriptNodes(levelFile, ref modNodeStartId, pickaxePosition, true));
                             scriptNodesToAdd.Add(NodeHelper.CreateCheckGlobalFlagNode(modNodeStartId++, pickaxePosition, "boss_krilith_dead", false, new[] { pickaxeSpawnNodeId }, false, null));
-                            globalScriptNodesToTriggerOnceOnLoad.Add(modNodeStartId - 1);
+                            globalScriptNodesToTriggerOnLoad.Add(modNodeStartId - 1);
 
                             int[] t2PortalNodes = { 3322, 137953, 137951, 137952 };
                             globalScriptNodesToTriggerOnceOnLoad.Add(t2PortalNodes[archipelagoData.GetRandomLocation("Temple 2 Portal")]);
