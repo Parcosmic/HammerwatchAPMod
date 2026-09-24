@@ -22,10 +22,10 @@ namespace HammerwatchAP.Game
         static SpeechBubble lastSpawned;
 
         static int speechTrapCounter = 0;
-        static int SPEECH_TRAP_COOLDOWN = 25;
+        const int SPEECH_TRAP_COOLDOWN = 25;
         static int speechTrapDurationCounter = -5000;
-        static int SPEECH_TRAP_DURATION = 5000;
-        static int MAX_SPEECH_TRAP_DIST = 10;
+        const int SPEECH_TRAP_DURATION = 5000;
+        const int MAX_SPEECH_TRAP_DIST = 10;
 
         private static Random random;
 

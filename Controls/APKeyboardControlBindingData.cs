@@ -78,6 +78,11 @@ namespace HammerwatchAP.Controls
             keyBindings[action] = key;
         }
 
+        public Keys ActionToKey(ControlManager.APControllerAction action)
+        {
+            return keyBindings[action];
+        }
+
         public override string ActionBoundName(ControlManager.APControllerAction action)
         {
             Keys key = keyBindings[action];

@@ -15,6 +15,7 @@ namespace HammerwatchAP.Util
         private const string aaaSndName = "sound/misc.xml:special_serious_aaaaaaaaaa";
         private const string keySndName = "sound/misc.xml:take_key";
         private const string bonusKeySndName = "sound/bonus.xml:bonus_key";
+        private const string collapseSndName = "sound/misc.xml:end_crash";
         private static TiltedEngine.Audio.Sound countdownSnd;
         private static TiltedEngine.Audio.Sound countdownFinishSnd;
         private static TiltedEngine.Audio.Sound exploreSpeedSnd;
@@ -22,7 +23,9 @@ namespace HammerwatchAP.Util
         private static TiltedEngine.Audio.Sound aaaSnd;
         private static TiltedEngine.Audio.Sound keySnd;
         private static TiltedEngine.Audio.Sound bonusKeySnd;
+        private static TiltedEngine.Audio.Sound collapseKeySnd;
         private static TiltedEngine.Audio.SoundInstance aaaSoundInstance;
+        private static TiltedEngine.Audio.SoundInstance collapseSoundInstance;
 
         public static void LoadSounds()
         {
@@ -33,6 +36,7 @@ namespace HammerwatchAP.Util
             aaaSnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(aaaSndName);
             keySnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(keySndName);
             bonusKeySnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(bonusKeySndName);
+            collapseKeySnd = GameBase.Instance.resources.GetResource<TiltedEngine.Audio.Sound>(collapseSndName);
         }
 
         public static void PlayCountdownSound()
@@ -72,6 +76,20 @@ namespace HammerwatchAP.Util
         public static void PlayBonusKeySound()
         {
             bonusKeySnd.Play2D(false);
+        }
+        public static void PlayCollapseSound()
+        {
+            if (collapseSoundInstance != null)
+            {
+                StopCollapseSound();
+            }
+            collapseSoundInstance = collapseKeySnd.Play2D(true);
+        }
+        public static void StopCollapseSound()
+        {
+            if (collapseSoundInstance == null) return;
+            collapseSoundInstance.Stop();
+            collapseSoundInstance.Dispose();
         }
     }
 }

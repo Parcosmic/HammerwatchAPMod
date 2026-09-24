@@ -14,8 +14,8 @@ namespace HammerwatchAP.Game
 {
     public static class QoL
     {
-        public static float EXPLORE_SPEED_MULTIPLIER = 3;
-        public static int EXPLORE_SPEED_RESET_TIME = 5000;
+        public const float EXPLORE_SPEED_MULTIPLIER = 3;
+        public const int EXPLORE_SPEED_RESET_TIME = 5000;
 
         public static int[] playerExploreSpeedCounter = new int[4];
         public static bool[] immortalPlayers = new bool[4];

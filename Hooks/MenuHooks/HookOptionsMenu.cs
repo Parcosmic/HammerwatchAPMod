@@ -320,7 +320,7 @@ namespace HammerwatchAP.Hooks
 						control = new XElement("Keyboard");
 						foreach(ControlManager.APControllerAction action in Enum.GetValues(typeof(ControlManager.APControllerAction)))
                         {
-							control.Add(new XElement(action.ToString(), apKeyboardBinding.ActionBoundName(action)));
+							control.Add(new XElement(action.ToString(), apKeyboardBinding.ActionToKey(action).ToString()));
 						}
 					}
 					else if (controlBindings[p] is PlayerJoystickControlBinding joystickBinding)
